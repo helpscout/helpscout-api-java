@@ -14,6 +14,7 @@ import java.util.Set;
 import net.helpscout.api.model.Mailbox;
 import net.helpscout.api.model.Folder;
 import net.helpscout.api.model.Conversation;
+import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.User;
 
 import sun.misc.BASE64Encoder;
@@ -61,8 +62,8 @@ public class ApiClient {
 		System.out.println(response2.getItems());
 		*/
 		
-		Page response = client.getConversationsByMailbox(85);
-		System.out.println(response.getPage());
+		Page response = client.getCustomers();
+		System.out.println(response.getItems());
 	}
 	
 	public Page getConversationsByMailbox(Integer mailboxID) {
@@ -97,6 +98,15 @@ public class ApiClient {
 	public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
 		return getPage(url, Folder.class);
+	}
+	
+	public Page getCustomers() {
+		return getPage("customers.json", Customer.class);
+	}
+	
+	public Page getCustomers(List<String> fields) throws ApiException {
+		String url = setFields("customers.json", fields);
+		return getPage(url, Customer.class);
 	}
 	
 	public User getUser(Integer userID) {
