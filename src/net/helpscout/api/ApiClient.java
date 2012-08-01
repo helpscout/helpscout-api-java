@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.helpscout.api.model.Mailbox;
+import net.helpscout.api.model.Folder;
+import net.helpscout.api.model.Conversation;
+import net.helpscout.api.model.User;
 
 import sun.misc.BASE64Encoder;
 
@@ -22,18 +25,48 @@ import com.google.gson.JsonParser;
 
 public class ApiClient {
 	private final static String BASE_URL = "https://api.helpscout.net/v1/";
-	
 	private String apiKey = "";
 	
-	public static void main(String[] args) {
-		ApiClient client = new ApiClient();
+	public ApiClient() {
+		// no param constructor
+	}
+	
+	public ApiClient(String apiKey) {
+		this.apiKey = apiKey;
+	}
+	
+	public void setKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+	
+	public static void main(String[] args) throws ApiException {
+		ApiClient client = new ApiClient("75ecf26bd0c9cbf294292d6c9e27dcfce928c11a");
 		
-		Page response = client.getMailboxes();
+		List<String> fields = new ArrayList<String>();
+		fields.add("name");
+		//fields.add("email");
+		/*
+		Page response = client.getMailboxes(fields);
+		Mailbox m = client.getMailbox(85, fields);
+		System.out.println(response.getItems());
+		System.out.println(m.getEmail());
+		Page response = client.getUsers();
+		User u = client.getUser(3465, fields);
+		Page response2 = client.getUsersByMailbox(85, fields);
+		System.out.println(response2.getItems());
+		System.out.println(u.getEmail());
+		Page response = client.getFolders(85);
+		System.out.println(response.getItems());
+		Page response2 = client.getFolders(85, fields);
+		System.out.println(response2.getItems());
+		*/
 		
-		Mailbox m = client.getMailbox(85);
-		
-		System.out.println(response);
-		
+		Page response = client.getConversationsByMailbox(85);
+		System.out.println(response.getPage());
+	}
+	
+	public Page getConversationsByMailbox(Integer mailboxID) {
+		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class);
 	}
 	
 	public Mailbox getMailbox(Integer mailboxID) {
@@ -44,15 +77,71 @@ public class ApiClient {
 		if (mailboxID == null || mailboxID < 1) {
 			throw new ApiException("Invalid mailboxId in getMailbox");		
 		}
-		if (fields != null && fields.size() > 0) {
-			// handle fields
-		}
-
+		String url = setFields("mailboxes/" + mailboxID + ".json", fields);
+		return (Mailbox)getItem(url, Mailbox.class);
 	}
-	
 	
 	public Page getMailboxes() {
 		return getPage("mailboxes.json", Mailbox.class);
+	}
+	
+	public Page getMailboxes(List<String> fields) throws ApiException {
+		String url = setFields("mailboxes.json", fields);
+		return getPage(url, Mailbox.class);
+	}
+	
+	public Page getFolders(Integer mailboxId) {
+		return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class);
+	}
+	
+	public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
+		String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
+		return getPage(url, Folder.class);
+	}
+	
+	public User getUser(Integer userID) {
+		return (User)getItem("users/" + userID + ".json", User.class);
+	}
+	
+	public User getUser(Integer userID, List<String> fields) throws ApiException {
+		if (userID == null || userID < 1) {
+			throw new ApiException("Invalid userId in getUser");		
+		}
+		String url = setFields("users/" + userID + ".json", fields);
+		return (User)getItem(url, User.class);
+	}
+	
+	public Page getUsers() {
+		return getPage("users.json", User.class);
+	}
+	
+	public Page getUsers(List<String> fields) throws ApiException {
+		String url = setFields("users.json", fields);
+		return getPage(url, User.class);
+	}
+	
+	public Page getUsersByMailbox(Integer mailboxId) {
+		return getPage("mailboxes/" + mailboxId + "/users.json", User.class);
+	}
+	
+	public Page getUsersByMailbox(Integer mailboxId, List<String> fields) throws ApiException {
+		String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
+		return getPage(url, User.class);
+	}
+	
+	private String setFields(String url, List<String> fields) {
+		if (fields != null && fields.size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(url + "?fields=");
+		    String sep = "";
+		    Iterator<String> iterator = fields.iterator();
+		    while (iterator.hasNext()) {
+		    	sb.append(sep).append(iterator.next());
+		        sep = ",";
+		    }
+		    url = sb.toString();
+		}
+		return url;
 	}
 	
 	private Object getItem(String url, Class<?> clazzType) {
@@ -63,6 +152,7 @@ public class ApiClient {
 		Gson gson = new Gson();
 		return gson.fromJson(elem, clazzType);
 	}
+	
 	private Page getPage(String url, Class<?> clazzType) {
 		String json = callServer(url);
 				
@@ -112,7 +202,8 @@ public class ApiClient {
 		return col;
 	}
 	
-	private String callServer(String url) { 
+	private String callServer(String url) {
+		System.out.println(url);
 		HttpURLConnection conn = null;
 		
 		String response = null;
@@ -149,7 +240,8 @@ public class ApiClient {
 	    	if (conn != null) {
 	    		conn.disconnect(); 
 	    	}	    	
-	    }	
+	    }
+	    System.out.println(response); // Testing
 	    return response;
 	} 
 	
