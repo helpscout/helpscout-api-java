@@ -14,10 +14,7 @@ import java.util.Set;
 import net.helpscout.api.model.Mailbox;
 import net.helpscout.api.model.Folder;
 import net.helpscout.api.model.Conversation;
-<<<<<<< HEAD
 import net.helpscout.api.model.Customer;
-=======
->>>>>>> c29d60dfd554a5f58e4cb92ad28ef22d9a9f64d0
 import net.helpscout.api.model.User;
 
 import sun.misc.BASE64Encoder;
