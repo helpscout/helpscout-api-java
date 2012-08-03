@@ -19,26 +19,26 @@ public class TestingAPI {
   public static void main(String[] args) throws ApiException {
   	ApiClient client = new ApiClient("your-api-key-here");
 		
-    List<String> fields = new ArrayList<String>();
+  	List<String> fields = new ArrayList<String>();
   	fields.add("name");
-		fields.add("email");
-		Page mailboxes = client.getMailboxes(fields);
-    if (mailboxes) {
-      // do something
-    }
-    
-		Mailbox mailbox = client.getMailbox(85);
-    if (mailbox) {
-      String mailboxName = mailbox.getName();
-      List<Folder> folders = mailbox.getFolders();
-    }
-    
-		Customer c = client.getCustomer(customer-id-here);
-		if (c.hasSocialProfiles()) {
-			List<SocialProfileEntry> profiles = c.getSocialProfiles();
-      // do something
-		}
+	fields.add("email");
+	Page mailboxes = client.getMailboxes(fields);
+	if (mailboxes) {
+	      // do something
 	}
+    
+	Mailbox mailbox = client.getMailbox(85);
+	if (mailbox) {
+		String mailboxName = mailbox.getName();
+		List<Folder> folders = mailbox.getFolders();
+	}
+    
+	Customer c = client.getCustomer(customer-id-here);
+	if (c.hasSocialProfiles()) {
+		List<SocialProfileEntry> profiles = c.getSocialProfiles();
+		// do something
+	}
+  }
 }
 </code></pre>
 
