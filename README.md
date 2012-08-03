@@ -45,3 +45,32 @@ public class TestingAPI {
 Field Selectors
 ---------------------
 Field selectors are given as a list of Strings. When field selectors are used, the appropriate object is created with the fields provided.
+
+Built-in Methods
+--------------------
+Each method also has a duplicate that allows you to pass in a list of Strings to specify desired fields (see Field Selectors).
+
+### Mailboxes
+* getMailboxes()
+* getMailbox(Integer mailboxID)
+
+### Folders
+* getFolders(Integer mailboxID)
+
+### Conversations
+* getConversationsForFolder(Integer mailboxID, Integer folderID)
+* getConversationsForMailbox(Integer mailboxID)
+* getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID)
+* getConversation(Integer conversationID)
+
+### Attachments
+* getAttachmentData(Integer attachmentID)
+
+### Customers
+* getCustomers()
+* getCustomer(Integer customerID)
+
+### Users
+* getUsers()
+* getUsersForMailbox(Integer mailboxID)
+* getUser(Integer userID)
