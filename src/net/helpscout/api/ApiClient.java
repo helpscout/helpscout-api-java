@@ -54,18 +54,14 @@ public class ApiClient {
 		Mailbox m = client.getMailbox(85);
 		Page users = client.getUsers();
 		User u = client.getUser(3465);
-		Page users2 = client.getUsersByMailbox(85);
+		Page users2 = client.getUsersForMailbox(85);
 		Page folders = client.getFolders(85);
 		Page customers = client.getCustomers();
 		Customer c = client.getCustomer(145026);
 		if (c.hasSocialProfiles()) {
 			List<SocialProfileEntry> profiles = c.getSocialProfiles();
 		}
-		Page convos = client.getConversationsByMailbox(85);
-	}
-	
-	public Page getConversationsByMailbox(Integer mailboxID) {
-		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class);
+		Page convos = client.getConversationsForMailbox(85);
 	}
 	
 	public Mailbox getMailbox(Integer mailboxID) {
@@ -96,6 +92,57 @@ public class ApiClient {
 	public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
 		return getPage(url, Folder.class);
+	}
+	
+	public Page getConversationsForFolder(Integer mailboxID, Integer folderID) {
+		return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class);
+	}
+	
+	public Page getConversationsForFolder(Integer mailboxID, Integer folderID, List<String> fields) {
+		String url = setFields("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", fields);
+		return getPage(url, Conversation.class);
+	}
+	
+	public Page getConversationsForMailbox(Integer mailboxID) {
+		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class);
+	}
+	
+	public Page getConversationsForMailbox(Integer mailboxID, List<String> fields) {
+		String url = setFields("mailboxes/" + mailboxID + "/conversations.json", fields);
+		return getPage(url, Conversation.class);
+	}
+	
+	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID) {
+		return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class);
+	}
+	
+	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, List<String> fields) {
+		String url = setFields("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", fields);
+		return getPage(url, Conversation.class);
+	}
+	
+	public Conversation getConversation(Integer conversationID) {
+		return (Conversation)getItem("conversations/" + conversationID + ".json", Conversation.class);
+	}
+	
+	public Conversation getConversation(Integer conversationID, List<String> fields) throws ApiException {
+		if (conversationID == null || conversationID < 1) {
+			throw new ApiException("Invalid conversationId in getConversation");		
+		}
+		String url = setFields("conversations/" + conversationID + ".json", fields);
+		return (Conversation)getItem(url, Conversation.class);
+	}
+	
+	// Could stand a revamp
+	public String getAttachmentData(Integer attachmentID) throws ApiException {
+		if (attachmentID == null || attachmentID < 1) {
+			throw new ApiException("Invalid attachmentID in getAttachmentData");		
+		}
+		String json = callServer("attachments/" + attachmentID + "data.json");
+		JsonElement obj = (new JsonParser()).parse(json);
+		JsonElement elem  = obj.getAsJsonObject().get("item");
+		JsonElement dataObj  = elem.getAsJsonObject().get("data");
+		return dataObj.getAsString();
 	}
 	
 	public Page getCustomers() {
@@ -140,11 +187,11 @@ public class ApiClient {
 		return getPage(url, User.class);
 	}
 	
-	public Page getUsersByMailbox(Integer mailboxId) {
+	public Page getUsersForMailbox(Integer mailboxId) {
 		return getPage("mailboxes/" + mailboxId + "/users.json", User.class);
 	}
 	
-	public Page getUsersByMailbox(Integer mailboxId, List<String> fields) throws ApiException {
+	public Page getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
 		return getPage(url, User.class);
 	}
@@ -223,7 +270,6 @@ public class ApiClient {
 	}
 	
 	private String callServer(String url) {
-		System.out.println(url);
 		HttpURLConnection conn = null;
 		
 		String response = null;
@@ -261,7 +307,6 @@ public class ApiClient {
 	    		conn.disconnect(); 
 	    	}	    	
 	    }
-	    System.out.println(response); // Testing
 	    return response;
 	} 
 	

@@ -1,15 +1,17 @@
 package net.helpscout.api.model;
 
 import java.util.List;
+import net.helpscout.api.model.thread.*;
+import net.helpscout.api.model.ref.*;
 
 public class Conversation {
 	private int id;
 	private int folderId;
-	private boolean draft;
+	private boolean isDraft;
 	private int number;
-	private int ownerId;
-	private int mailboxId;
-	private int customerId;
+	private UserRef owner;
+	private MailboxRef mailbox;
+	private CustomerRef customer;
 	private int threadCount;
 	private String status;
 	private String subject;
@@ -19,11 +21,11 @@ public class Conversation {
 	private String modifiedAt;
 	private String closedAt;
 	private int closedBy;
-	
 	private List<String> ccList;
 	private List<String> bccList;
 	private List<String> tags;
-	private List<Thread> threads;
+	
+	private List<Message> threads;
 	
 	public int getId() {
 		return id;
@@ -32,19 +34,19 @@ public class Conversation {
 		return folderId;
 	}
 	public boolean isDraft() {
-		return draft;
+		return isDraft;
 	}
 	public int getNumber() {
 		return number;
 	}
-	public int getOwnerId() {
-		return ownerId;
+	public UserRef getOwner() {
+		return owner;
 	}
-	public int getMailboxId() {
-		return mailboxId;
+	public MailboxRef getMailbox() {
+		return mailbox;
 	}
-	public int getCustomerId() {
-		return customerId;
+	public CustomerRef getCustomer() {
+		return customer;
 	}
 	public int getThreadCount() {
 		return threadCount;
@@ -94,7 +96,7 @@ public class Conversation {
 	public boolean hasThreads() {
 		return threads != null && threads.size() > 0;
 	}
-	public List<Thread> getThreads() {
+	public List<Message> getThreads() {
 		return threads;
 	}
 }
