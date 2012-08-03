@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.helpscout.api.model.Mailbox;
-import net.helpscout.api.model.Folder;
+import net.helpscout.api.model.Attachment;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
+import net.helpscout.api.model.Folder;
+import net.helpscout.api.model.Mailbox;
 import net.helpscout.api.model.User;
+import net.helpscout.api.model.thread.*;
+import net.helpscout.api.model.customer.*;
 
 import sun.misc.BASE64Encoder;
 
@@ -46,24 +49,19 @@ public class ApiClient {
 		List<String> fields = new ArrayList<String>();
 		fields.add("name");
 		//fields.add("email");
-		/*
-		Page response = client.getMailboxes(fields);
-		Mailbox m = client.getMailbox(85, fields);
-		System.out.println(response.getItems());
-		System.out.println(m.getEmail());
-		Page response = client.getUsers();
-		User u = client.getUser(3465, fields);
-		Page response2 = client.getUsersByMailbox(85, fields);
-		System.out.println(response2.getItems());
-		System.out.println(u.getEmail());
-		Page response = client.getFolders(85);
-		System.out.println(response.getItems());
-		Page response2 = client.getFolders(85, fields);
-		System.out.println(response2.getItems());
-		*/
 		
-		Page response = client.getCustomers();
-		System.out.println(response.getItems());
+		Page mailboxes = client.getMailboxes(fields);
+		Mailbox m = client.getMailbox(85);
+		Page users = client.getUsers();
+		User u = client.getUser(3465);
+		Page users2 = client.getUsersByMailbox(85);
+		Page folders = client.getFolders(85);
+		Page customers = client.getCustomers();
+		Customer c = client.getCustomer(145026);
+		if (c.hasSocialProfiles()) {
+			List<SocialProfileEntry> profiles = c.getSocialProfiles();
+		}
+		Page convos = client.getConversationsByMailbox(85);
 	}
 	
 	public Page getConversationsByMailbox(Integer mailboxID) {
@@ -107,6 +105,18 @@ public class ApiClient {
 	public Page getCustomers(List<String> fields) throws ApiException {
 		String url = setFields("customers.json", fields);
 		return getPage(url, Customer.class);
+	}
+	
+	public Customer getCustomer(Integer customerID) {
+		return (Customer)getItem("customers/" + customerID + ".json", Customer.class);
+	}
+	
+	public Customer getCustomer(Integer customerID, List<String> fields) throws ApiException {
+		if (customerID == null || customerID < 1) {
+			throw new ApiException("Invalid customerId in getCustomer");		
+		}
+		String url = setFields("customers/" + customerID + ".json", fields);
+		return (Customer)getItem(url, Customer.class);
 	}
 
 	public User getUser(Integer userID) {

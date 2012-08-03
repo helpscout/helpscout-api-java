@@ -24,25 +24,13 @@ public class LineItem {
 	public int getAssignedTo() {
 		return assignedTo;
 	}
-	public void setAssignedTo(int assignedTo) {
-		this.assignedTo = assignedTo;
-	}
 	public String getStatus() {
 		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
 	}
 	public int getCreatedBy() {
 		return createdBy;
 	}
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
 	public int getFromMailboxId() {
 		return fromMailboxId;
-	}
-	public void setFromMailboxId(int fromMailboxId) {
-		this.fromMailboxId = fromMailboxId;
 	}
 }

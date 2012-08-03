@@ -3,9 +3,6 @@ package net.helpscout.api.model.thread;
 import net.helpscout.api.model.thread.LineItem;
 import net.helpscout.api.model.Attachment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 interface ConversationThread {
@@ -54,43 +51,22 @@ public class AbstractThread extends LineItem implements ConversationThread {
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getState() {
 		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
 	}
 	public String getBody() {
 		return body;
 	}
-	public void setBody(String body) {
-		this.body = body;
-	}
 	public List<String> getToList() {
 		return toList;
-	}
-	public void setToList(List<String> toList) {
-		this.toList = toList;
 	}
 	public List<String> getCcList() {
 		return ccList;
 	}
-	public void setCcList(List<String> ccList) {
-		this.ccList = ccList;
-	}
 	public List<String> getBccList() {
 		return bccList;
 	}
-	public void setBccList(List<String> bccList) {
-		this.bccList = bccList;
-	}
 	public List<Attachment> getAttachments() {
 		return attachments;
-	}
-	public void setAttachments(List<Attachment> attachments) {
-		this.attachments = attachments;
 	}
 }
