@@ -2,6 +2,7 @@ package net.helpscout.api;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ApiClient {
 		if (c.hasSocialProfiles()) {
 			List<SocialProfileEntry> profiles = c.getSocialProfiles();
 		}
-		Page convos = client.getConversationsForMailbox(85);
+		Conversation convo = client.getConversation(1936475);
 	}
 	
 	public Mailbox getMailbox(Integer mailboxID) {
@@ -286,7 +287,7 @@ public class ApiClient {
 	        conn.setRequestProperty("Accept", "application/json"); 
 	        conn.setRequestProperty("Authorization", "Basic " + getBase64Encoded(apiKey + ":x"));
 	        
-	        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+	        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.forName("UTF8")));
 	     
 	        StringBuilder sb = new StringBuilder();
 	        
