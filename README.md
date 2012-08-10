@@ -5,7 +5,7 @@ Java Wrapper for the Help Scout API. More information on our developer site: [ht
 Requirements
 ---------------------
 * JDE 1.6
-* gson
+* [google-gson](http://code.google.com/p/google-gson/)
 
 Example Usage
 ---------------------
