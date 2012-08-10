@@ -1,36 +1,29 @@
 package net.helpscout.api.model.thread;
 
-public class LineItem {
-	private int assignedTo = 0;
-	private String status = "Unassigned";
-	private int createdBy = 0;
-	private int fromMailboxId = 0;
+import net.helpscout.api.cbo.Status;
+import net.helpscout.api.model.ref.MailboxRef;
+import net.helpscout.api.model.ref.PersonRef;
+import net.helpscout.api.model.ref.UserRef;
+
+public interface LineItem {
 	
-	public boolean isAssigned() {
-		return this.assignedTo != 0;
-	}
-	public boolean isActive() {
-		return this.status == "active";
-	}
-	public boolean isPending() {
-		return this.status == "pending";
-	}
-	public boolean isClosed() {
-		return this.status == "closed";
-	}
-	public boolean isSpam() {
-		return this.status == "spam";
-	}
-	public int getAssignedTo() {
-		return assignedTo;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public int getCreatedBy() {
-		return createdBy;
-	}
-	public int getFromMailboxId() {
-		return fromMailboxId;
-	}
+	public boolean isAssigned();
+	
+	public boolean isActive();
+	
+	public boolean isPending();
+	
+	public boolean isClosed();
+	
+	public boolean isSpam();
+	
+	public UserRef getAssignedTo();
+	
+	public Status getStatus();
+		
+	public boolean isStatusChange();
+		
+	public PersonRef getCreatedBy();
+		
+	public MailboxRef getFromMailbox();	
 }

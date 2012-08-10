@@ -1,6 +1,6 @@
 package net.helpscout.api.model.customer;
 
-public class CustomerEntry extends Object {
+public class CustomerEntry {
 	private int id;
 	private String value;
 	private String type;

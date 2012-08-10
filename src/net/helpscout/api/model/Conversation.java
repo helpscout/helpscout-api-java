@@ -1,31 +1,41 @@
 package net.helpscout.api.model;
 
+import java.util.Calendar;
 import java.util.List;
-import net.helpscout.api.model.thread.*;
-import net.helpscout.api.model.ref.*;
+
+import net.helpscout.api.cbo.Status;
+import net.helpscout.api.model.ref.CustomerRef;
+import net.helpscout.api.model.ref.MailboxRef;
+import net.helpscout.api.model.ref.PersonRef;
+import net.helpscout.api.model.ref.UserRef;
+import net.helpscout.api.model.thread.LineItem;
 
 public class Conversation {
 	private int id;
 	private int folderId;
 	private boolean isDraft;
 	private int number;
+	private Source source;
+	
 	private UserRef owner;
 	private MailboxRef mailbox;
 	private CustomerRef customer;
 	private int threadCount;
-	private String status;
+	private Status status;
 	private String subject;
 	private String preview;
-	private int createdBy;
-	private String createdAt;
-	private String modifiedAt;
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 	private String closedAt;
-	private int closedBy;
+	private UserRef closedBy;
+
+	private PersonRef createdBy;
+	
 	private List<String> ccList;
 	private List<String> bccList;
 	private List<String> tags;
 	
-	private List<Message> threads;
+	private List<LineItem> threads;
 	
 	public int getId() {
 		return id;
@@ -51,7 +61,7 @@ public class Conversation {
 	public int getThreadCount() {
 		return threadCount;
 	}
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 	public String getSubject() {
@@ -60,21 +70,32 @@ public class Conversation {
 	public String getPreview() {
 		return preview;
 	}
-	public int getCreatedBy() {
+	public Source getSource() {
+		return source;
+	}
+	
+	public PersonRef getCreatedBy() {
 		return createdBy;
 	}
-	public String getCreatedAt() {
+	
+	public boolean isCreatedByCustomer() {
+		return createdBy != null && createdBy instanceof CustomerRef;
+	}
+	
+	public Calendar getCreatedAt() {
 		return createdAt;
 	}
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 	public String getClosedAt() {
 		return closedAt;
 	}
-	public int getClosedBy() {
+	
+	public UserRef getClosedBy() {
 		return closedBy;
 	}
+	
 	public boolean hasCcList() {
 		return ccList != null && ccList.size() > 0;
 	}
@@ -96,7 +117,8 @@ public class Conversation {
 	public boolean hasThreads() {
 		return threads != null && threads.size() > 0;
 	}
-	public List<Message> getThreads() {
+	
+	public List<LineItem> getThreads() {
 		return threads;
 	}
 }

@@ -1,12 +1,14 @@
 package net.helpscout.api.model;
 
+import java.util.Calendar;
+
 public class Mailbox {
 	private int id;
 	private String name;
 	private String slug;
 	private String email;
-	private String createdAt;
-	private String modifiedAt;
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 	
 	public int getId() {
 		return id;
@@ -20,10 +22,10 @@ public class Mailbox {
 	public String getEmail() {
 		return email;
 	}
-	public String getCreatedAt() {
+	public Calendar getCreatedAt() {
 		return createdAt;
 	}
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 }

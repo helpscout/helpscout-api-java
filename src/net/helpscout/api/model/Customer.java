@@ -1,5 +1,6 @@
 package net.helpscout.api.model;
 
+import java.util.Calendar;
 import java.util.List;
 
 import net.helpscout.api.model.customer.*;
@@ -7,18 +8,19 @@ import net.helpscout.api.model.customer.*;
 public class Customer {
 	private int id;
 	private String firstName;
-	private String lastName;
-	private String role;
-	private String timezone;
-	private String photoUrl;
-	private String photoType;
+	private String lastName;	
 	private String gender;
 	private String age;
-	private String organization;
+	
 	private String jobTitle;
 	private String location;
-	private String createdAt;
-	private String modifiedAt;
+	private String organization;
+	
+	private String photoUrl;
+	private String photoType;
+		
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 	
 	private String background;
 	private Address address;
@@ -27,7 +29,7 @@ public class Customer {
 	private List<PhoneEntry> phones;
 	private List<ChatEntry> chats;
 	private List<WebsiteEntry> websites;
-
+	
 	public int getId() {
 		return id;
 	}
@@ -38,14 +40,6 @@ public class Customer {
 
 	public String getLastName() {
 		return lastName;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public String getTimezone() {
-		return timezone;
 	}
 
 	public String getPhotoUrl() {
@@ -76,11 +70,11 @@ public class Customer {
 		return location;
 	}
 
-	public String getCreatedAt() {
+	public Calendar getCreatedAt() {
 		return createdAt;
 	}
 
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 	

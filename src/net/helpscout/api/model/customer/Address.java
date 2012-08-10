@@ -1,18 +1,25 @@
 package net.helpscout.api.model.customer;
 
-public class Address extends Object {
+import java.util.Calendar;
+import java.util.List;
+
+public class Address {
 	private int id;
-	// private List<String> lines;
+	private List<String> lines;
 	private String city;
 	private String state;
 	private String postalCode;
 	private String country;
-	private String createdAt;
-	private String modifiedAt;
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 	
 	public int getId() {
 		return id;
 	}
+	public List<String> getLines() {
+		return lines;
+	}
+	
 	public String getCity() {
 		return city;
 	}
@@ -25,10 +32,10 @@ public class Address extends Object {
 	public String getCountry() {
 		return country;
 	}
-	public String getCreatedAt() {
+	public Calendar getCreatedAt() {
 		return createdAt;
 	}
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 }

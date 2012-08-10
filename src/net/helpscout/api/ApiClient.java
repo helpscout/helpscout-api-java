@@ -1,29 +1,52 @@
 package net.helpscout.api;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
-import net.helpscout.api.model.Attachment;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.Folder;
 import net.helpscout.api.model.Mailbox;
 import net.helpscout.api.model.User;
-import net.helpscout.api.model.thread.*;
-import net.helpscout.api.model.customer.*;
+import net.helpscout.api.model.ref.PersonRef;
+import net.helpscout.api.model.thread.LineItem;
+import net.helpscout.api.adapters.CalendarAdapter;
+import net.helpscout.api.adapters.PersonRefAdapter;
+import net.helpscout.api.adapters.StatusAdapter;
+import net.helpscout.api.adapters.ThreadStateAdapter;
+import net.helpscout.api.adapters.ThreadsAdapater;
+import net.helpscout.api.cbo.JsonThreadLocal;
+import net.helpscout.api.cbo.Status;
+import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.exception.AccessDeniedException;
+import net.helpscout.api.exception.ApiKeySuspendedException;
+import net.helpscout.api.exception.InvalidApiKeyException;
+import net.helpscout.api.exception.InvalidFormatException;
+import net.helpscout.api.exception.InvalidMethodException;
+import net.helpscout.api.exception.NotFoundException;
+import net.helpscout.api.exception.ServerException;
+import net.helpscout.api.exception.ServiceUnavailableException;
+import net.helpscout.api.exception.ThrottleRateException;
 
+import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -31,42 +54,37 @@ import com.google.gson.JsonParser;
 public class ApiClient {
 	private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private String apiKey = "";
+		
+	private static ApiClient instance = null;
 	
-	public ApiClient() {
-		// no param constructor
+	private final GsonBuilder builder;
+	
+	private ApiClient() {
+		builder = new GsonBuilder();
+		builder.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter());
+		builder.registerTypeAdapter(Status.class, new StatusAdapter());
+		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
+		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));		
+		builder.registerTypeAdapter(Calendar.class, new CalendarAdapter());		
 	}
 	
-	public ApiClient(String apiKey) {
-		this.apiKey = apiKey;
+	public synchronized static ApiClient getInstance() {
+		if (instance == null) {
+			synchronized (BASE_URL) {
+				if (instance == null) {
+					instance = new ApiClient();
+				}
+			}
+		}
+		return instance;
 	}
 	
 	public void setKey(String apiKey) {
 		this.apiKey = apiKey;
 	}
 	
-	public static void main(String[] args) throws ApiException {
-		ApiClient client = new ApiClient("75ecf26bd0c9cbf294292d6c9e27dcfce928c11a");
-		
-		List<String> fields = new ArrayList<String>();
-		fields.add("name");
-		//fields.add("email");
-		
-		Page mailboxes = client.getMailboxes(fields);
-		Mailbox m = client.getMailbox(85);
-		Page users = client.getUsers();
-		User u = client.getUser(3465);
-		Page users2 = client.getUsersForMailbox(85);
-		Page folders = client.getFolders(85);
-		Page customers = client.getCustomers();
-		Customer c = client.getCustomer(145026);
-		if (c.hasSocialProfiles()) {
-			List<SocialProfileEntry> profiles = c.getSocialProfiles();
-		}
-		Conversation convo = client.getConversation(1936475);
-	}
-	
-	public Mailbox getMailbox(Integer mailboxID) {
-		return (Mailbox)getItem("mailboxes/" + mailboxID + ".json", Mailbox.class);
+	public Mailbox getMailbox(Integer mailboxID) throws ApiException {
+		return (Mailbox)getItem("mailboxes/" + mailboxID + ".json", Mailbox.class, 200);
 	}
 	
 	public Mailbox getMailbox(Integer mailboxID, List<String> fields) throws ApiException {
@@ -74,56 +92,56 @@ public class ApiClient {
 			throw new ApiException("Invalid mailboxId in getMailbox");		
 		}
 		String url = setFields("mailboxes/" + mailboxID + ".json", fields);
-		return (Mailbox)getItem(url, Mailbox.class);
+		return (Mailbox)getItem(url, Mailbox.class, 200);
 	}
 	
-	public Page getMailboxes() {
-		return getPage("mailboxes.json", Mailbox.class);
+	public Page getMailboxes() throws ApiException {
+		return getPage("mailboxes.json", Mailbox.class, 200);
 	}
 	
 	public Page getMailboxes(List<String> fields) throws ApiException {
 		String url = setFields("mailboxes.json", fields);
-		return getPage(url, Mailbox.class);
+		return getPage(url, Mailbox.class, 200);
 	}
 	
-	public Page getFolders(Integer mailboxId) {
-		return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class);
+	public Page getFolders(Integer mailboxId) throws ApiException {
+		return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class, 200);
 	}
 	
 	public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
-		return getPage(url, Folder.class);
+		return getPage(url, Folder.class, 200);
 	}
 	
-	public Page getConversationsForFolder(Integer mailboxID, Integer folderID) {
-		return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class);
+	public Page getConversationsForFolder(Integer mailboxID, Integer folderID) throws ApiException {
+		return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class, 200);
 	}
 	
-	public Page getConversationsForFolder(Integer mailboxID, Integer folderID, List<String> fields) {
+	public Page getConversationsForFolder(Integer mailboxID, Integer folderID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", fields);
-		return getPage(url, Conversation.class);
+		return getPage(url, Conversation.class, 200);
 	}
 	
-	public Page getConversationsForMailbox(Integer mailboxID) {
-		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class);
+	public Page getConversationsForMailbox(Integer mailboxID) throws ApiException {
+		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class, 200);
 	}
 	
-	public Page getConversationsForMailbox(Integer mailboxID, List<String> fields) {
+	public Page getConversationsForMailbox(Integer mailboxID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/conversations.json", fields);
-		return getPage(url, Conversation.class);
+		return getPage(url, Conversation.class, 200);
 	}
 	
-	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID) {
-		return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class);
+	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID) throws ApiException {
+		return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class, 200);
 	}
 	
-	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, List<String> fields) {
+	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", fields);
-		return getPage(url, Conversation.class);
+		return getPage(url, Conversation.class, 200);
 	}
 	
-	public Conversation getConversation(Integer conversationID) {
-		return (Conversation)getItem("conversations/" + conversationID + ".json", Conversation.class);
+	public Conversation getConversation(Integer conversationID) throws ApiException {
+		return (Conversation)getItem("conversations/" + conversationID + ".json", Conversation.class, 200);
 	}
 	
 	public Conversation getConversation(Integer conversationID, List<String> fields) throws ApiException {
@@ -131,32 +149,30 @@ public class ApiClient {
 			throw new ApiException("Invalid conversationId in getConversation");		
 		}
 		String url = setFields("conversations/" + conversationID + ".json", fields);
-		return (Conversation)getItem(url, Conversation.class);
+		return (Conversation)getItem(url, Conversation.class, 200);
 	}
 	
-	// Could stand a revamp
 	public String getAttachmentData(Integer attachmentID) throws ApiException {
 		if (attachmentID == null || attachmentID < 1) {
 			throw new ApiException("Invalid attachmentID in getAttachmentData");		
 		}
-		String json = callServer("attachments/" + attachmentID + "data.json");
+		String json = callServer("attachments/" + attachmentID + "/data.json", 200);
 		JsonElement obj = (new JsonParser()).parse(json);
 		JsonElement elem  = obj.getAsJsonObject().get("item");
-		JsonElement dataObj  = elem.getAsJsonObject().get("data");
-		return dataObj.getAsString();
+		return getDecoded(elem.getAsJsonObject().get("data").getAsString());		
 	}
 	
-	public Page getCustomers() {
-		return getPage("customers.json", Customer.class);
+	public Page getCustomers() throws ApiException {
+		return getPage("customers.json", Customer.class, 200);
 	}
 	
 	public Page getCustomers(List<String> fields) throws ApiException {
 		String url = setFields("customers.json", fields);
-		return getPage(url, Customer.class);
+		return getPage(url, Customer.class, 200);
 	}
 	
-	public Customer getCustomer(Integer customerID) {
-		return (Customer)getItem("customers/" + customerID + ".json", Customer.class);
+	public Customer getCustomer(Integer customerID) throws ApiException {
+		return (Customer)getItem("customers/" + customerID + ".json", Customer.class, 200);
 	}
 	
 	public Customer getCustomer(Integer customerID, List<String> fields) throws ApiException {
@@ -164,11 +180,11 @@ public class ApiClient {
 			throw new ApiException("Invalid customerId in getCustomer");		
 		}
 		String url = setFields("customers/" + customerID + ".json", fields);
-		return (Customer)getItem(url, Customer.class);
+		return (Customer)getItem(url, Customer.class, 200);
 	}
 
-	public User getUser(Integer userID) {
-		return (User)getItem("users/" + userID + ".json", User.class);
+	public User getUser(Integer userID) throws ApiException {
+		return (User)getItem("users/" + userID + ".json", User.class, 200);
 	}
 	
 	public User getUser(Integer userID, List<String> fields) throws ApiException {
@@ -176,25 +192,25 @@ public class ApiClient {
 			throw new ApiException("Invalid userId in getUser");		
 		}
 		String url = setFields("users/" + userID + ".json", fields);
-		return (User)getItem(url, User.class);
+		return (User)getItem(url, User.class, 200);
 	}
 	
-	public Page getUsers() {
-		return getPage("users.json", User.class);
+	public Page getUsers() throws ApiException {
+		return getPage("users.json", User.class, 200);
 	}
 	
 	public Page getUsers(List<String> fields) throws ApiException {
 		String url = setFields("users.json", fields);
-		return getPage(url, User.class);
+		return getPage(url, User.class, 200);
 	}
 	
-	public Page getUsersForMailbox(Integer mailboxId) {
-		return getPage("mailboxes/" + mailboxId + "/users.json", User.class);
+	public Page getUsersForMailbox(Integer mailboxId) throws ApiException {
+		return getPage("mailboxes/" + mailboxId + "/users.json", User.class, 200);
 	}
 	
 	public Page getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
-		return getPage(url, User.class);
+		return getPage(url, User.class, 200);
 	}
 	
 	private String setFields(String url, List<String> fields) {
@@ -212,17 +228,22 @@ public class ApiClient {
 		return url;
 	}
 	
-	private Object getItem(String url, Class<?> clazzType) {
-		String json = callServer(url);
-		JsonElement obj = (new JsonParser()).parse(json);
-		JsonElement elem  = obj.getAsJsonObject().get("item");
+	private Object getItem(String url, Class<?> clazzType, int expectedCode) throws ApiException {
+		String json = callServer(url, expectedCode);
+		JsonElement obj  = (new JsonParser()).parse(json);
+		JsonElement item = obj.getAsJsonObject().get("item");
+				
+		JsonThreadLocal.set(item);
 		
-		Gson gson = new Gson();
-		return gson.fromJson(elem, clazzType);
+		Object clazz = builder.create().fromJson(item, clazzType);
+				
+		JsonThreadLocal.unset();
+		
+		return clazz;
 	}
 	
-	private Page getPage(String url, Class<?> clazzType) {
-		String json = callServer(url);
+	private Page getPage(String url, Class<?> clazzType, int expectedCode) throws ApiException {
+		String json = callServer(url, 200);
 				
 		JsonElement obj = (new JsonParser()).parse(json);
 				
@@ -270,10 +291,11 @@ public class ApiClient {
 		return col;
 	}
 	
-	private String callServer(String url) {
+	private String callServer(String url, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
 		
-		String response = null;
+		BufferedReader br  = null;
+		String response    = null;
 		
 	    try { 
 	        URL aUrl = new URL(BASE_URL + url); 
@@ -285,34 +307,118 @@ public class ApiClient {
 
 	        conn.setRequestProperty("Content-Type", "application/json"); 
 	        conn.setRequestProperty("Accept", "application/json"); 
-	        conn.setRequestProperty("Authorization", "Basic " + getBase64Encoded(apiKey + ":x"));
+	        conn.setRequestProperty("Authorization", "Basic " + getEncoded(apiKey + ":x"));
+	        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
 	        
-	        BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream()), Charset.forName("UTF8")));
-	     
-	        StringBuilder sb = new StringBuilder();
+	        conn.connect();
 	        
-	    	String line;	    		
-	    	while ((line = br.readLine()) != null) {
-	    		sb.append(line);
-	    	}
-	     	    		
-	    	conn.getResponseCode(); 
-	    	conn.disconnect(); 
-	    	
-	    	response = sb.toString();
+	        checkStatusCode(conn, expectedCode);
+	        
+	        br = new BufferedReader(new InputStreamReader((getInputStream(conn)), Charset.forName("UTF8")));
+
+	    	response = getResponse(br);
 	    	
 	    } catch(Exception e) { 
 	        throw new RuntimeException(e); 
 	    } finally {
-	    	if (conn != null) {
-	    		conn.disconnect(); 
-	    	}	    	
+	    	close(br);
+	    	close(conn);	    	
 	    }
 	    return response;
 	} 
 	
-	private String getBase64Encoded(String val) {
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encode(val.getBytes());		
+	private void checkStatusCode(HttpURLConnection conn, int expectedCode) throws ApiException, IOException {
+		int code = conn.getResponseCode();
+		if (code == expectedCode) {
+			return;
+		}
+		switch(code) {
+			case 400:
+				throw new InvalidFormatException("The request was not formatted correctly");				
+			case 401:
+				throw new InvalidApiKeyException("Invalid API key");
+			case 402:
+				throw new ApiKeySuspendedException("API key suspended");
+			case 403:
+				throw new AccessDeniedException("Access denied");
+			case 404:
+				throw new NotFoundException("Resource not found");
+			case 405:
+				throw new InvalidMethodException("Invalid method type");
+			case 429:
+				throw new ThrottleRateException("Throttle limit reached. Too many requests");
+			case 500:
+				throw new ServerException("Application error or server error");
+			case 503:
+				throw new ServiceUnavailableException("Service Temporarily Unavailable");
+			default:			
+				throw new ApiException("API key suspended");
+		}
+	}
+
+	private String getResponse(BufferedReader reader) throws IOException {
+		StringBuilder sb = new StringBuilder();
+        
+    	String line;	    		
+    	while ((line = reader.readLine()) != null) {
+    		sb.append(line);
+    	}    	
+    	
+    	return sb.toString();
+	}
+	
+	private void close(HttpURLConnection conn) {
+		if (conn != null) {
+			try {
+				conn.disconnect();
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+	}
+	private void close(BufferedReader reader) {
+		if (reader != null) {
+    		try {
+    			reader.close();
+			} catch (IOException e) {
+				// ignore
+			}
+    	}
+	}
+	
+	private InputStream getInputStream(HttpURLConnection conn) throws IOException {
+        String encoding = conn.getContentEncoding();
+        
+		InputStream inputStream = null;
+
+		//create the appropriate stream wrapper based on
+		//the encoding type
+		if (encoding != null) {
+			if (encoding.equalsIgnoreCase("gzip")) {
+				inputStream = new GZIPInputStream(conn.getInputStream());
+			}
+			else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+				inputStream = new InflaterInputStream(conn.getInputStream(), new Inflater(true));
+			}		
+		}
+		if (inputStream == null) {		
+			inputStream = conn.getInputStream();
+		}
+		return inputStream;
+	}
+	
+	private String getEncoded(String val) {		
+		return (new BASE64Encoder()).encode(val.getBytes());		
+	}
+	
+	private String getDecoded(String val) {
+		BASE64Decoder decoder = new BASE64Decoder();
+		try {
+			return new String(decoder.decodeBuffer(val));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;		
 	}
 }

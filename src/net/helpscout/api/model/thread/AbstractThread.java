@@ -1,35 +1,13 @@
 package net.helpscout.api.model.thread;
 
-import net.helpscout.api.model.thread.LineItem;
+import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.model.Attachment;
 
 import java.util.List;
 
-interface ConversationThread {
-	public boolean isPublished();
-	public boolean isDraft();
-	public boolean isHeldForReview();
-	public boolean hasAttachments();
-	public String getState();
-	public String getBody();
-	public List<String> getToList();
-	public List<String> getCcList();
-	public List<String> getBccList();
-	public List<Attachment> getAttachments();
-	public boolean isAssigned();
-	public boolean isActive();
-	public boolean isPending();
-	public boolean isClosed();
-	public boolean isSpam();
-	public int getAssignedTo();
-	public String getStatus();
-	public int getCreatedBy();
-	public int getFromMailboxId();
-}
-
-public class AbstractThread extends LineItem implements ConversationThread {
+public class AbstractThread extends BaseLineItem implements ConversationThread {
 	private int id;
-	private String state;
+	private ThreadState state;
 	private String body;
 	private List<String> toList;
 	private List<String> ccList;
@@ -37,13 +15,13 @@ public class AbstractThread extends LineItem implements ConversationThread {
 	private List<Attachment> attachments;
 	
 	public boolean isPublished() {
-		return this.state == "published";
+		return this.state == ThreadState.Published;
 	}
 	public boolean isDraft() {
-		return this.state == "draft";
+		return this.state == ThreadState.Draft;
 	}
 	public boolean isHeldForReview() {
-		return this.state == "underreview";
+		return this.state == ThreadState.UnderReview;
 	}
 	public boolean hasAttachments() {
 		return this.attachments != null && this.attachments.size() > 0;
@@ -51,7 +29,8 @@ public class AbstractThread extends LineItem implements ConversationThread {
 	public int getId() {
 		return id;
 	}
-	public String getState() {
+	
+	public ThreadState getState() {
 		return state;
 	}
 	public String getBody() {

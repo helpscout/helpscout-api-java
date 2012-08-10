@@ -1,5 +1,7 @@
 package net.helpscout.api.model;
 
+import java.util.Calendar;
+
 public class Folder {
 	private int id;
 	private String name;
@@ -7,7 +9,7 @@ public class Folder {
 	private int userId;
 	private int totalCount;
 	private int activeCount;
-	private String modifiedAt;
+	private Calendar modifiedAt;
 	
 	public int getId() {
 		return id;
@@ -27,7 +29,7 @@ public class Folder {
 	public int getActiveCount() {
 		return activeCount;
 	}
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 }

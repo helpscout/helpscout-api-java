@@ -1,5 +1,7 @@
 package net.helpscout.api.model;
 
+import java.util.Calendar;
+
 public class User {
 	private int id;
 	private String firstName;
@@ -8,8 +10,8 @@ public class User {
 	private String role;
 	private String timezone;
 	private String photoUrl;
-	private String createdAt;
-	private String modifiedAt;
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 	
 	public int getId() {
 		return id;
@@ -32,10 +34,10 @@ public class User {
 	public String getPhotoUrl() {
 		return photoUrl;
 	}
-	public String getCreatedAt() {
+	public Calendar getCreatedAt() {
 		return createdAt;
 	}
-	public String getModifiedAt() {
+	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
 }
