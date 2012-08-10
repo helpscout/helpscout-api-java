@@ -17,8 +17,9 @@ import java.util.List;
 public class TestingAPI {
 
   public static void main(String[] args) throws ApiException {
-  	ApiClient client = new ApiClient("your-api-key-here");
-		
+        ApiClient client = ApiClient.getInstance();
+        client.setKey("your-api-key-here");
+  			
   	List<String> fields = new ArrayList<String>();
   	fields.add("name");
 	fields.add("email");
