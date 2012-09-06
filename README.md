@@ -1,5 +1,5 @@
-helpscout-api-java
-=================
+Help Scout Java Wrapper
+=======================
 Java Wrapper for the Help Scout API. More information on our developer site: [http://developer.helpscout.net](http://developer.helpscout.net).
 
 Requirements
@@ -75,3 +75,21 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 * getUsers()
 * getUsersForMailbox(Integer mailboxID)
 * getUser(Integer userID)
+
+
+Example Usage: Webhooks
+------------------------
+<pre><code>
+Webhook webhook = new Webhook('secret-key-here', httpRequest);
+if (webhook.isValid()) {
+   String event = webhook.getEventType();
+		
+   if (webhook.isConversationEvent()) {				
+	Conversation convo = webhook.getConversation();
+	// do something
+   } else if (webhook.isCustomerEvent()) {
+	Customer customer = webhook.getCustomer();
+	// do something
+   }
+}
+</code></pre>
