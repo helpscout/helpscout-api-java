@@ -47,7 +47,7 @@ Field Selectors
 ---------------------
 Field selectors are given as a list of Strings. When field selectors are used, the appropriate object is created with the fields provided.
 
-Built-in Methods
+ApiClient Methods
 --------------------
 Each method also has a duplicate that allows you to pass in a list of Strings to specify desired fields (see Field Selectors).
 
