@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 
 public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
@@ -26,7 +27,7 @@ public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
 		JsonElement element = JsonThreadLocal.get();
 		JsonElement source = element.getAsJsonObject().get("source");
 				
-		if (source != null) {
+		if (source != null && !(source instanceof JsonNull)) {
 			String via = source.getAsJsonObject().get("via").getAsString();
 			if ("customer".equals(via)) {
 				return gson.create().fromJson(json, CustomerRef.class);	

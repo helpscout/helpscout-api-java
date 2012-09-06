@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,16 +21,6 @@ import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.Folder;
 import net.helpscout.api.model.Mailbox;
 import net.helpscout.api.model.User;
-import net.helpscout.api.model.ref.PersonRef;
-import net.helpscout.api.model.thread.LineItem;
-import net.helpscout.api.adapters.CalendarAdapter;
-import net.helpscout.api.adapters.PersonRefAdapter;
-import net.helpscout.api.adapters.StatusAdapter;
-import net.helpscout.api.adapters.ThreadStateAdapter;
-import net.helpscout.api.adapters.ThreadsAdapater;
-import net.helpscout.api.cbo.JsonThreadLocal;
-import net.helpscout.api.cbo.Status;
-import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.exception.AccessDeniedException;
 import net.helpscout.api.exception.ApiKeySuspendedException;
 import net.helpscout.api.exception.InvalidApiKeyException;
@@ -46,7 +35,6 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -57,15 +45,7 @@ public class ApiClient {
 		
 	private static ApiClient instance = null;
 	
-	private final GsonBuilder builder;
-	
-	private ApiClient() {
-		builder = new GsonBuilder();
-		builder.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter());
-		builder.registerTypeAdapter(Status.class, new StatusAdapter());
-		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
-		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));		
-		builder.registerTypeAdapter(Calendar.class, new CalendarAdapter());		
+	private ApiClient() {			
 	}
 	
 	public synchronized static ApiClient getInstance() {
@@ -233,13 +213,7 @@ public class ApiClient {
 		JsonElement obj  = (new JsonParser()).parse(json);
 		JsonElement item = obj.getAsJsonObject().get("item");
 				
-		JsonThreadLocal.set(item);
-		
-		Object clazz = builder.create().fromJson(item, clazzType);
-				
-		JsonThreadLocal.unset();
-		
-		return clazz;
+		return Parser.getInstance().getObject(item, clazzType);		
 	}
 	
 	private Page getPage(String url, Class<?> clazzType, int expectedCode) throws ApiException {
