@@ -7,7 +7,7 @@ Requirements
 * JDE 1.6
 * [google-gson](http://code.google.com/p/google-gson/)
 
-Example Usage
+Example Usage: API
 ---------------------
 <pre><code>
 import net.helpscout.api;
