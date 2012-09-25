@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Address {
-	private int id;
+	private Long id;
 	private List<String> lines;
 	private String city;
 	private String state;
@@ -12,14 +12,14 @@ public class Address {
 	private String country;
 	private Calendar createdAt;
 	private Calendar modifiedAt;
-	
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
 	public List<String> getLines() {
 		return lines;
 	}
-	
+
 	public String getCity() {
 		return city;
 	}

@@ -1,9 +1,9 @@
 package net.helpscout.api.model.ref;
 
 public interface PersonRef {
-		
-	public int getId();
+
+	public Long getId();
 	public String getFirstName();
 	public String getLastName();
-	public String getEmail();		
+	public String getEmail();
 }

@@ -6,14 +6,14 @@ import net.helpscout.api.model.Attachment;
 import java.util.List;
 
 public class AbstractThread extends BaseLineItem implements ConversationThread {
-	private int id;
+	private Long id;
 	private ThreadState state;
 	private String body;
 	private List<String> toList;
 	private List<String> ccList;
 	private List<String> bccList;
 	private List<Attachment> attachments;
-	
+
 	public boolean isPublished() {
 		return this.state == ThreadState.Published;
 	}
@@ -26,10 +26,10 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 	public boolean hasAttachments() {
 		return this.attachments != null && this.attachments.size() > 0;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	
+
 	public ThreadState getState() {
 		return state;
 	}

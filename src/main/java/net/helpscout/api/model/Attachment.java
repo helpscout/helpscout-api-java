@@ -1,19 +1,19 @@
 package net.helpscout.api.model;
 
 public class Attachment {
-	private int id;
+	private Long id;
 	private String mimeType;
 	private String fileName;
 	private int size;
 	private int width;
 	private int height;
 	private String url;
-	
+
 	public boolean isImage() {
 		return mimeType != null && mimeType.startsWith("image");
 	}
-	
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
 	public String getMimeType() {
@@ -34,5 +34,5 @@ public class Attachment {
 	public String getUrl() {
 		return url;
 	}
-	
+
 }

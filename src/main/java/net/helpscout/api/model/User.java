@@ -3,7 +3,7 @@ package net.helpscout.api.model;
 import java.util.Calendar;
 
 public class User {
-	private int id;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -12,8 +12,8 @@ public class User {
 	private String photoUrl;
 	private Calendar createdAt;
 	private Calendar modifiedAt;
-	
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
 	public String getFirstName() {

@@ -3,15 +3,15 @@ package net.helpscout.api.model;
 import java.util.Calendar;
 
 public class Folder {
-	private int id;
+	private Long id;
 	private String name;
 	private String type;
 	private int userId;
 	private int totalCount;
 	private int activeCount;
 	private Calendar modifiedAt;
-	
-	public int getId() {
+
+	public Long getId() {
 		return id;
 	}
 	public String getName() {
