@@ -2,7 +2,7 @@ package net.helpscout.api.model;
 
 import net.helpscout.api.model.customer.*;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Customer {
@@ -19,8 +19,8 @@ public class Customer {
 	private String photoUrl;
 	private String photoType;
 
-	private Calendar createdAt;
-	private Calendar modifiedAt;
+	private Date createdAt;
+	private Date modifiedAt;
 
 	private String background;
 	private Address address;
@@ -70,12 +70,20 @@ public class Customer {
 		return location;
 	}
 
-	public Calendar getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public Calendar getModifiedAt() {
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getModifiedAt() {
 		return modifiedAt;
+	}
+
+	public void setModifiedAt(Date modifiedAt) {
+		this.modifiedAt = modifiedAt;
 	}
 
 	public boolean hasBackground() {
@@ -172,14 +180,6 @@ public class Customer {
 
 	public void setPhotoType(String photoType) {
 		this.photoType = photoType;
-	}
-
-	public void setCreatedAt(Calendar createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public void setModifiedAt(Calendar modifiedAt) {
-		this.modifiedAt = modifiedAt;
 	}
 
 	public void setBackground(String background) {

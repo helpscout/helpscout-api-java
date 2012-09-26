@@ -7,7 +7,7 @@ import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 import net.helpscout.api.model.thread.LineItem;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Conversation {
@@ -24,8 +24,8 @@ public class Conversation {
 	private Status status;
 	private String subject;
 	private String preview;
-	private Calendar createdAt;
-	private Calendar modifiedAt;
+	private Date createdAt;
+	private Date modifiedAt;
 	private String closedAt;
 	private UserRef closedBy;
 
@@ -82,10 +82,10 @@ public class Conversation {
 		return createdBy != null && createdBy instanceof CustomerRef;
 	}
 
-	public Calendar getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public Calendar getModifiedAt() {
+	public Date getModifiedAt() {
 		return modifiedAt;
 	}
 	public String getClosedAt() {

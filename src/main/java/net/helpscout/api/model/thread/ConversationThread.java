@@ -1,8 +1,5 @@
 package net.helpscout.api.model.thread;
 
-import java.util.Calendar;
-import java.util.List;
-
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.model.Attachment;
@@ -10,7 +7,10 @@ import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
-public interface ConversationThread {	
+import java.util.Date;
+import java.util.List;
+
+public interface ConversationThread {
 	public boolean isPublished();
 	public boolean isDraft();
 	public boolean isHeldForReview();
@@ -30,6 +30,6 @@ public interface ConversationThread {
 	public UserRef getAssignedTo();
 	public Status getStatus();
 	public PersonRef getCreatedBy();
-	public Calendar getCreatedAt();
+	public Date getCreatedAt();
 	public MailboxRef getFromMailbox();
 }

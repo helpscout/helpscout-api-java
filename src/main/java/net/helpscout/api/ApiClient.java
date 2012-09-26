@@ -1,9 +1,6 @@
 package net.helpscout.api;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
 import org.slf4j.Logger;
@@ -126,7 +123,7 @@ public class ApiClient {
 		if (attachmentID == null || attachmentID < 1) {
 			throw new ApiException("Invalid attachmentID in getAttachmentData");
 		}
-		String json = callServer("attachments/" + attachmentID + "/data.json", METHOD_GET, 200);
+		String json = doGet("attachments/" + attachmentID + "/data.json", 200);
 		JsonElement obj = (new JsonParser()).parse(json);
 		JsonElement elem  = obj.getAsJsonObject().get("item");
 		return getDecoded(elem.getAsJsonObject().get("data").getAsString());
@@ -141,15 +138,15 @@ public class ApiClient {
 		return getPage(url, Customer.class, 200);
 	}
 
-	public Customer getCustomer(Integer customerID) throws ApiException {
-		return (Customer)getItem("customers/" + customerID + ".json", Customer.class, 200);
+	public Customer getCustomer(Long customerId) throws ApiException {
+		return (Customer)getItem("customers/" + customerId + ".json", Customer.class, 200);
 	}
 
-	public Customer getCustomer(Integer customerID, List<String> fields) throws ApiException {
-		if (customerID == null || customerID < 1) {
+	public Customer getCustomer(Long customerId, List<String> fields) throws ApiException {
+		if (customerId == null || customerId < 1) {
 			throw new ApiException("Invalid customerId in getCustomer");
 		}
-		String url = setFields("customers/" + customerID + ".json", fields);
+		String url = setFields("customers/" + customerId + ".json", fields);
 		return (Customer)getItem(url, Customer.class, 200);
 	}
 
@@ -183,15 +180,16 @@ public class ApiClient {
 		return getPage(url, User.class, 200);
 	}
 
-	public Customer createCustomer(Customer customer) throws ApiException {
-		Gson gson = new Gson();
-		String json = gson.toJson(customer);
+	public void createCustomer(Customer customer) throws ApiException {
+		String json = new Gson().toJson(customer);
+		Long id = doPost("customers.json", json, 201);
+		customer.setId(id);
+	}
 
-		String response = callServer("customers.json?reload=true", METHOD_POST, 201, json);
-		JsonElement obj  = (new JsonParser()).parse(response);
-		JsonElement item = obj.getAsJsonObject().get("item");
-
-		return (Customer)Parser.getInstance().getObject(item, Customer.class);
+	public void updateCustomer(Customer customer) throws ApiException {
+		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		String json = builder.create().toJson(customer, Customer.class);
+		doPut("customers/" + customer.getId() + ".json", json, 200);
 	}
 
 	private String setFields(String url, List<String> fields) {
@@ -210,7 +208,7 @@ public class ApiClient {
 	}
 
 	private Object getItem(String url, Class<?> clazzType, int expectedCode) throws ApiException {
-		String json = callServer(url, METHOD_GET, expectedCode);
+		String json = doGet(url, expectedCode);
 		JsonElement obj  = (new JsonParser()).parse(json);
 		JsonElement item = obj.getAsJsonObject().get("item");
 
@@ -218,8 +216,7 @@ public class ApiClient {
 	}
 
 	private Page getPage(String url, Class<?> clazzType, int expectedCode) throws ApiException {
-		String json = callServer(url, METHOD_GET, 200);
-
+		String json = doGet(url, 200);
 		JsonElement obj = (new JsonParser()).parse(json);
 
 		Set<Map.Entry<String, JsonElement>> set = obj.getAsJsonObject().entrySet();
@@ -253,37 +250,27 @@ public class ApiClient {
 
 	private ArrayList<Object> getPageItems(JsonElement elem, Class<?> clazzType) {
 		Gson gson = new Gson();
-
 		JsonArray ar = elem.getAsJsonArray();
-		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 
+		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 		for(JsonElement e : ar) {
-			Object o = gson.fromJson(e, clazzType);
-			if (o != null) {
-				col.add(o);
+			try {
+				Object o = gson.fromJson(e, clazzType);
+				if (o != null) {
+					col.add(o);
+				}
+			} catch (Exception ex) {
+				log.debug("BKD => " + e.toString());
 			}
 		}
 		return col;
 	}
 
-	private String callServer(String url, String method, int expectedCode, String requestBody) throws ApiException {
+	private Long doPost(String url, String requestBody, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
-
-		BufferedReader br  = null;
-		String response    = null;
-
+		Long id = null;
 		try {
-			URL aUrl = new URL(BASE_URL + url);
-
-			conn = (HttpURLConnection) aUrl.openConnection();
-
-			conn.setInstanceFollowRedirects(false);
-			conn.setRequestMethod(method);
-
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setRequestProperty("Accept", "application/json");
-			conn.setRequestProperty("Authorization", "Basic " + getEncoded(apiKey + ":x"));
-			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+		    conn = getConnection(apiKey, url, METHOD_POST);
 
 			if (requestBody != null) {
 				conn.setDoOutput(true);
@@ -292,18 +279,68 @@ public class ApiClient {
 					output = conn.getOutputStream();
 					output.write(requestBody.getBytes("UTF-8"));
 				} finally {
-					if (output != null) try { output.close(); } catch (IOException logOrIgnore) {}
+					if (output != null) {
+						try { output.close(); } catch (IOException ioe) {}
+					}
 				}
 			}
 
 			conn.connect();
+			checkStatusCode(conn, expectedCode);
 
+			String location = conn.getHeaderField("LOCATION");
+			id = new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		} finally {
+			close(conn);
+		}
+		return id;
+	}
+
+	private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
+		HttpURLConnection conn = null;
+		Long id = null;
+		try {
+			conn = getConnection(apiKey, url, METHOD_PUT);
+
+			if (requestBody != null) {
+				conn.setDoOutput(true);
+				OutputStream output = null;
+				try {
+					output = conn.getOutputStream();
+					output.write(requestBody.getBytes("UTF-8"));
+				} finally {
+					if (output != null) {
+						try { output.close(); } catch (IOException ioe) {}
+					}
+				}
+			}
+
+			conn.connect();
+			checkStatusCode(conn, expectedCode);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		} finally {
+			close(conn);
+		}
+	}
+
+	private String doGet(String url, int expectedCode) throws ApiException {
+		HttpURLConnection conn = null;
+
+		BufferedReader br  = null;
+		String response    = null;
+
+		try {
+			conn = getConnection(apiKey, url, METHOD_GET);
+			conn.connect();
 			checkStatusCode(conn, expectedCode);
 
 			br = new BufferedReader(new InputStreamReader((getInputStream(conn)), Charset.forName("UTF8")));
-
 			response = getResponse(br);
-
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -313,8 +350,19 @@ public class ApiClient {
 		return response;
 	}
 
-	private String callServer(String url, String method, int expectedCode) throws ApiException {
-		return callServer(url, method, expectedCode, null);
+	private HttpURLConnection getConnection(String apiKey, String url, String method) throws Exception {
+		URL aUrl = new URL(BASE_URL + url);
+
+		HttpURLConnection conn = (HttpURLConnection) aUrl.openConnection();
+
+		conn.setInstanceFollowRedirects(false);
+		conn.setRequestMethod(method);
+
+		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("Authorization", "Basic " + getEncoded(apiKey + ":x"));
+		conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
+		return conn;
 	}
 
 	private void checkStatusCode(HttpURLConnection conn, int expectedCode) throws ApiException, IOException {

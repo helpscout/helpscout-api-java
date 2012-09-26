@@ -1,6 +1,6 @@
 package net.helpscout.api.model;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class User {
 	private Long id;
@@ -10,8 +10,8 @@ public class User {
 	private String role;
 	private String timezone;
 	private String photoUrl;
-	private Calendar createdAt;
-	private Calendar modifiedAt;
+	private Date createdAt;
+	private Date modifiedAt;
 
 	public Long getId() {
 		return id;
@@ -34,10 +34,10 @@ public class User {
 	public String getPhotoUrl() {
 		return photoUrl;
 	}
-	public Calendar getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public Calendar getModifiedAt() {
+	public Date getModifiedAt() {
 		return modifiedAt;
 	}
 }

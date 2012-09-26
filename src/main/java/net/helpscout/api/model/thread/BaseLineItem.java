@@ -1,20 +1,20 @@
 package net.helpscout.api.model.thread;
 
-import java.util.Calendar;
-
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
+import java.util.Date;
+
 public class BaseLineItem implements LineItem {
 	private UserRef assignedTo;
 	private Status status;
 	private PersonRef createdBy;
-	private Calendar createdAt;
-	
+	private Date createdAt;
+
 	private MailboxRef fromMailbox;
-	
+
 	public boolean isAssigned() {
 		return this.assignedTo != null;
 	}
@@ -36,16 +36,16 @@ public class BaseLineItem implements LineItem {
 	public Status getStatus() {
 		return status;
 	}
-	
+
 	public boolean isStatusChange() {
 		return status != Status.NoChange;
 	}
-	
+
 	public PersonRef getCreatedBy() {
 		return createdBy;
 	}
-	
-	public Calendar getCreatedAt() {
+
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 	public MailboxRef getFromMailbox() {
