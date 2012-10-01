@@ -51,4 +51,16 @@ public class BaseLineItem implements LineItem {
 	public MailboxRef getFromMailbox() {
 		return fromMailbox;
 	}
+
+	public void setAssignedTo(UserRef assignedTo) {
+		this.assignedTo = assignedTo;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public void setCreatedBy(PersonRef person) {
+		this.createdBy = person;
+	}
 }

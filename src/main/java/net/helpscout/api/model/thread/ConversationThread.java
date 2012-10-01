@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface ConversationThread {
 	public Long getId();
+	public String getType();
 	public boolean isPublished();
 	public boolean isDraft();
 	public boolean isHeldForReview();
@@ -33,4 +34,16 @@ public interface ConversationThread {
 	public PersonRef getCreatedBy();
 	public Date getCreatedAt();
 	public MailboxRef getFromMailbox();
+
+	public void setId(Long id);
+	public void setType(String type);
+	public void setState(ThreadState state);
+	public void setStatus(Status status);
+	public void setBody(String body);
+	public void setToList(List<String> toList);
+	public void setCcList(List<String> ccList);
+	public void setBccList(List<String> bccList);
+	public void setAttachments(List<Attachment> attachments);
+	public void setAssignedTo(UserRef assignedTo);
+	public void setCreatedBy(PersonRef person);
 }

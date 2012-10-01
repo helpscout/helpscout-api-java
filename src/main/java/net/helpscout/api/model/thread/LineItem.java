@@ -6,24 +6,26 @@ import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
 public interface LineItem {
-	
+
 	public boolean isAssigned();
-	
+
 	public boolean isActive();
-	
+
 	public boolean isPending();
-	
+
 	public boolean isClosed();
-	
+
 	public boolean isSpam();
-	
+
 	public UserRef getAssignedTo();
-	
+
 	public Status getStatus();
-		
+
 	public boolean isStatusChange();
-		
+
 	public PersonRef getCreatedBy();
-		
-	public MailboxRef getFromMailbox();	
+
+	public MailboxRef getFromMailbox();
+
+	public void setAssignedTo(UserRef assignedTo);
 }
