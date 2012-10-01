@@ -3,10 +3,12 @@ package net.helpscout.api;
 import com.google.gson.*;
 import net.helpscout.api.adapters.StatusAdapter;
 import net.helpscout.api.adapters.ThreadStateAdapter;
+import net.helpscout.api.adapters.ThreadsAdapater;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
+import net.helpscout.api.model.thread.LineItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
@@ -205,7 +207,13 @@ public class ApiClient {
 	}
 
 	public void createConversation(Conversation conversation) throws ApiException {
-		String json = new Gson().toJson(conversation);
+		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
+				.registerTypeAdapter(Status.class, new StatusAdapter());
+		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
+
+		String json = builder.create().toJson(conversation);
+		log.debug("BKD => Conversation JSON: " + json);
 		Long id = doPost("conversations.json", json, 201);
 		conversation.setId(id);
 	}
