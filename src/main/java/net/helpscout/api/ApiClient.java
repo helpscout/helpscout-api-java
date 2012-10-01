@@ -1,6 +1,10 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
+import net.helpscout.api.adapters.StatusAdapter;
+import net.helpscout.api.adapters.ThreadStateAdapter;
+import net.helpscout.api.cbo.Status;
+import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
 import org.slf4j.Logger;
@@ -107,7 +111,7 @@ public class ApiClient {
 		return getPage(url, Conversation.class, 200);
 	}
 
-	public Conversation getConversation(Integer conversationID) throws ApiException {
+	public Conversation getConversation(Long conversationID) throws ApiException {
 		return (Conversation)getItem("conversations/" + conversationID + ".json", Conversation.class, 200);
 	}
 
@@ -130,7 +134,15 @@ public class ApiClient {
 	}
 
 	public Page getCustomers() throws ApiException {
-		return getPage("customers.json", Customer.class, 200);
+		return getCustomers(new Integer(null));
+	}
+
+	public Page getCustomers(Integer page) throws ApiException {
+		if (page != null) {
+			return getPage("customers.json?page=" + page, Customer.class, 200);
+		} else {
+			return getPage("customers.json", Customer.class, 200);
+		}
 	}
 
 	public Page getCustomers(List<String> fields) throws ApiException {
@@ -190,6 +202,22 @@ public class ApiClient {
 		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		String json = builder.create().toJson(customer, Customer.class);
 		doPut("customers/" + customer.getId() + ".json", json, 200);
+	}
+
+	public void createConversation(Conversation conversation) throws ApiException {
+		String json = new Gson().toJson(conversation);
+		Long id = doPost("conversations.json", json, 201);
+		conversation.setId(id);
+	}
+
+	public void updateConversation(Conversation conversation) throws ApiException {
+		GsonBuilder builder = new GsonBuilder()
+				.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
+				.registerTypeAdapter(Status.class, new StatusAdapter());
+
+		String json = builder.create().toJson(conversation, Conversation.class);
+		doPut("conversations/" + conversation.getId() + ".json", json, 200);
 	}
 
 	private String setFields(String url, List<String> fields) {

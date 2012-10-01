@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface ConversationThread {
+	public Long getId();
 	public boolean isPublished();
 	public boolean isDraft();
 	public boolean isHeldForReview();
