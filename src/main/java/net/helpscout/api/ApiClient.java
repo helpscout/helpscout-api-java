@@ -152,6 +152,18 @@ public class ApiClient {
 		return getPage(url, Customer.class, 200);
 	}
 
+	public Page searchCustomers(String email, String firstName, String lastName) throws ApiException {
+		return searchCustomers(email, firstName, lastName, null, null);
+	}
+
+	public Page searchCustomers(String email, String firstName, String lastName, Integer page,
+			List<String> fields) throws ApiException {
+		StringBuilder url = new StringBuilder();
+		url.append(setFields("customers.json", fields));
+		addSearchParams(url, email, firstName, lastName, page);
+		return getPage(url.toString(), Customer.class, 200);
+	}
+
 	public Customer getCustomer(Long customerId) throws ApiException {
 		return (Customer)getItem("customers/" + customerId + ".json", Customer.class, 200);
 	}
@@ -231,7 +243,13 @@ public class ApiClient {
 	private String setFields(String url, List<String> fields) {
 		if (fields != null && fields.size() > 0) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(url + "?fields=");
+			sb.append(url);
+			if (url.indexOf("?") > 0) {
+				sb.append("&");
+			} else {
+				sb.append("?");
+			}
+			sb.append("fields=");
 		    String sep = "";
 		    Iterator<String> iterator = fields.iterator();
 		    while (iterator.hasNext()) {
@@ -241,6 +259,44 @@ public class ApiClient {
 		    url = sb.toString();
 		}
 		return url;
+	}
+
+	private void addSearchParams(StringBuilder url, String email, String firstName, String lastName, Integer page) {
+		if (email != null && email.trim().length() > 0) {
+			if (url.toString().indexOf("?") > 0) {
+				url.append("&");
+			} else {
+				url.append("?");
+			}
+			url.append("email=").append(email.trim());
+		}
+
+		if (firstName != null && firstName.trim().length() > 0) {
+			if (url.toString().indexOf("?") > 0) {
+				url.append("&");
+			} else {
+				url.append("?");
+			}
+			url.append("firstName=").append(email.trim());
+		}
+
+		if (lastName != null && lastName.trim().length() > 0) {
+			if (url.toString().indexOf("?") > 0) {
+				url.append("&");
+			} else {
+				url.append("?");
+			}
+			url.append("lastName=").append(lastName.trim());
+		}
+
+		if (page != null) {
+			if (url.toString().indexOf("?") > 0) {
+				url.append("&");
+			} else {
+				url.append("?");
+			}
+			url.append("page=").append(page);
+		}
 	}
 
 	private Object getItem(String url, Class<?> clazzType, int expectedCode) throws ApiException {
