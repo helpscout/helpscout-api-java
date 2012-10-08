@@ -33,8 +33,6 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem> {
 			item = gson.create().fromJson(json, ForwardParent.class);
 		} else if ("forwardchild".equals(theType)) {
 			item = gson.create().fromJson(json, ForwardChild.class);
-		} else if ("chat".equals(theType)) {
-			item = gson.create().fromJson(json, Chat.class);
 		}
 
 		JsonThreadLocal.unset();

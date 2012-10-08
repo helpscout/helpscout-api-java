@@ -12,7 +12,6 @@ import java.util.List;
 
 public class Conversation {
 	private int id;
-	private String type;
 	private int folderId;
 	private boolean isDraft;
 	private int number;
@@ -40,10 +39,6 @@ public class Conversation {
 
 	public int getId() {
 		return id;
-	}
-
-	public String getType() {
-		return type;
 	}
 
 	public int getFolderId() {

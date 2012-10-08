@@ -5,7 +5,6 @@ public abstract class AbstractRef implements PersonRef {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String type;
 
 	public int getId() {
 		return id;
@@ -21,9 +20,5 @@ public abstract class AbstractRef implements PersonRef {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public String getType() {
-		return type;
 	}
 }
