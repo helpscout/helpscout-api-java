@@ -6,4 +6,9 @@ public interface PersonRef {
 	public String getFirstName();
 	public String getLastName();
 	public String getEmail();
+
+	public void setId(Long id);
+	public void setFirstName(String firstName);
+	public void setLastName(String lastName);
+	public void setEmail(String email);
 }

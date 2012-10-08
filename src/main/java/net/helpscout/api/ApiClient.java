@@ -8,6 +8,7 @@ import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
+import net.helpscout.api.model.thread.ConversationThread;
 import net.helpscout.api.model.thread.LineItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,6 +231,23 @@ public class ApiClient {
 		conversation.setId(id);
 	}
 
+	public void createConversationThread(Long conversationId, ConversationThread thread) throws ApiException {
+		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
+				.registerTypeAdapter(Status.class, new StatusAdapter());
+		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
+
+		String json = builder.create().toJson(thread);
+		log.debug("BKD => Thread JSON: " + json);
+		Long id = doPost("conversations/" + conversationId + ".json", json, 201);
+		thread.setId(id);
+	}
+
+	public void deleteConversation(Long id) throws ApiException {
+		String url = "conversations/" + id + ".json";
+		doDelete(url, 200);
+	}
+
 	public void updateConversation(Conversation conversation) throws ApiException {
 		GsonBuilder builder = new GsonBuilder()
 				.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -393,7 +411,6 @@ public class ApiClient {
 
 	private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
-		Long id = null;
 		try {
 			conn = getConnection(apiKey, url, METHOD_PUT);
 
@@ -442,6 +459,20 @@ public class ApiClient {
 		return response;
 	}
 
+	private void doDelete(String url, int expectedCode) throws ApiException {
+		HttpURLConnection conn = null;
+		try {
+			conn = getConnection(apiKey, url, METHOD_DELETE);
+			conn.connect();
+			checkStatusCode(conn, expectedCode);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		} finally {
+			close(conn);
+		}
+	}
+
 	private HttpURLConnection getConnection(String apiKey, String url, String method) throws Exception {
 		URL aUrl = new URL(BASE_URL + url);
 
@@ -450,8 +481,10 @@ public class ApiClient {
 		conn.setInstanceFollowRedirects(false);
 		conn.setRequestMethod(method);
 
-		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setRequestProperty("Accept", "application/json");
+		if (!method.equalsIgnoreCase(METHOD_DELETE)) {
+			conn.setRequestProperty("Content-Type", "application/json");
+			conn.setRequestProperty("Accept", "application/json");
+		}
 		conn.setRequestProperty("Authorization", "Basic " + getEncoded(apiKey + ":x"));
 		conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
 		return conn;

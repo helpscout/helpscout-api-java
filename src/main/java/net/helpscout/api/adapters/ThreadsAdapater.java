@@ -26,17 +26,17 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializ
 		LineItem item = null;
 
 		String theType = obj.get("type").getAsString();
-		if ("lineitem".equals(theType)) {
+		if (ThreadType.LineItem.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, BaseLineItem.class);
-		} else if ("message".equals(theType)) {
+		} else if (ThreadType.Message.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, Message.class);
-		} else if ("customer".equals(theType)) {
+		} else if (ThreadType.Customer.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, Customer.class);
-		} else if ("note".equals(theType)) {
+		} else if (ThreadType.Note.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, Note.class);
-		} else if ("forwardparent".equals(theType)) {
+		} else if (ThreadType.ForwardParent.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, ForwardParent.class);
-		} else if ("forwardchild".equals(theType)) {
+		} else if (ThreadType.ForwardChild.getLabel().equals(theType)) {
 			item = gson.create().fromJson(json, ForwardChild.class);
 		}
 
@@ -46,7 +46,9 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializ
 
 	public JsonElement serialize(LineItem lineItem, Type typeOfT, JsonSerializationContext context) {
 		AbstractThread thread = (AbstractThread)lineItem;
-		if (lineItem.getClass().isAssignableFrom(Message.class)) {
+		if (lineItem.getClass().isAssignableFrom(BaseLineItem.class)) {
+			thread.setType(ThreadType.LineItem.getLabel());
+		} else if (lineItem.getClass().isAssignableFrom(Message.class)) {
 			thread.setType(ThreadType.Message.getLabel());
 		} else if (lineItem.getClass().isAssignableFrom(Note.class)) {
 			thread.setType(ThreadType.Note.getLabel());
