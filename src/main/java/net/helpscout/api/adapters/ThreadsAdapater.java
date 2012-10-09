@@ -48,6 +48,8 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializ
 
 	public JsonElement serialize(LineItem lineItem, Type typeOfT, JsonSerializationContext context) {
 		AbstractThread thread = (AbstractThread)lineItem;
+
+		// Set the type of thread
 		if (lineItem.getClass().isAssignableFrom(BaseLineItem.class)) {
 			thread.setType(ThreadType.LineItem.getLabel());
 		} else if (lineItem.getClass().isAssignableFrom(Message.class)) {
@@ -63,8 +65,8 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializ
 		} else if (lineItem.getClass().isAssignableFrom(Chat.class)) {
 			thread.setType(ThreadType.Chat.getLabel());
 		}
+
 		JsonElement json = gson.create().toJsonTree(thread);
-		log.debug("BKD => Thread: " + json.toString());
 		return json;
 	}
 }

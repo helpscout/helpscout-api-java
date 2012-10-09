@@ -1,15 +1,18 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
+import net.helpscout.api.adapters.CreatedByTypeAdapter;
 import net.helpscout.api.adapters.StatusAdapter;
 import net.helpscout.api.adapters.ThreadStateAdapter;
 import net.helpscout.api.adapters.ThreadsAdapater;
+import net.helpscout.api.cbo.CreatedByType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
-import net.helpscout.api.model.thread.ConversationThread;
-import net.helpscout.api.model.thread.LineItem;
+import net.helpscout.api.model.Customer;
+import net.helpscout.api.model.thread.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
@@ -19,7 +22,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -222,25 +228,31 @@ public class ApiClient {
 	public void createConversation(Conversation conversation) throws ApiException {
 		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
-				.registerTypeAdapter(Status.class, new StatusAdapter());
+				.registerTypeAdapter(Status.class, new StatusAdapter())
+				.registerTypeAdapter(CreatedByType.class, new CreatedByTypeAdapter());
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 
 		String json = builder.create().toJson(conversation);
-		log.debug("BKD => Conversation JSON: " + json);
 		Long id = doPost("conversations.json", json, 201);
 		conversation.setId(id);
 	}
 
 	public void createConversationThread(Long conversationId, ConversationThread thread) throws ApiException {
-		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
-				.registerTypeAdapter(Status.class, new StatusAdapter());
-		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
+		try {
+			setThreadProperties(thread);
 
-		String json = builder.create().toJson(thread);
-		log.debug("BKD => Thread JSON: " + json);
-		Long id = doPost("conversations/" + conversationId + ".json", json, 201);
-		thread.setId(id);
+			GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+					.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
+					.registerTypeAdapter(Status.class, new StatusAdapter())
+					.registerTypeAdapter(CreatedByType.class, new CreatedByTypeAdapter());
+
+			String json = builder.create().toJson(thread);
+			Long id = doPost("conversations/" + conversationId + ".json", json, 201);
+			thread.setId(id);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new ApiException(ex.getMessage());
+		}
 	}
 
 	public void deleteConversation(Long id) throws ApiException {
@@ -258,6 +270,27 @@ public class ApiClient {
 		doPut("conversations/" + conversation.getId() + ".json", json, 200);
 	}
 
+	private void setThreadProperties(ConversationThread thread) {
+		AbstractThread theThread = (AbstractThread)thread;
+
+		// Set the type of thread
+		if (theThread.getClass().isAssignableFrom(BaseLineItem.class)) {
+			thread.setType(ThreadType.LineItem.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(Message.class)) {
+			thread.setType(ThreadType.Message.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(Note.class)) {
+			thread.setType(ThreadType.Note.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(Customer.class)) {
+			thread.setType(ThreadType.Customer.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(ForwardParent.class)) {
+			thread.setType(ThreadType.ForwardParent.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(ForwardChild.class)) {
+			thread.setType(ThreadType.ForwardChild.getLabel());
+		} else if (theThread.getClass().isAssignableFrom(Chat.class)) {
+			thread.setType(ThreadType.Chat.getLabel());
+		}
+	}
+
 	private String setFields(String url, List<String> fields) {
 		if (fields != null && fields.size() > 0) {
 			StringBuilder sb = new StringBuilder();
@@ -269,11 +302,10 @@ public class ApiClient {
 			}
 			sb.append("fields=");
 		    String sep = "";
-		    Iterator<String> iterator = fields.iterator();
-		    while (iterator.hasNext()) {
-		    	sb.append(sep).append(iterator.next());
-		        sep = ",";
-		    }
+			for (String field : fields) {
+				sb.append(sep).append(field);
+				sep = ",";
+			}
 		    url = sb.toString();
 		}
 		return url;
@@ -295,7 +327,7 @@ public class ApiClient {
 			} else {
 				url.append("?");
 			}
-			url.append("firstName=").append(email.trim());
+			url.append("firstName=").append(firstName.trim());
 		}
 
 		if (lastName != null && lastName.trim().length() > 0) {
@@ -333,10 +365,8 @@ public class ApiClient {
 
 		Page p = new Page();
 
-		Iterator<Map.Entry<String, JsonElement>> elem = set.iterator();
-		while(elem.hasNext()) {
-			Map.Entry<String, JsonElement> a = elem.next();
-			String key      = a.getKey();
+		for (Map.Entry<String, JsonElement> a : set) {
+			String key = a.getKey();
 			JsonElement val = a.getValue();
 
 			if (key.equals("page")) {
@@ -377,6 +407,7 @@ public class ApiClient {
 	}
 
 	private Long doPost(String url, String requestBody, int expectedCode) throws ApiException {
+		log.debug("BKD => Post request body: " + requestBody);
 		HttpURLConnection conn = null;
 		Long id = null;
 		try {
@@ -390,7 +421,7 @@ public class ApiClient {
 					output.write(requestBody.getBytes("UTF-8"));
 				} finally {
 					if (output != null) {
-						try { output.close(); } catch (IOException ioe) {}
+						try { output.close(); } catch (IOException ignored) {}
 					}
 				}
 			}
@@ -402,6 +433,7 @@ public class ApiClient {
 			id = new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
 
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		} finally {
 			close(conn);
@@ -422,7 +454,7 @@ public class ApiClient {
 					output.write(requestBody.getBytes("UTF-8"));
 				} finally {
 					if (output != null) {
-						try { output.close(); } catch (IOException ioe) {}
+						try { output.close(); } catch (IOException ignored) {}
 					}
 				}
 			}
@@ -559,8 +591,7 @@ public class ApiClient {
 		if (encoding != null) {
 			if (encoding.equalsIgnoreCase("gzip")) {
 				inputStream = new GZIPInputStream(conn.getInputStream());
-			}
-			else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+			} else if (encoding.equalsIgnoreCase("deflate")) {
 				inputStream = new InflaterInputStream(conn.getInputStream(), new Inflater(true));
 			}
 		}

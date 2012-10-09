@@ -18,21 +18,27 @@ public class BaseLineItem implements LineItem {
 	public boolean isAssigned() {
 		return this.assignedTo != null;
 	}
+
 	public boolean isActive() {
 		return this.status == Status.Active;
 	}
+
 	public boolean isPending() {
 		return this.status == Status.Pending;
 	}
+
 	public boolean isClosed() {
 		return this.status == Status.Closed;
 	}
+
 	public boolean isSpam() {
 		return this.status == Status.Spam;
 	}
+
 	public UserRef getAssignedTo() {
 		return assignedTo;
 	}
+
 	public Status getStatus() {
 		return status;
 	}
@@ -48,6 +54,11 @@ public class BaseLineItem implements LineItem {
 	public Date getCreatedAt() {
 		return createdAt;
 	}
+
+	public void setFromMailbox(MailboxRef fromMailbox) {
+		this.fromMailbox = fromMailbox;
+	}
+
 	public MailboxRef getFromMailbox() {
 		return fromMailbox;
 	}
@@ -62,5 +73,9 @@ public class BaseLineItem implements LineItem {
 
 	public void setCreatedBy(PersonRef person) {
 		this.createdBy = person;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 }

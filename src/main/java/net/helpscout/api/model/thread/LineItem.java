@@ -17,15 +17,23 @@ public interface LineItem {
 
 	public boolean isSpam();
 
+	public void setAssignedTo(UserRef assignedTo);
+
 	public UserRef getAssignedTo();
+
+	public void setStatus(Status status);
 
 	public Status getStatus();
 
 	public boolean isStatusChange();
 
+	public void setCreatedBy(PersonRef person);
+
 	public PersonRef getCreatedBy();
+
+	public void setFromMailbox(MailboxRef mailbox);
 
 	public MailboxRef getFromMailbox();
 
-	public void setAssignedTo(UserRef assignedTo);
+
 }
