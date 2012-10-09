@@ -1,11 +1,11 @@
 package net.helpscout.api.cbo;
 
 /**
- * CreatedByType -
+ * PersonType -
  *
  * @author briandame@gmail.com
  */
-public enum CreatedByType {
+public enum PersonType {
 
 	User(1, "user"),
 	Customer(2, "customer");
@@ -13,7 +13,7 @@ public enum CreatedByType {
 	private final int value;
 	private final String label;
 
-	private CreatedByType(int value, String label) {
+	private PersonType(int value, String label) {
 		this.value = value;
 		this.label = label;
 	}
@@ -26,21 +26,21 @@ public enum CreatedByType {
 		return this.label;
 	}
 
-	public static CreatedByType findByValue(Integer value) {
-		for (CreatedByType item : CreatedByType.values()) {
+	public static PersonType findByValue(Integer value) {
+		for (PersonType item : PersonType.values()) {
 			if (item.getValue() == value) {
 				return item;
 			}
 		}
-		return CreatedByType.User;
+		return PersonType.User;
 	}
 
-	public static CreatedByType findByLabel(String label) {
-		for (CreatedByType item : CreatedByType.values()) {
+	public static PersonType findByLabel(String label) {
+		for (PersonType item : PersonType.values()) {
 			if (item.getLabel().equalsIgnoreCase(label)) {
 				return item;
 			}
 		}
-		return CreatedByType.User;
+		return PersonType.User;
 	}
 }

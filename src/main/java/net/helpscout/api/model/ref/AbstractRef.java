@@ -1,13 +1,13 @@
 package net.helpscout.api.model.ref;
 
-import net.helpscout.api.cbo.CreatedByType;
+import net.helpscout.api.cbo.PersonType;
 
 public abstract class AbstractRef implements PersonRef {
 	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private CreatedByType type;
+	private PersonType type;
 
 	public Long getId() {
 		return id;
@@ -41,11 +41,11 @@ public abstract class AbstractRef implements PersonRef {
 		this.email = email;
 	}
 
-	public CreatedByType getType() {
+	public PersonType getType() {
 		return type;
 	}
 
-	public void setType(CreatedByType type) {
+	public void setType(PersonType type) {
 		this.type = type;
 	}
 }

@@ -1,11 +1,11 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
-import net.helpscout.api.adapters.CreatedByTypeAdapter;
+import net.helpscout.api.adapters.PersonTypeAdapter;
 import net.helpscout.api.adapters.StatusAdapter;
 import net.helpscout.api.adapters.ThreadStateAdapter;
 import net.helpscout.api.adapters.ThreadsAdapater;
-import net.helpscout.api.cbo.CreatedByType;
+import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.cbo.ThreadType;
@@ -229,7 +229,7 @@ public class ApiClient {
 		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
 				.registerTypeAdapter(Status.class, new StatusAdapter())
-				.registerTypeAdapter(CreatedByType.class, new CreatedByTypeAdapter());
+				.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 
 		String json = builder.create().toJson(conversation);
@@ -244,7 +244,7 @@ public class ApiClient {
 			GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 					.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
 					.registerTypeAdapter(Status.class, new StatusAdapter())
-					.registerTypeAdapter(CreatedByType.class, new CreatedByTypeAdapter());
+					.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 
 			String json = builder.create().toJson(thread);
 			Long id = doPost("conversations/" + conversationId + ".json", json, 201);

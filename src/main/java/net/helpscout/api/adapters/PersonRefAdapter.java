@@ -2,6 +2,7 @@ package net.helpscout.api.adapters;
 
 import com.google.gson.*;
 import net.helpscout.api.cbo.JsonThreadLocal;
+import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.model.ref.CustomerRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
@@ -12,6 +13,7 @@ public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
 	private GsonBuilder gson;
 
 	public PersonRefAdapter(GsonBuilder gson) {
+		gson.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 		this.gson = gson;
 	}
 
