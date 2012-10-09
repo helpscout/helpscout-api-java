@@ -1,5 +1,6 @@
 package net.helpscout.api.model;
 
+import net.helpscout.api.cbo.ConversationType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.CustomerRef;
 import net.helpscout.api.model.ref.MailboxRef;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class Conversation {
 	private int id;
-	private String type;
+	private ConversationType type;
 	private int folderId;
 	private boolean isDraft;
 	private int number;
@@ -42,8 +43,12 @@ public class Conversation {
 		return id;
 	}
 
-	public String getType() {
+	public ConversationType getType() {
 		return type;
+	}
+
+	public void setType(ConversationType type) {
+		this.type = type;
 	}
 
 	public int getFolderId() {
