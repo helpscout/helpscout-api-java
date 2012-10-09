@@ -12,11 +12,11 @@ import java.util.List;
 
 public class Conversation {
 	private Long id;
+	private String type;
 	private Long folderId;
 	private boolean isDraft;
 	private Long number;
 	private Source source;
-	private String type;
 
 	private UserRef owner;
 	private MailboxRef mailbox;
@@ -44,6 +44,14 @@ public class Conversation {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Long getFolderId() {
@@ -76,14 +84,6 @@ public class Conversation {
 
 	public void setSource(Source source) {
 		this.source = source;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public UserRef getOwner() {
@@ -178,20 +178,12 @@ public class Conversation {
 		return createdBy;
 	}
 
-	public boolean isCreatedByCustomer() {
-		return createdBy != null && createdBy instanceof CustomerRef;
-	}
-
 	public void setCreatedBy(PersonRef createdBy) {
 		this.createdBy = createdBy;
 	}
 
 	public List<String> getCcList() {
 		return ccList;
-	}
-
-	public boolean hasCcList() {
-		return ccList != null && ccList.size() > 0;
 	}
 
 	public void setCcList(List<String> ccList) {
@@ -202,20 +194,12 @@ public class Conversation {
 		return bccList;
 	}
 
-	public boolean hasBccList() {
-		return bccList != null && bccList.size() > 0;
-	}
-
 	public void setBccList(List<String> bccList) {
 		this.bccList = bccList;
 	}
 
 	public List<String> getTags() {
 		return tags;
-	}
-
-	public boolean hasTags() {
-		return tags != null && tags.size() > 0;
 	}
 
 	public void setTags(List<String> tags) {
@@ -226,11 +210,27 @@ public class Conversation {
 		return threads;
 	}
 
+	public void setThreads(List<LineItem> threads) {
+		this.threads = threads;
+	}
+
+	public boolean hasCcList() {
+		return ccList != null && ccList.size() > 0;
+	}
+
+	public boolean hasBccList() {
+		return bccList != null && bccList.size() > 0;
+	}
+
 	public boolean hasThreads() {
 		return threads != null && threads.size() > 0;
 	}
 
-	public void setThreads(List<LineItem> threads) {
-		this.threads = threads;
+	public boolean hasTags() {
+		return tags != null && tags.size() > 0;
+	}
+
+	public boolean isCreatedByCustomer() {
+		return createdBy != null && createdBy instanceof CustomerRef;
 	}
 }
