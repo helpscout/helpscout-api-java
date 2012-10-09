@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.helpscout.api.adapters.*;
+import net.helpscout.api.cbo.CreatedByType;
 import net.helpscout.api.cbo.JsonThreadLocal;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
@@ -26,6 +27,7 @@ public final class Parser {
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 		builder.registerTypeAdapter(Date.class, new DateAdapter());
+		builder.registerTypeAdapter(CreatedByType.class, new CreatedByTypeAdapter());
 	}
 
 	public synchronized static Parser getInstance() {
