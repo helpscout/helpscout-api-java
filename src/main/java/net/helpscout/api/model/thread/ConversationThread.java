@@ -34,5 +34,4 @@ public interface ConversationThread {
 	public PersonRef getCreatedBy();
 	public Calendar getCreatedAt();
 	public MailboxRef getFromMailbox();
-	public void setType(ThreadType type);
 }
