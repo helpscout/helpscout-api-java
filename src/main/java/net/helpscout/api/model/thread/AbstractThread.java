@@ -36,10 +36,6 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 		return id;
 	}
 
-	public void setType(ThreadType type) {
-		this.type = type;
-	}
-
 	public ThreadType getType() {
 		return type;
 	}
