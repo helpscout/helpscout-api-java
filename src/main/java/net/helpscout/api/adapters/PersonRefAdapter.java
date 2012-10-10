@@ -20,11 +20,10 @@ public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
 	public PersonRef deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
 		JsonElement element = JsonThreadLocal.get();
-		JsonElement source = element.getAsJsonObject().get("source");
-
-		if (source != null && !(source instanceof JsonNull)) {
-			String via = source.getAsJsonObject().get("via").getAsString();
-			if ("customer".equals(via)) {
+		String type = element.getAsJsonObject().get("type").getAsString();
+		if (type != null) {
+			PersonType personType = PersonType.findByLabel(type.trim());
+			if (personType == PersonType.Customer) {
 				return gson.create().fromJson(json, CustomerRef.class);
 			}
 		}

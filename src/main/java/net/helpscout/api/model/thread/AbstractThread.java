@@ -1,15 +1,15 @@
 package net.helpscout.api.model.thread;
 
 import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.model.Attachment;
 
 import java.util.List;
 
 public class AbstractThread extends BaseLineItem implements ConversationThread {
 	private Long id;
-
+	private ThreadType type;
 	private ThreadState state;
-	private String type;
 	private String body;
 	private List<String> toList;
 	private List<String> ccList;
@@ -34,6 +34,14 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setType(ThreadType type) {
+		this.type = type;
+	}
+
+	public ThreadType getType() {
+		return type;
 	}
 
 	public ThreadState getState() {
@@ -86,13 +94,5 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 
 	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 }

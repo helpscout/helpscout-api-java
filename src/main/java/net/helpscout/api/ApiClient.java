@@ -1,10 +1,9 @@
 package net.helpscout.api;
 
+import net.helpscout.api.adapters.*;
+import net.helpscout.api.model.Mailbox;
+
 import com.google.gson.*;
-import net.helpscout.api.adapters.PersonTypeAdapter;
-import net.helpscout.api.adapters.StatusAdapter;
-import net.helpscout.api.adapters.ThreadStateAdapter;
-import net.helpscout.api.adapters.ThreadsAdapater;
 import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
@@ -34,8 +33,8 @@ public class ApiClient {
 
 	final static Logger log = LoggerFactory.getLogger(ApiClient.class);
 
-	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
-	private final static String BASE_URL = "http://localhost:9000/v1/";
+	private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	// private final static String BASE_URL = "http://localhost:9000/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -229,7 +228,8 @@ public class ApiClient {
 		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
 				.registerTypeAdapter(Status.class, new StatusAdapter())
-				.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
+				.registerTypeAdapter(PersonType.class, new PersonTypeAdapter())
+				.registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter());
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 
 		String json = builder.create().toJson(conversation);
@@ -275,19 +275,19 @@ public class ApiClient {
 
 		// Set the type of thread
 		if (theThread.getClass().isAssignableFrom(BaseLineItem.class)) {
-			thread.setType(ThreadType.LineItem.getLabel());
+			thread.setType(ThreadType.LineItem);
 		} else if (theThread.getClass().isAssignableFrom(Message.class)) {
-			thread.setType(ThreadType.Message.getLabel());
+			thread.setType(ThreadType.Message);
 		} else if (theThread.getClass().isAssignableFrom(Note.class)) {
-			thread.setType(ThreadType.Note.getLabel());
+			thread.setType(ThreadType.Note);
 		} else if (theThread.getClass().isAssignableFrom(Customer.class)) {
-			thread.setType(ThreadType.Customer.getLabel());
+			thread.setType(ThreadType.Customer);
 		} else if (theThread.getClass().isAssignableFrom(ForwardParent.class)) {
-			thread.setType(ThreadType.ForwardParent.getLabel());
+			thread.setType(ThreadType.ForwardParent);
 		} else if (theThread.getClass().isAssignableFrom(ForwardChild.class)) {
-			thread.setType(ThreadType.ForwardChild.getLabel());
+			thread.setType(ThreadType.ForwardChild);
 		} else if (theThread.getClass().isAssignableFrom(Chat.class)) {
-			thread.setType(ThreadType.Chat.getLabel());
+			thread.setType(ThreadType.Chat);
 		}
 	}
 
@@ -301,6 +301,7 @@ public class ApiClient {
 				sb.append("?");
 			}
 			sb.append("fields=");
+
 		    String sep = "";
 			for (String field : fields) {
 				sb.append(sep).append(field);
@@ -390,8 +391,8 @@ public class ApiClient {
 
 	private ArrayList<Object> getPageItems(JsonElement elem, Class<?> clazzType) {
 		Gson gson = new Gson();
-		JsonArray ar = elem.getAsJsonArray();
 
+		JsonArray ar = elem.getAsJsonArray();
 		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 		for(JsonElement e : ar) {
 			try {

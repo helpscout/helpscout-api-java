@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
-public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializer<LineItem> {
+public class ThreadsAdapater implements JsonDeserializer<LineItem> {
 	final static Logger log = LoggerFactory.getLogger(ThreadStateAdapter.class);
 
 	private GsonBuilder gson;
@@ -44,29 +44,5 @@ public class ThreadsAdapater implements JsonDeserializer<LineItem>, JsonSerializ
 
 		JsonThreadLocal.unset();
 		return item;
-	}
-
-	public JsonElement serialize(LineItem lineItem, Type typeOfT, JsonSerializationContext context) {
-		AbstractThread thread = (AbstractThread)lineItem;
-
-		// Set the type of thread
-		if (lineItem.getClass().isAssignableFrom(BaseLineItem.class)) {
-			thread.setType(ThreadType.LineItem.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(Message.class)) {
-			thread.setType(ThreadType.Message.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(Note.class)) {
-			thread.setType(ThreadType.Note.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(Customer.class)) {
-			thread.setType(ThreadType.Customer.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(ForwardParent.class)) {
-			thread.setType(ThreadType.ForwardParent.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(ForwardChild.class)) {
-			thread.setType(ThreadType.ForwardChild.getLabel());
-		} else if (lineItem.getClass().isAssignableFrom(Chat.class)) {
-			thread.setType(ThreadType.Chat.getLabel());
-		}
-
-		JsonElement json = gson.create().toJsonTree(thread);
-		return json;
 	}
 }

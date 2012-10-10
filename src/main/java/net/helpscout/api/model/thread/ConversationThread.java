@@ -2,6 +2,7 @@ package net.helpscout.api.model.thread;
 
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.model.Attachment;
 import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
@@ -12,11 +13,11 @@ import java.util.List;
 
 public interface ConversationThread {
 	public Long getId();
-	public String getType();
 	public boolean isPublished();
 	public boolean isDraft();
 	public boolean isHeldForReview();
 	public boolean hasAttachments();
+	public ThreadType getType();
 	public ThreadState getState();
 	public String getBody();
 	public List<String> getToList();
@@ -36,7 +37,7 @@ public interface ConversationThread {
 	public MailboxRef getFromMailbox();
 
 	public void setId(Long id);
-	public void setType(String type);
+	public void setType(ThreadType type);
 	public void setState(ThreadState state);
 	public void setStatus(Status status);
 	public void setBody(String body);
