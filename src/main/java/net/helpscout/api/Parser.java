@@ -4,10 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.helpscout.api.adapters.*;
-import net.helpscout.api.cbo.ConversationType;
-import net.helpscout.api.cbo.JsonThreadLocal;
-import net.helpscout.api.cbo.Status;
-import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.cbo.*;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.ref.PersonRef;
@@ -23,6 +20,7 @@ public final class Parser {
 	private Parser() {
 		builder = new GsonBuilder();
 		builder.registerTypeAdapter(ConversationType.class, new ConversationTypeAdapter());
+		builder.registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter());
 		builder.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter());
 		builder.registerTypeAdapter(Status.class, new StatusAdapter());
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
