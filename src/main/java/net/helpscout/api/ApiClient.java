@@ -202,13 +202,12 @@ public class ApiClient {
 	private String setFields(String url, List<String> fields) {
 		if (fields != null && fields.size() > 0) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(url + "?fields=");
+			sb.append(url).append("?fields=");
 		    String sep = "";
-		    Iterator<String> iterator = fields.iterator();
-		    while (iterator.hasNext()) {
-		    	sb.append(sep).append(iterator.next());
-		        sep = ",";
-		    }
+			for (String field : fields) {
+				sb.append(sep).append(field);
+				sep = ",";
+			}
 		    url = sb.toString();
 		}
 		return url;
@@ -231,10 +230,8 @@ public class ApiClient {
 
 		Page p = new Page();
 
-		Iterator<Map.Entry<String, JsonElement>> elem = set.iterator();
-		while(elem.hasNext()) {
-			Map.Entry<String, JsonElement> a = elem.next();
-			String key      = a.getKey();
+		for (Map.Entry<String, JsonElement> a : set) {
+			String key = a.getKey();
 			JsonElement val = a.getValue();
 
 			if (key.equals("page")) {
@@ -376,8 +373,7 @@ public class ApiClient {
 		if (encoding != null) {
 			if (encoding.equalsIgnoreCase("gzip")) {
 				inputStream = new GZIPInputStream(conn.getInputStream());
-			}
-			else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+			} else if (encoding.equalsIgnoreCase("deflate")) {
 				inputStream = new InflaterInputStream(conn.getInputStream(), new Inflater(true));
 			}
 		}
