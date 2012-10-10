@@ -106,9 +106,11 @@ public class Conversation {
 	public Calendar getCreatedAt() {
 		return createdAt;
 	}
+
 	public Calendar getModifiedAt() {
 		return modifiedAt;
 	}
+
 	public String getClosedAt() {
 		return closedAt;
 	}
