@@ -2,6 +2,10 @@ Help Scout Java Wrapper
 =======================
 Java Wrapper for the Help Scout API. More information on our developer site: [http://developer.helpscout.net](http://developer.helpscout.net).
 
+Version 1.2.0 Released
+---------------------
+Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/wiki/Changelog) for details.
+
 Requirements
 ---------------------
 * JDE 1.6
@@ -19,7 +23,7 @@ public class TestingAPI {
   public static void main(String[] args) throws ApiException {
         ApiClient client = ApiClient.getInstance();
         client.setKey("your-api-key-here");
-  			
+
   	List<String> fields = new ArrayList<String>();
   	fields.add("name");
 	fields.add("email");
@@ -27,13 +31,13 @@ public class TestingAPI {
 	if (mailboxes) {
 	      // do something
 	}
-    
+
 	Mailbox mailbox = client.getMailbox(85);
 	if (mailbox) {
 		String mailboxName = mailbox.getName();
 		List<Folder> folders = mailbox.getFolders();
 	}
-    
+
 	Customer c = client.getCustomer(customer-id-here);
 	if (c.hasSocialProfiles()) {
 		List<SocialProfileEntry> profiles = c.getSocialProfiles();
@@ -83,8 +87,8 @@ Example Usage: Webhooks
 Webhook webhook = new Webhook('secret-key-here', httpRequest);
 if (webhook.isValid()) {
    String event = webhook.getEventType();
-		
-   if (webhook.isConversationEvent()) {				
+
+   if (webhook.isConversationEvent()) {
 	Conversation convo = webhook.getConversation();
 	// do something
    } else if (webhook.isCustomerEvent()) {
