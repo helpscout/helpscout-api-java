@@ -183,19 +183,19 @@ public class ApiClient {
 
 		// Set the type of thread
 		if (theThread.getClass().isAssignableFrom(BaseLineItem.class)) {
-			thread.setType(ThreadType.LineItem.getLabel());
+			thread.setType(ThreadType.LineItem);
 		} else if (theThread.getClass().isAssignableFrom(Message.class)) {
-			thread.setType(ThreadType.Message.getLabel());
+			thread.setType(ThreadType.Message);
 		} else if (theThread.getClass().isAssignableFrom(Note.class)) {
-			thread.setType(ThreadType.Note.getLabel());
+			thread.setType(ThreadType.Note);
 		} else if (theThread.getClass().isAssignableFrom(Customer.class)) {
-			thread.setType(ThreadType.Customer.getLabel());
+			thread.setType(ThreadType.Customer);
 		} else if (theThread.getClass().isAssignableFrom(ForwardParent.class)) {
-			thread.setType(ThreadType.ForwardParent.getLabel());
+			thread.setType(ThreadType.ForwardParent);
 		} else if (theThread.getClass().isAssignableFrom(ForwardChild.class)) {
-			thread.setType(ThreadType.ForwardChild.getLabel());
+			thread.setType(ThreadType.ForwardChild);
 		} else if (theThread.getClass().isAssignableFrom(Chat.class)) {
-			thread.setType(ThreadType.Chat.getLabel());
+			thread.setType(ThreadType.Chat);
 		}
 	}
 
