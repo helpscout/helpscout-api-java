@@ -4,11 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
-import net.helpscout.api.model.Customer;
-import net.helpscout.api.model.thread.*;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -19,7 +16,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -176,27 +176,6 @@ public class ApiClient {
 	public Page getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
 		return getPage(url, User.class, 200);
-	}
-
-	private void setThreadProperties(ConversationThread thread) {
-		AbstractThread theThread = (AbstractThread)thread;
-
-		// Set the type of thread
-		if (theThread.getClass().isAssignableFrom(BaseLineItem.class)) {
-			thread.setType(ThreadType.LineItem);
-		} else if (theThread.getClass().isAssignableFrom(Message.class)) {
-			thread.setType(ThreadType.Message);
-		} else if (theThread.getClass().isAssignableFrom(Note.class)) {
-			thread.setType(ThreadType.Note);
-		} else if (theThread.getClass().isAssignableFrom(Customer.class)) {
-			thread.setType(ThreadType.Customer);
-		} else if (theThread.getClass().isAssignableFrom(ForwardParent.class)) {
-			thread.setType(ThreadType.ForwardParent);
-		} else if (theThread.getClass().isAssignableFrom(ForwardChild.class)) {
-			thread.setType(ThreadType.ForwardChild);
-		} else if (theThread.getClass().isAssignableFrom(Chat.class)) {
-			thread.setType(ThreadType.Chat);
-		}
 	}
 
 	private String setFields(String url, List<String> fields) {
