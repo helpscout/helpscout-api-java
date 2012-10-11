@@ -18,7 +18,6 @@ public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
 	}
 
 	public PersonRef deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
 		JsonElement element = JsonThreadLocal.get();
 		String type = element.getAsJsonObject().get("type").getAsString();
 		if (type != null) {

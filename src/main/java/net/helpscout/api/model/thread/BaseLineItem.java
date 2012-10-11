@@ -12,7 +12,6 @@ public class BaseLineItem implements LineItem {
 	private Status status;
 	private PersonRef createdBy;
 	private Date createdAt;
-
 	private MailboxRef fromMailbox;
 
 	public boolean isAssigned() {
