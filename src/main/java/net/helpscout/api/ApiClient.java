@@ -273,7 +273,7 @@ public class ApiClient {
 	 * Once the hash has been set for an attachment, the attachment can be included
 	 * when creating a new thread.
 	 *
-	 * @param attachment
+	 * @param attachment the attachment to be created
 	 * @throws ApiException
 	 */
 	public void createAttachment(Attachment attachment) throws ApiException {
@@ -459,8 +459,7 @@ public class ApiClient {
 
 	private Long getIdFromPost(HttpURLConnection conn) {
 		String location = conn.getHeaderField("LOCATION");
-		Long id = new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
-		return id;
+		return new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
 	}
 
 	private String getAttachmentHashFromPost(HttpURLConnection conn) throws RuntimeException {
