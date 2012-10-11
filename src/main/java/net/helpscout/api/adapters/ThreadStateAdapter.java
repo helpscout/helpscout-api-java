@@ -12,7 +12,6 @@ public class ThreadStateAdapter implements JsonDeserializer<ThreadState>, JsonSe
 	}
 
 	public JsonElement serialize(ThreadState threadState, Type srcType, JsonSerializationContext context) {
-		JsonPrimitive json = new JsonPrimitive(threadState.getKey());
-		return json;
+		return new JsonPrimitive(threadState.getKey());
 	}
 }
