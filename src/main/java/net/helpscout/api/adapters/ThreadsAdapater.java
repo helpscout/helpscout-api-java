@@ -4,13 +4,10 @@ import com.google.gson.*;
 import net.helpscout.api.cbo.JsonThreadLocal;
 import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.model.thread.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
 public class ThreadsAdapater implements JsonDeserializer<LineItem> {
-	final static Logger log = LoggerFactory.getLogger(ThreadStateAdapter.class);
 
 	private GsonBuilder gson;
 

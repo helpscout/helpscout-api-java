@@ -10,8 +10,6 @@ import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.thread.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -29,7 +27,7 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	final static Logger log = LoggerFactory.getLogger(ApiClient.class);
+	// final static Logger log = LoggerFactory.getLogger(ApiClient.class);
 
 	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String BASE_URL = "http://localhost:9000/v1/";
@@ -412,20 +410,15 @@ public class ApiClient {
 		JsonArray ar = elem.getAsJsonArray();
 		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 		for(JsonElement e : ar) {
-			try {
-				Object o = gson.fromJson(e, clazzType);
-				if (o != null) {
-					col.add(o);
-				}
-			} catch (Exception ex) {
-				log.debug("BKD => " + e.toString());
+			Object o = gson.fromJson(e, clazzType);
+			if (o != null) {
+				col.add(o);
 			}
 		}
 		return col;
 	}
 
 	private Object doPost(String url, String requestBody, int expectedCode) throws ApiException {
-		log.debug("BKD => Request body: " + requestBody);
 		HttpURLConnection conn = null;
 		try {
 		    conn = getConnection(apiKey, url, METHOD_POST);
@@ -459,7 +452,11 @@ public class ApiClient {
 
 	private Long getIdFromPost(HttpURLConnection conn) {
 		String location = conn.getHeaderField("LOCATION");
-		return new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
+		if (location != null && location.trim().length() > 0) {
+			return new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
+		} else {
+			return null;
+		}
 	}
 
 	private String getAttachmentHashFromPost(HttpURLConnection conn) throws RuntimeException {
@@ -486,7 +483,6 @@ public class ApiClient {
 		HttpURLConnection conn = null;
 		try {
 			conn = getConnection(apiKey, url, METHOD_PUT);
-
 			if (requestBody != null) {
 				conn.setDoOutput(true);
 				OutputStream output = null;
@@ -499,7 +495,6 @@ public class ApiClient {
 					}
 				}
 			}
-
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
 		} catch (Exception ex) {
@@ -512,10 +507,8 @@ public class ApiClient {
 
 	private String doGet(String url, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
-
 		BufferedReader br  = null;
 		String response    = null;
-
 		try {
 			conn = getConnection(apiKey, url, METHOD_GET);
 			conn.connect();
