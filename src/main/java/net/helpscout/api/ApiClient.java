@@ -1,9 +1,7 @@
 package net.helpscout.api;
 
-import net.helpscout.api.adapters.*;
-import net.helpscout.api.model.Mailbox;
-
 import com.google.gson.*;
+import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
@@ -33,8 +31,8 @@ public class ApiClient {
 
 	final static Logger log = LoggerFactory.getLogger(ApiClient.class);
 
-	private final static String BASE_URL = "https://api.helpscout.net/v1/";
-	// private final static String BASE_URL = "http://localhost:9000/v1/";
+	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	private final static String BASE_URL = "http://localhost:9000/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -214,7 +212,7 @@ public class ApiClient {
 
 	public void createCustomer(Customer customer) throws ApiException {
 		String json = new Gson().toJson(customer);
-		Long id = doPost("customers.json", json, 201);
+		Long id = (Long)doPost("customers.json", json, 201);
 		customer.setId(id);
 	}
 
@@ -233,7 +231,7 @@ public class ApiClient {
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 
 		String json = builder.create().toJson(conversation);
-		Long id = doPost("conversations.json", json, 201);
+		Long id = (Long)doPost("conversations.json", json, 201);
 		conversation.setId(id);
 	}
 
@@ -247,7 +245,7 @@ public class ApiClient {
 					.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 
 			String json = builder.create().toJson(thread);
-			Long id = doPost("conversations/" + conversationId + ".json", json, 201);
+			Long id = (Long)doPost("conversations/" + conversationId + ".json", json, 201);
 			thread.setId(id);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -268,6 +266,25 @@ public class ApiClient {
 
 		String json = builder.create().toJson(conversation, Conversation.class);
 		doPut("conversations/" + conversation.getId() + ".json", json, 200);
+	}
+
+	/**
+	 * Uploads an attachment to Help Scout and assigns a hash value to the attachment.
+	 * Once the hash has been set for an attachment, the attachment can be included
+	 * when creating a new thread.
+	 *
+	 * @param attachment
+	 * @throws ApiException
+	 */
+	public void createAttachment(Attachment attachment) throws ApiException {
+		String json = new Gson().toJson(attachment);
+		String hash = (String)doPost("attachments.json", json, 201);
+		attachment.setHash(hash);
+	}
+
+	public void deleteAttachment(Long id) throws ApiException {
+		String url = "attachments/" + id + ".json";
+		doDelete(url, 200);
 	}
 
 	private void setThreadProperties(ConversationThread thread) {
@@ -407,10 +424,9 @@ public class ApiClient {
 		return col;
 	}
 
-	private Long doPost(String url, String requestBody, int expectedCode) throws ApiException {
-		log.debug("BKD => Post request body: " + requestBody);
+	private Object doPost(String url, String requestBody, int expectedCode) throws ApiException {
+		log.debug("BKD => Request body: " + requestBody);
 		HttpURLConnection conn = null;
-		Long id = null;
 		try {
 		    conn = getConnection(apiKey, url, METHOD_POST);
 
@@ -426,20 +442,45 @@ public class ApiClient {
 					}
 				}
 			}
-
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
 
-			String location = conn.getHeaderField("LOCATION");
-			id = new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
-
+			if (url.equals("attachments.json")) {
+				return getAttachmentHashFromPost(conn);
+			} else {
+				return getIdFromPost(conn);
+			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		} finally {
 			close(conn);
 		}
+	}
+
+	private Long getIdFromPost(HttpURLConnection conn) {
+		String location = conn.getHeaderField("LOCATION");
+		Long id = new Long(location.substring(location.lastIndexOf("/") + 1, location.lastIndexOf(".")));
 		return id;
+	}
+
+	private String getAttachmentHashFromPost(HttpURLConnection conn) throws RuntimeException {
+		String hash = null;
+		BufferedReader br = null;
+		String response;
+		try {
+			br = new BufferedReader(new InputStreamReader((getInputStream(conn)), Charset.forName("UTF8")));
+			response = getResponse(br);
+			JsonElement obj  = (new JsonParser()).parse(response);
+			JsonElement item = obj.getAsJsonObject().get("item");
+			hash = item.getAsJsonObject().get("hash").getAsString();
+		}  catch(Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			close(br);
+			close(conn);
+		}
+		return hash;
 	}
 
 	private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
