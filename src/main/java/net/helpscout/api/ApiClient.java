@@ -27,10 +27,7 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	// final static Logger log = LoggerFactory.getLogger(ApiClient.class);
-
-	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
-	private final static String BASE_URL = "http://localhost:9000/v1/";
+	private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -243,8 +240,7 @@ public class ApiClient {
 					.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 
 			String json = builder.create().toJson(thread);
-			Long id = (Long)doPost("conversations/" + conversationId + ".json", json, 201);
-			thread.setId(id);
+			doPost("conversations/" + conversationId + ".json", json, 201);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ApiException(ex.getMessage());
