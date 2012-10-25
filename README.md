@@ -67,13 +67,21 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 * getConversationsForMailbox(Integer mailboxID)
 * getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID)
 * getConversation(Integer conversationID)
+* createConversation(Conversation conversation)
+* createConversationThread(Long conversationId, ConversationThread thread)
+* updateConversation(Conversation conversation)
+* deleteConversation(Long id)
 
 ### Attachments
 * getAttachmentData(Integer attachmentID)
+* createAttachment(Attachment attachment)
+* deleteAttachment(Long id)
 
 ### Customers
 * getCustomers()
 * getCustomer(Integer customerID)
+* createCustomer(Customer customer)
+* updateCustomer(Customer customer)
 
 ### Users
 * getUsers()
