@@ -5,6 +5,8 @@ import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
+import java.util.Date;
+
 public interface LineItem {
 
 	public boolean isAssigned();
@@ -35,5 +37,5 @@ public interface LineItem {
 
 	public MailboxRef getFromMailbox();
 
-
+	public void setCreatedAt(Date createdAt);
 }
