@@ -47,4 +47,5 @@ public interface ConversationThread {
 	public void setAttachments(List<Attachment> attachments);
 	public void setAssignedTo(UserRef assignedTo);
 	public void setCreatedBy(PersonRef person);
+	public void setCreatedAt(Date createdAt);
 }
