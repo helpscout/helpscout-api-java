@@ -151,6 +151,16 @@ public class ApiClient {
 		return getPage(url, Customer.class, 200);
 	}
 
+	public Page getCustomersForMailbox(Long mailboxId, Integer page, List<String> fields) throws ApiException {
+		StringBuilder sbUrl = new StringBuilder();
+		sbUrl.append("mailboxes/").append(mailboxId).append("/customers.json");
+		if (page != null) {
+			sbUrl.append("?page=").append(page);
+		}
+		String url = setFields(sbUrl.toString(), fields);
+		return getPage(url, Customer.class, 200);
+	}
+
 	public Page searchCustomers(String email, String firstName, String lastName) throws ApiException {
 		return searchCustomers(email, firstName, lastName, null, null);
 	}
