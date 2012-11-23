@@ -27,6 +27,7 @@ public class CreateConversation {
 		CustomerRef customer = new CustomerRef();
 		customer.setId(12345L);
 		customer.setEmail("customer@example.com");
+		customer.setPhone("800-555-1212");
 
 		Conversation conversation = new Conversation();
 		conversation.setSubject("I need help!"); // Required
