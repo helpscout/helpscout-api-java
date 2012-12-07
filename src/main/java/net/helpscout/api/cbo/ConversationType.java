@@ -8,7 +8,8 @@ package net.helpscout.api.cbo;
 public enum ConversationType {
 
 	Email(1, "email"),
-	Chat(2, "chat");
+	Chat(2, "chat"),
+	Phone(3, "phone");
 
 	private final int value;
 	private final String label;

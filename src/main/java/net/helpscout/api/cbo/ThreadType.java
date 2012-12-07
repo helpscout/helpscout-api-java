@@ -13,7 +13,8 @@ public enum ThreadType {
 	Customer(3, "customer"),
 	ForwardParent(4, "forwardparent"),
 	ForwardChild(5, "forwardchild"),
-	Chat(6, "chat");
+	Chat(6, "chat"),
+	Phone(7, "phone");
 
 	private final int value;
 	private final String label;
