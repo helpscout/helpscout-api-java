@@ -2,10 +2,7 @@ package net.helpscout.api;
 
 import com.google.gson.*;
 import net.helpscout.api.adapters.*;
-import net.helpscout.api.cbo.PersonType;
-import net.helpscout.api.cbo.Status;
-import net.helpscout.api.cbo.ThreadState;
-import net.helpscout.api.cbo.ThreadType;
+import net.helpscout.api.cbo.*;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
@@ -27,7 +24,8 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	private final static String BASE_URL = "http://localhost:9000/v1/";
+	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -228,19 +226,33 @@ public class ApiClient {
 	}
 
 	public void createConversation(Conversation conversation) throws ApiException {
+		createConversation(conversation, false);
+	}
+
+	public void createConversation(Conversation conversation, boolean imported) throws ApiException {
 		GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 				.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
 				.registerTypeAdapter(Status.class, new StatusAdapter())
 				.registerTypeAdapter(PersonType.class, new PersonTypeAdapter())
-				.registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter());
-		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
+				.registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter())
+				.registerTypeAdapter(ConversationType.class, new ConversationTypeAdapter());
 
 		String json = builder.create().toJson(conversation);
-		Long id = (Long)doPost("conversations.json", json, 201);
+
+		StringBuilder url = new StringBuilder("conversations.json");
+		if (imported) {
+			url.append("?imported=true");
+		}
+
+		Long id = (Long)doPost(url.toString(), json, 201);
 		conversation.setId(id);
 	}
 
 	public void createConversationThread(Long conversationId, ConversationThread thread) throws ApiException {
+		createConversationThread(conversationId, thread, false);
+	}
+
+	public void createConversationThread(Long conversationId, ConversationThread thread, boolean imported) throws ApiException {
 		try {
 			setThreadProperties(thread);
 
@@ -250,7 +262,13 @@ public class ApiClient {
 					.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 
 			String json = builder.create().toJson(thread);
-			doPost("conversations/" + conversationId + ".json", json, 201);
+
+			StringBuilder url = new StringBuilder("conversations/").append(conversationId).append(".json");
+			if (imported) {
+				url.append("?imported=true");
+			}
+
+			doPost(url.toString(), json, 201);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ApiException(ex.getMessage());

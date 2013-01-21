@@ -1,3 +1,7 @@
+## 1.3.5 (January 21, 2013)
+
+* Conversations and threads can now be marked as 'imported' at creation time.
+
 ## 1.3.4 (December 7, 2012)
 
 * Added 'phone' conversation and thread type.
