@@ -249,6 +249,10 @@ public class ApiClient {
 	}
 
 	public void createConversationThread(Long conversationId, ConversationThread thread) throws ApiException {
+		createConversationThread(conversationId, thread, false);
+	}
+
+	public void createConversationThread(Long conversationId, ConversationThread thread, boolean imported) throws ApiException {
 		try {
 			setThreadProperties(thread);
 
@@ -258,7 +262,13 @@ public class ApiClient {
 					.registerTypeAdapter(PersonType.class, new PersonTypeAdapter());
 
 			String json = builder.create().toJson(thread);
-			doPost("conversations/" + conversationId + ".json", json, 201);
+
+			StringBuilder url = new StringBuilder("conversations/").append(conversationId).append(".json");
+			if (imported) {
+				url.append("?imported=true");
+			}
+
+			doPost(url.toString(), json, 201);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new ApiException(ex.getMessage());
