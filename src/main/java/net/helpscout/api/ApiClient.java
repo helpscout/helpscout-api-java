@@ -24,8 +24,7 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	private final static String BASE_URL = "http://localhost:9000/v1/";
-	// private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
