@@ -1,5 +1,6 @@
 package net.helpscout.api.model.thread;
 
+import net.helpscout.api.cbo.ActionType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
@@ -13,6 +14,8 @@ public class BaseLineItem implements LineItem {
 	private PersonRef createdBy;
 	private Date createdAt;
 	private MailboxRef fromMailbox;
+    private ActionType actionType;
+    private Long actionSourceId;
 
 	public boolean isAssigned() {
 		return this.assignedTo != null;
@@ -77,4 +80,20 @@ public class BaseLineItem implements LineItem {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
+    public ActionType getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
+
+    public Long getActionSourceId() {
+        return actionSourceId;
+    }
+
+    public void setActionSourceId(Long actionSourceId) {
+        this.actionSourceId = actionSourceId;
+    }
 }
