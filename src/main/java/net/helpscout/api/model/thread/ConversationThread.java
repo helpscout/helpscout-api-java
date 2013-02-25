@@ -1,5 +1,6 @@
 package net.helpscout.api.model.thread;
 
+import net.helpscout.api.cbo.ActionType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.cbo.ThreadType;
@@ -35,6 +36,8 @@ public interface ConversationThread {
 	public PersonRef getCreatedBy();
 	public Date getCreatedAt();
 	public MailboxRef getFromMailbox();
+    public ActionType getActionType();
+    public Long getActionSourceId();
 
 	public void setId(Long id);
 	public void setType(ThreadType type);
