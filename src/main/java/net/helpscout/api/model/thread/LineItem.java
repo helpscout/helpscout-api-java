@@ -1,5 +1,6 @@
 package net.helpscout.api.model.thread;
 
+import net.helpscout.api.cbo.ActionType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.MailboxRef;
 import net.helpscout.api.model.ref.PersonRef;
@@ -38,4 +39,12 @@ public interface LineItem {
 	public MailboxRef getFromMailbox();
 
 	public void setCreatedAt(Date createdAt);
+
+    public ActionType getActionType();
+
+    public void setActionType(ActionType actionType);
+
+    public Long getActionSourceId();
+
+    public void setActionSourceId(Long actionSourceId);
 }

@@ -24,6 +24,7 @@ public final class Parser {
 		builder.registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter());
 		builder.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter());
 		builder.registerTypeAdapter(Status.class, new StatusAdapter());
+        builder.registerTypeAdapter(ActionType.class, new ActionTypeAdapter());
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 		builder.registerTypeAdapter(Date.class, new DateAdapter());
