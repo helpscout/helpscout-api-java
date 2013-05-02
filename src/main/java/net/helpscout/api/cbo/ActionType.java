@@ -8,7 +8,9 @@ package net.helpscout.api.cbo;
 public enum ActionType {
 
     MovedFromMailbox(1, "movedFromMailbox"),
-    Merged(2, "merged");
+    Merged(2, "merged"),
+    Imported(3, "imported"),
+    Workflow(4, "workflow");
 
     private final int value;
     private final String label;
