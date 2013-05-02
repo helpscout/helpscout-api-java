@@ -1,3 +1,7 @@
+## 1.3.7 (May 2, 2013)
+
+* Added support for 'imported' and 'workflow' action type on line items.
+
 ## 1.3.6 (March 1, 2013)
 
 * Updated with support for new line item properties (actionType and actionSourceId). See [developer docs](http://developer.helpscout.net/) for more information.
