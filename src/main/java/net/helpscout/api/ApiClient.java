@@ -14,10 +14,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -307,6 +304,17 @@ public class ApiClient {
 		String url = "attachments/" + id + ".json";
 		doDelete(url, 200);
 	}
+
+    /**
+     * Finds the workflows associated with the specified mailbox id.
+     *
+     * @param mailboxId the id of the mailbox
+     * @return a Page of Workflow objects
+     * @throws ApiException
+     */
+    public Page getWorkflows(Long mailboxId) throws ApiException {
+        return getPage("mailboxes/" + mailboxId + "/workflows.json", Workflow.class, 200);
+    }
 
 	private void setThreadProperties(ConversationThread thread) {
 		AbstractThread theThread = (AbstractThread)thread;
