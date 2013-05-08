@@ -28,6 +28,8 @@ public final class Parser {
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
 		builder.registerTypeAdapter(Date.class, new DateAdapter());
+		builder.registerTypeAdapter(WorkflowStatus.class, new WorkflowStatusAdapter());
+		builder.registerTypeAdapter(WorkflowType.class, new WorkflowTypeAdapter());
 	}
 
 	public synchronized static Parser getInstance() {
