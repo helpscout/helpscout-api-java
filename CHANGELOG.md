@@ -1,3 +1,7 @@
+## 1.3.8 (May 14, 2013)
+
+* Added support for workflows (get workflows, run a manual workflow).
+
 ## 1.3.7 (May 2, 2013)
 
 * Added support for 'imported' and 'workflow' action type on line items.
