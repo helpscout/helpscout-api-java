@@ -25,9 +25,11 @@ public final class Parser {
 		builder.registerTypeAdapter(ThreadState.class, new ThreadStateAdapter());
 		builder.registerTypeAdapter(Status.class, new StatusAdapter());
         builder.registerTypeAdapter(ActionType.class, new ActionTypeAdapter());
+        builder.registerTypeAdapter(Date.class, new DateAdapter());
+        builder.registerTypeAdapter(WorkflowStatus.class, new WorkflowStatusAdapter());
+        builder.registerTypeAdapter(WorkflowType.class, new WorkflowTypeAdapter());
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
-		builder.registerTypeAdapter(Date.class, new DateAdapter());
 	}
 
 	public synchronized static Parser getInstance() {

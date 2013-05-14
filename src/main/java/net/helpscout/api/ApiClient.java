@@ -14,10 +14,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -308,6 +305,29 @@ public class ApiClient {
 		doDelete(url, 200);
 	}
 
+    /**
+     * Finds the workflows associated with the specified mailbox id.
+     *
+     * @param mailboxId the id of the mailbox
+     * @return a Page of Workflow objects
+     * @throws ApiException
+     */
+    public Page getWorkflows(Long mailboxId) throws ApiException {
+        return getPage("mailboxes/" + mailboxId + "/workflows.json", Workflow.class, 200);
+    }
+
+    public void runManualWorkflow(Long id, Long ticketId) throws ApiException {
+        doPost("workflows/" + id + "/conversations/" + ticketId + ".json", null, 200);
+    }
+
+    public void runManualWorkflow(Long id, Collection<Long> ticketIds) throws ApiException {
+        JsonElement tickets = new Gson().toJsonTree(ticketIds);
+        JsonObject obj = new JsonObject();
+        obj.add("conversationIds", tickets);
+        String json = new Gson().toJson(obj);
+        doPost("workflows/" + id + "/conversations.json", json, 200);
+    }
+
 	private void setThreadProperties(ConversationThread thread) {
 		AbstractThread theThread = (AbstractThread)thread;
 
@@ -433,7 +453,8 @@ public class ApiClient {
 		JsonArray ar = elem.getAsJsonArray();
 		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 		for(JsonElement e : ar) {
-			Object o = gson.fromJson(e, clazzType);
+            Object o = Parser.getInstance().getObject(e, clazzType);
+			// Object o = gson.fromJson(e, clazzType);
 			if (o != null) {
 				col.add(o);
 			}
@@ -444,7 +465,7 @@ public class ApiClient {
 	private Object doPost(String url, String requestBody, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
 		try {
-		    conn = getConnection(apiKey, url, METHOD_POST);
+		    conn = getConnection(apiKey, url, METHOD_POST, requestBody != null);
 
 			if (requestBody != null) {
 				conn.setDoOutput(true);
@@ -505,7 +526,7 @@ public class ApiClient {
 	private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
 		try {
-			conn = getConnection(apiKey, url, METHOD_PUT);
+			conn = getConnection(apiKey, url, METHOD_PUT, requestBody != null);
 			if (requestBody != null) {
 				conn.setDoOutput(true);
 				OutputStream output = null;
@@ -533,7 +554,7 @@ public class ApiClient {
 		BufferedReader br  = null;
 		String response    = null;
 		try {
-			conn = getConnection(apiKey, url, METHOD_GET);
+			conn = getConnection(apiKey, url, METHOD_GET, false);
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
 
@@ -551,7 +572,7 @@ public class ApiClient {
 	private void doDelete(String url, int expectedCode) throws ApiException {
 		HttpURLConnection conn = null;
 		try {
-			conn = getConnection(apiKey, url, METHOD_DELETE);
+			conn = getConnection(apiKey, url, METHOD_DELETE, false);
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
 		} catch (Exception ex) {
@@ -562,7 +583,7 @@ public class ApiClient {
 		}
 	}
 
-	private HttpURLConnection getConnection(String apiKey, String url, String method) throws Exception {
+	private HttpURLConnection getConnection(String apiKey, String url, String method, boolean hasRequestBody) throws Exception {
 		URL aUrl = new URL(BASE_URL + url);
 
 		HttpURLConnection conn = (HttpURLConnection) aUrl.openConnection();
@@ -570,7 +591,7 @@ public class ApiClient {
 		conn.setInstanceFollowRedirects(false);
 		conn.setRequestMethod(method);
 
-		if (!method.equalsIgnoreCase(METHOD_DELETE)) {
+		if (hasRequestBody) {
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setRequestProperty("Accept", "application/json");
 		}
