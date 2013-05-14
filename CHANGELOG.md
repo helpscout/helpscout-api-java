@@ -1,6 +1,6 @@
 ## 1.3.8 (May 14, 2013)
 
-* Added support for workflows (get workflows, run a manual workflow).
+* Added support for workflows (get workflows, run a manual workflow). See [developer docs](http://developer.helpscout.net/workflows/list/) for more information.
 
 ## 1.3.7 (May 2, 2013)
 
