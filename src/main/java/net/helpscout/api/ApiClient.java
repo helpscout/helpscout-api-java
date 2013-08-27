@@ -21,7 +21,8 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	//private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	private final static String BASE_URL = "https://dev-api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -118,6 +119,31 @@ public class ApiClient {
 		return (Conversation)getItem(url, Conversation.class, 200);
 	}
 
+	public String getThreadSource(Integer conversationID, Integer threadID) throws ApiException {
+		if (conversationID == null || conversationID < 1) {
+			throw new ApiException("Invalid conversationID in getThreadSource");
+		}
+		if (threadID == null || threadID < 1) {
+			throw new ApiException("Invalid threadID in getThreadSource");
+		}
+		String json = null;
+		try {
+			json = doGet("conversations/" + conversationID + "/thread-source/" + threadID + ".json", 200);
+		} catch(RuntimeException e) {
+			if (e.getCause() instanceof NotFoundException) {
+				json = null;
+			} else {
+				throw e;
+			}
+		}
+		if (json != null) {
+			JsonElement obj = (new JsonParser()).parse(json);
+			JsonElement elem  = obj.getAsJsonObject().get("item");
+			return getDecoded(elem.getAsJsonObject().get("data").getAsString());
+		} 
+		return null;
+	}
+	
 	public String getAttachmentData(Integer attachmentID) throws ApiException {
 		if (attachmentID == null || attachmentID < 1) {
 			throw new ApiException("Invalid attachmentID in getAttachmentData");
@@ -447,14 +473,11 @@ public class ApiClient {
 		return p;
 	}
 
-	private ArrayList<Object> getPageItems(JsonElement elem, Class<?> clazzType) {
-		Gson gson = new Gson();
-
+	private ArrayList<Object> getPageItems(JsonElement elem, Class<?> clazzType) {		
 		JsonArray ar = elem.getAsJsonArray();
 		ArrayList<Object> col = new ArrayList<Object>(ar.size());
 		for(JsonElement e : ar) {
             Object o = Parser.getInstance().getObject(e, clazzType);
-			// Object o = gson.fromJson(e, clazzType);
 			if (o != null) {
 				col.add(o);
 			}
