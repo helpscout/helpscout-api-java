@@ -325,10 +325,27 @@ public class ApiClient {
 		attachment.setHash(hash);
 	}
 
+    /**
+     * Deletes an attachment.
+     *
+     * @param id
+     * @throws ApiException
+     */
 	public void deleteAttachment(Long id) throws ApiException {
 		String url = "attachments/" + id + ".json";
 		doDelete(url, 200);
 	}
+
+    /**
+     * Deletes a note thread.
+     *
+     * @param threadId
+     * @throws ApiException
+     */
+    public void deleteNote(Long threadId) throws ApiException {
+        String url = "notes/" + threadId + ".json";
+        doDelete(url, 200);
+    }
 
     /**
      * Finds the workflows associated with the specified mailbox id.
