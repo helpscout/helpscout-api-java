@@ -204,6 +204,10 @@ public class ApiClient {
 		return (Customer)getItem(url, Customer.class, 200);
 	}
 
+    public User getUserMe() throws ApiException {
+        return (User)getItem("users/me.json", User.class, 200);
+    }
+
 	public User getUser(Integer userID) throws ApiException {
 		return (User)getItem("users/" + userID + ".json", User.class, 200);
 	}
