@@ -6,6 +6,7 @@ import net.helpscout.api.cbo.*;
 import net.helpscout.api.exception.*;
 import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
+import net.helpscout.api.model.customer.SearchCustomer;
 import net.helpscout.api.model.thread.*;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -438,6 +439,52 @@ public class ApiClient {
 	}
 
     /**
+     * Returns a page of SearchConversation objects by searching using the query.
+     *
+     * @param query
+     * @param sortField
+     * @param sortOrder
+     * @param page
+     * @return Page
+     * @throws ApiException
+     */
+    public Page searchConversations(String query, String sortField, String sortOrder, Integer page) throws ApiException {
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("query", query);
+        if (sortField != null && sortField.trim().length() > 0) {
+            params.put("sortField", sortField);
+        }
+        if (sortOrder != null && sortOrder.trim().length() > 0) {
+            params.put("sortOrder", sortOrder);
+        }
+        params.put("page", String.valueOf(page));
+        return getPage("search/conversations.json", params, SearchConversation.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Returns a page of SearchCustomer objects by searching using the query.
+     *
+     * @param query
+     * @param sortField
+     * @param sortOrder
+     * @param page
+     * @return Page
+     * @throws ApiException
+     */
+    public Page searchCustomers(String query, String sortField, String sortOrder, Integer page) throws ApiException {
+        Map<String,String> params = new HashMap<String,String>();
+        params.put("query", query);
+        if (sortField != null && sortField.trim().length() > 0) {
+            params.put("sortField", sortField);
+        }
+        if (sortOrder != null && sortOrder.trim().length() > 0) {
+            params.put("sortOrder", sortOrder);
+        }
+        params.put("page", String.valueOf(page));
+        return getPage("search/customers.json", params, SearchCustomer.class, HTTP_STATUS_OK);
+    }
+
+    /**
      * Gets the customer with the specified id.
      *
      * @param customerId
@@ -810,7 +857,7 @@ public class ApiClient {
             StringBuilder sb = new StringBuilder();
             sb.append(url);
             for (String key : params.keySet()) {
-                if (url.indexOf("?") > 0) {
+                if (sb.indexOf("?") > 0) {
                     sb.append("&");
                 } else {
                     sb.append("?");
