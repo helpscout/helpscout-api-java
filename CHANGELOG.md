@@ -1,3 +1,7 @@
+## 1.3.12 (February 4, 2014)
+
+* Added support for conversation and customer search endpoints. See [developer docs](http://developer.helpscout.net/) for more information.
+
 ## 1.3.11 (February 4, 2014)
 
 * Added method to get the current User associated with the API used to make the request.
