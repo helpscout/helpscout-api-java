@@ -10,6 +10,10 @@
 
 * Added endpoint to delete a note.
 
+## 1.3.9 (August 27 14, 2013)
+
+* Added support for the thread-source endpoint (to retrieve original email source). See [developer docs](http://developer.helpscout.net/conversations/thread/source/) for more information.
+
 ## 1.3.8 (May 14, 2013)
 
 * Added support for workflows (get workflows, run a manual workflow). See [developer docs](http://developer.helpscout.net/workflows/list/) for more information.
