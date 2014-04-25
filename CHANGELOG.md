@@ -1,6 +1,7 @@
-#### 1.3.12 (March 4, 2014)
+#### 1.3.13 (April 25, 2014)
 
-* Added support for conversation and customer search endpoints. See [developer docs](http://developer.helpscout.net/) for more information.
+* Added support for updating the body text of a thread. See [developer docs](http://developer.helpscout.net/) for more information.
+
 
 #### 1.3.11 (February 4, 2014)
 

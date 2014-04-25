@@ -22,7 +22,7 @@ import java.util.zip.InflaterInputStream;
 
 public class ApiClient {
 
-	private final static String BASE_URL = "https://api.helpscout.net/v1/";	
+	private final static String BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -718,6 +718,25 @@ public class ApiClient {
 			throw new ApiException(ex.getMessage());
 		}
 	}
+
+    /**
+     * Update the body text of the specified thread.
+     *
+     * @param conversationId
+     * @param threadId
+     * @param text
+     * @return
+     * @throws ApiException
+     */
+    public void updateConversationThreadText(Long conversationId, Long threadId, String text) throws ApiException {
+        Map<String,String> threadBody = new HashMap<String, String>();
+        threadBody.put("body", text);
+
+        GsonBuilder builder = new GsonBuilder();
+        String json = builder.create().toJson(threadBody);
+
+        doPut("conversations/" + conversationId + "/threads/" + threadId +  ".json", json, HTTP_STATUS_OK);
+    }
 
     /**
      * Deletes the specified conversation.
