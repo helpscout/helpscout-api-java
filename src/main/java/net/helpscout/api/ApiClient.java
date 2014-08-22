@@ -119,8 +119,20 @@ public class ApiClient {
      * @param mailboxId
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getFolders(Long)}
      */
-	public Page getFolders(Integer mailboxId) throws ApiException {
+    public Page getFolders(Integer mailboxId) throws ApiException {
+      return getFolders(Long.valueOf(mailboxId));
+    }
+
+    /**
+     * Gets the first page of folders for the specified mailbox.
+     *
+     * @param mailboxId
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getFolders(Long mailboxId) throws ApiException {
 		return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class, HTTP_STATUS_OK);
 	}
 
@@ -131,8 +143,21 @@ public class ApiClient {
      * @param fields
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getFolders(Long, List)}
      */
-	public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
+    public Page getFolders(Integer mailboxId, List<String> fields) throws ApiException {
+      return getFolders(Long.valueOf(mailboxId), fields);
+    }
+
+    /**
+     * Gets the first page of folders for the specified mailbox.
+     *
+     * @param mailboxId
+     * @param fields
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getFolders(Long mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
 		return getPage(url, Folder.class, HTTP_STATUS_OK);
 	}
@@ -144,8 +169,21 @@ public class ApiClient {
      * @param queryParams
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getFolders(Long, Map)}
      */
     public Page getFolders(Integer mailboxId, Map<String, String> queryParams) throws ApiException {
+      return getFolders(Long.valueOf(mailboxId), queryParams);
+    }
+
+    /**
+     * Gets a page of folders for the specified mailbox.
+     *
+     * @param mailboxId
+     * @param queryParams
+     * @return Page
+     * @throws ApiException
+     */
+    public Page getFolders(Long mailboxId, Map<String, String> queryParams) throws ApiException {
         return getPage("mailboxes/" + mailboxId + "/folders.json", queryParams, Folder.class, HTTP_STATUS_OK);
     }
 
@@ -156,8 +194,21 @@ public class ApiClient {
      * @param folderID
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForFolder(Long, Long)}
      */
-	public Page getConversationsForFolder(Integer mailboxID, Integer folderID) throws ApiException {
+    public Page getConversationsForFolder(Integer mailboxID, Integer folderID) throws ApiException {
+      return getConversationsForFolder(Long.valueOf(mailboxID), Long.valueOf(folderID));
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox and folder.
+     *
+     * @param mailboxID
+     * @param folderID
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForFolder(Long mailboxID, Long folderID) throws ApiException {
 		return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
 	}
 
@@ -169,8 +220,22 @@ public class ApiClient {
      * @param fields
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForFolder(Long, Long, List)}
      */
-	public Page getConversationsForFolder(Integer mailboxID, Integer folderID, List<String> fields) throws ApiException {
+    public Page getConversationsForFolder(Integer mailboxID, Integer folderID, List<String> fields) throws ApiException {
+      return getConversationsForFolder(Long.valueOf(mailboxID), Long.valueOf(folderID), fields);
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox and folder.
+     *
+     * @param mailboxID
+     * @param folderID
+     * @param fields
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForFolder(Long mailboxID, Long folderID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", fields);
 		return getPage(url, Conversation.class, HTTP_STATUS_OK);
 	}
@@ -183,8 +248,22 @@ public class ApiClient {
      * @param queryParams
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForFolder(Long, Long, Map)}
      */
     public Page getConversationsForFolder(Integer mailboxID, Integer folderID, Map<String, String> queryParams) throws ApiException {
+      return getConversationsForFolder(Long.valueOf(mailboxID), Long.valueOf(folderID), queryParams);
+    }
+
+    /**
+     * Gets a page of conversations for the specified mailbox and folder.
+     *
+     * @param mailboxID
+     * @param folderID
+     * @param queryParams
+     * @return Page
+     * @throws ApiException
+     */
+    public Page getConversationsForFolder(Long mailboxID, Long folderID, Map<String, String> queryParams) throws ApiException {
         return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
     }
 
@@ -194,8 +273,20 @@ public class ApiClient {
      * @param mailboxID
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForMailbox(Long)}
      */
-	public Page getConversationsForMailbox(Integer mailboxID) throws ApiException {
+    public Page getConversationsForMailbox(Integer mailboxID) throws ApiException {
+      return getConversationsForMailbox(Long.valueOf(mailboxID));
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox.
+     *
+     * @param mailboxID
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForMailbox(Long mailboxID) throws ApiException {
 		return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
 	}
 
@@ -206,8 +297,21 @@ public class ApiClient {
      * @param fields
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForMailbox(Long, List)}
      */
-	public Page getConversationsForMailbox(Integer mailboxID, List<String> fields) throws ApiException {
+    public Page getConversationsForMailbox(Integer mailboxID, List<String> fields) throws ApiException {
+      return getConversationsForMailbox(Long.valueOf(mailboxID), fields);
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox.
+     *
+     * @param mailboxID
+     * @param fields
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForMailbox(Long mailboxID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/conversations.json", fields);
 		return getPage(url, Conversation.class, HTTP_STATUS_OK);
 	}
@@ -219,8 +323,21 @@ public class ApiClient {
      * @param queryParams
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForMailbox(Long, Map)}
      */
     public Page getConversationsForMailbox(Integer mailboxID, Map<String, String> queryParams) throws ApiException {
+      return getConversationsForMailbox(Long.valueOf(mailboxID), queryParams);
+    }
+
+    /**
+     * Gets a page of conversations for the specified mailbox.
+     *
+     * @param mailboxID
+     * @param queryParams
+     * @return Page
+     * @throws ApiException
+     */
+    public Page getConversationsForMailbox(Long mailboxID, Map<String, String> queryParams) throws ApiException {
         return getPage("mailboxes/" + mailboxID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
     }
 
@@ -231,8 +348,21 @@ public class ApiClient {
      * @param customerID
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForCustomerByMailbox(Long, Long)}
      */
-	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID) throws ApiException {
+    public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID) throws ApiException {
+      return getConversationsForCustomerByMailbox(Long.valueOf(mailboxID), Long.valueOf(customerID));
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox and customer.
+     *
+     * @param mailboxID
+     * @param customerID
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForCustomerByMailbox(Long mailboxID, Long customerID) throws ApiException {
 		return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
 	}
 
@@ -244,8 +374,22 @@ public class ApiClient {
      * @param fields
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForCustomerByMailbox(Long, Long, List)}
      */
-	public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, List<String> fields) throws ApiException {
+    public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, List<String> fields) throws ApiException {
+      return getConversationsForCustomerByMailbox(Long.valueOf(mailboxID), Long.valueOf(customerID), fields);
+    }
+
+    /**
+     * Gets the first page of conversations for the specified mailbox and customer.
+     *
+     * @param mailboxID
+     * @param customerID
+     * @param fields
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getConversationsForCustomerByMailbox(Long mailboxID, Long customerID, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", fields);
 		return getPage(url, Conversation.class, HTTP_STATUS_OK);
 	}
@@ -258,8 +402,22 @@ public class ApiClient {
      * @param queryParams
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getConversationsForCustomerByMailbox(Long, Long, Map)}
      */
     public Page getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID, Map<String, String> queryParams) throws ApiException {
+      return getConversationsForCustomerByMailbox(Long.valueOf(mailboxID), Long.valueOf(customerID), queryParams);
+    }
+
+    /**
+     * Gets a page of conversations for the specified mailbox and customer.
+     *
+     * @param mailboxID
+     * @param customerID
+     * @param queryParams
+     * @return Page
+     * @throws ApiException
+     */
+    public Page getConversationsForCustomerByMailbox(Long mailboxID, Long customerID, Map<String, String> queryParams) throws ApiException {
         return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
     }
 
@@ -281,8 +439,21 @@ public class ApiClient {
      * @param fields
      * @return Conversation
      * @throws ApiException
+     * @deprecated use {@link #getConversation(Long, List)}
      */
-	public Conversation getConversation(Integer conversationID, List<String> fields) throws ApiException {
+    public Conversation getConversation(Integer conversationID, List<String> fields) throws ApiException {
+      return getConversation(Long.valueOf(conversationID), fields);
+    }
+
+    /**
+     * Gets the conversation with the specified id.
+     *
+     * @param conversationID
+     * @param fields
+     * @return Conversation
+     * @throws ApiException
+     */
+	public Conversation getConversation(Long conversationID, List<String> fields) throws ApiException {
 		if (conversationID == null || conversationID < 1) {
 			throw new ApiException("Invalid conversationId in getConversation");
 		}
@@ -297,8 +468,21 @@ public class ApiClient {
      * @param threadID
      * @return String
      * @throws ApiException
+     * @deprecated use {@link #getThreadSource(Long, Long)}
      */
-	public String getThreadSource(Integer conversationID, Integer threadID) throws ApiException {
+    public String getThreadSource(Integer conversationID, Integer threadID) throws ApiException {
+      return getThreadSource(Long.valueOf(conversationID), Long.valueOf(threadID));
+    }
+
+    /**
+     * Gets the thread source for the specified conversation and thread.
+     *
+     * @param conversationID
+     * @param threadID
+     * @return String
+     * @throws ApiException
+     */
+	public String getThreadSource(Long conversationID, Long threadID) throws ApiException {
 		if (conversationID == null || conversationID < 1) {
 			throw new ApiException("Invalid conversationID in getThreadSource");
 		}
@@ -329,8 +513,19 @@ public class ApiClient {
      * @param attachmentID
      * @return String
      * @throws ApiException
+     * @deprecated use {@link #getAttachmentData(Long)}
      */
-	public String getAttachmentData(Integer attachmentID) throws ApiException {
+    public String getAttachmentData(Integer attachmentID) throws ApiException {
+      return getAttachmentData(Long.valueOf(attachmentID));
+    }
+    /**
+     * Gets the attachment data for the specified attachment id.
+     *
+     * @param attachmentID
+     * @return String
+     * @throws ApiException
+     */
+	public String getAttachmentData(Long attachmentID) throws ApiException {
 		if (attachmentID == null || attachmentID < 1) {
 			throw new ApiException("Invalid attachmentID in getAttachmentData");
 		}
@@ -358,7 +553,7 @@ public class ApiClient {
      * @throws ApiException
      */
 	public Page getCustomers() throws ApiException {
-		return getCustomers(new Integer(null));
+		return getCustomers((Integer) null);
 	}
 
     /**
@@ -368,7 +563,7 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-	public Page getCustomers(Integer page) throws ApiException {
+    public Page getCustomers(Integer page) throws ApiException {
 		if (page != null) {
 			return getPage("customers.json?page=" + page, Customer.class, HTTP_STATUS_OK);
 		} else {
@@ -527,8 +722,20 @@ public class ApiClient {
      * @param userID
      * @return User
      * @throws ApiException
+     * @deprecated use {@link #getUser(Long)}
      */
-	public User getUser(Integer userID) throws ApiException {
+    public User getUser(Integer userID) throws ApiException {
+      return getUser(Long.valueOf(userID));
+    }
+
+    /**
+     * Gets the user with the specified id.
+     *
+     * @param userID
+     * @return User
+     * @throws ApiException
+     */
+	public User getUser(Long userID) throws ApiException {
 		return (User)getItem("users/" + userID + ".json", User.class, HTTP_STATUS_OK);
 	}
 
@@ -539,8 +746,21 @@ public class ApiClient {
      * @param fields
      * @return User
      * @throws ApiException
+     * @deprecated use {@link #getUser(Long, List)}
      */
-	public User getUser(Integer userID, List<String> fields) throws ApiException {
+    public User getUser(Integer userID, List<String> fields) throws ApiException {
+      return getUser(Long.valueOf(userID), fields);
+    }
+
+    /**
+     * Gets the user with the specified id.
+     *
+     * @param userID
+     * @param fields
+     * @return User
+     * @throws ApiException
+     */
+	public User getUser(Long userID, List<String> fields) throws ApiException {
 		if (userID == null || userID < 1) {
 			throw new ApiException("Invalid userId in getUser");
 		}
@@ -587,8 +807,20 @@ public class ApiClient {
      * @param mailboxId
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getUsersForMailbox(Long)}
      */
-	public Page getUsersForMailbox(Integer mailboxId) throws ApiException {
+    public Page getUsersForMailbox(Integer mailboxId) throws ApiException {
+      return getUsersForMailbox(Long.valueOf(mailboxId));
+    }
+
+    /**
+     * Gets the first page of users for the specified mailbox.
+     *
+     * @param mailboxId
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getUsersForMailbox(Long mailboxId) throws ApiException {
 		return getPage("mailboxes/" + mailboxId + "/users.json", User.class, HTTP_STATUS_OK);
 	}
 
@@ -599,8 +831,21 @@ public class ApiClient {
      * @param fields
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getUsersForMailbox(Long, List)}
      */
-	public Page getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
+    public Page getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
+      return getUsersForMailbox(Long.valueOf(mailboxId), fields);
+    }
+
+    /**
+     * Gets the first page of users for the specified mailbox.
+     *
+     * @param mailboxId
+     * @param fields
+     * @return Page
+     * @throws ApiException
+     */
+	public Page getUsersForMailbox(Long mailboxId, List<String> fields) throws ApiException {
 		String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
 		return getPage(url, User.class, HTTP_STATUS_OK);
 	}
@@ -612,8 +857,21 @@ public class ApiClient {
      * @param queryParams
      * @return Page
      * @throws ApiException
+     * @deprecated use {@link #getUsersForMailbox(Long, Map)}
      */
     public Page getUsersForMailbox(Integer mailboxId, Map<String, String> queryParams) throws ApiException {
+      return getUsersForMailbox(Long.valueOf(mailboxId), queryParams);
+    }
+
+    /**
+     * Gets a page of users for the specified mailbox.
+     *
+     * @param mailboxId
+     * @param queryParams
+     * @return Page
+     * @throws ApiException
+     */
+    public Page getUsersForMailbox(Long mailboxId, Map<String, String> queryParams) throws ApiException {
         return getPage("mailboxes/" + mailboxId + "/users.json", queryParams, User.class, HTTP_STATUS_OK);
     }
 

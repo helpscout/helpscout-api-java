@@ -57,36 +57,36 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 
 ### Mailboxes
 * getMailboxes()
-* getMailbox(Integer mailboxID)
+* getMailbox(Long mailboxID)
 
 ### Folders
-* getFolders(Integer mailboxID)
+* getFolders(Long mailboxID)
 
 ### Conversations
-* getConversationsForFolder(Integer mailboxID, Integer folderID)
-* getConversationsForMailbox(Integer mailboxID)
-* getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID)
-* getConversation(Integer conversationID)
+* getConversationsForFolder(Long mailboxID, Long folderID)
+* getConversationsForMailbox(Long mailboxID)
+* getConversationsForCustomerByMailbox(Long mailboxID, Long customerID)
+* getConversation(Long conversationID)
 * createConversation(Conversation conversation)
 * createConversationThread(Long conversationId, ConversationThread thread)
 * updateConversation(Conversation conversation)
 * deleteConversation(Long id)
 
 ### Attachments
-* getAttachmentData(Integer attachmentID)
+* getAttachmentData(Long attachmentID)
 * createAttachment(Attachment attachment)
 * deleteAttachment(Long id)
 
 ### Customers
 * getCustomers()
-* getCustomer(Integer customerID)
+* getCustomer(Long customerID)
 * createCustomer(Customer customer)
 * updateCustomer(Customer customer)
 
 ### Users
 * getUsers()
-* getUsersForMailbox(Integer mailboxID)
-* getUser(Integer userID)
+* getUsersForMailbox(Long mailboxID)
+* getUser(Long userID)
 
 
 Example Usage: Webhooks
