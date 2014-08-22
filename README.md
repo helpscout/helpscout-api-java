@@ -12,7 +12,7 @@ Requirements
 
 Example Usage: API
 ---------------------
-<pre><code>
+```java
 import net.helpscout.api;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,31 +20,33 @@ import java.util.List;
 public class TestingAPI {
 
   public static void main(String[] args) throws ApiException {
-        ApiClient client = ApiClient.getInstance();
-        client.setKey("your-api-key-here");
+    ApiClient client = ApiClient.getInstance();
+    client.setKey("your-api-key-here");
 
-  	List<String> fields = new ArrayList<String>();
-  	fields.add("name");
-	fields.add("email");
-	Page mailboxes = client.getMailboxes(fields);
-	if (mailboxes) {
-	      // do something
-	}
+    List<String> fields = new ArrayList<String>();
+    fields.add("name");
+    fields.add("email");
+    Page mailboxes = client.getMailboxes(fields);
+    if (mailboxes != null) {
+      // do something
+    }
 
-	Mailbox mailbox = client.getMailbox(85);
-	if (mailbox) {
-		String mailboxName = mailbox.getName();
-		List<Folder> folders = mailbox.getFolders();
-	}
+    Long mailboxId = 123456L;
+    Mailbox mailbox = client.getMailbox(mailboxId);
+    if (mailbox != null) {
+      String mailboxName = mailbox.getName();
+      Page folders = client.getFolders(mailbox.getId());
+    }
 
-	Customer c = client.getCustomer(customer-id-here);
-	if (c.hasSocialProfiles()) {
-		List<SocialProfileEntry> profiles = c.getSocialProfiles();
-		// do something
-	}
+    Long customerId = 123456L;
+    Customer c = client.getCustomer(customerId);
+    if (c.hasSocialProfiles()) {
+      List<SocialProfileEntry> profiles = c.getSocialProfiles();
+      // do something
+    }
   }
 }
-</code></pre>
+```
 
 Field Selectors
 ---------------------
@@ -90,17 +92,18 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 
 Example Usage: Webhooks
 ------------------------
-<pre><code>
-Webhook webhook = new Webhook('secret-key-here', httpRequest);
+```java
+String secretKey = "secret-key-here";
+Webhook webhook = new Webhook(secretKey, httpRequest);
 if (webhook.isValid()) {
-   String event = webhook.getEventType();
+  String event = webhook.getEventType();
 
-   if (webhook.isConversationEvent()) {
-	Conversation convo = webhook.getConversation();
-	// do something
-   } else if (webhook.isCustomerEvent()) {
-	Customer customer = webhook.getCustomer();
-	// do something
-   }
+  if (webhook.isConversationEvent()) {
+    Conversation convo = webhook.getConversation();
+    // do something
+  } else if (webhook.isCustomerEvent()) {
+    Customer customer = webhook.getCustomer();
+    // do something
+  }
 }
-</code></pre>
+```
