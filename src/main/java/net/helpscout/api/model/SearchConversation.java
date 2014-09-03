@@ -111,4 +111,13 @@ public class SearchConversation {
     public void setScore(Float score) {
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "SearchConversation [id=" + id + ", number=" + number + ", mailboxId=" + mailboxId + ", subject="
+                + subject + ", status=" + status + ", threadCount=" + threadCount + ", preview=" + preview
+                + ", customerName=" + customerName + ", customerEmail=" + customerEmail + ", modifiedAt=" + modifiedAt
+                + ", score=" + score + "]";
+    }
+
 }

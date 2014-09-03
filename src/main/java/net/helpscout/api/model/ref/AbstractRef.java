@@ -57,4 +57,11 @@ public abstract class AbstractRef implements PersonRef {
 	public void setType(PersonType type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "AbstractRef [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", phone=" + phone + ", type=" + type + "]";
+	}
+
 }

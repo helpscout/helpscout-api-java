@@ -75,4 +75,11 @@ public class Tag {
     public void setModifiedAt(Date modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
+    @Override
+    public String toString() {
+        return "Tag [id=" + id + ", slug=" + slug + ", tag=" + tag + ", count=" + count + ", color=" + color
+                + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
+    }
+
 }

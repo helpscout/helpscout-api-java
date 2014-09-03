@@ -1,12 +1,12 @@
 package net.helpscout.api;
 
-import java.util.Collection;
+import java.util.List;
 
-public class Page {
-    private Integer page = null;
+public class Page<T> {
+	private Integer page = null;
 	private Integer pages = null;
 	private Integer count = null;
-	private Collection<?> items = null;
+	private List<T> items = null;
 	
 	public Integer getPage() {
 		return page;
@@ -26,11 +26,15 @@ public class Page {
 	public void setCount(Integer count) {
 		this.count = count;
 	}
-	public Collection<?> getItems() {
+	public List<T> getItems() {
 		return items;
 	}
-	public void setItems(Collection<?> items) {
+	public void setItems(List<T> items) {
 		this.items = items;
 	}
-	
+	@Override
+	public String toString() {
+		return "Page [page=" + page + ", pages=" + pages + ", count=" + count + ", items=" + items + "]";
+	}
+
 }

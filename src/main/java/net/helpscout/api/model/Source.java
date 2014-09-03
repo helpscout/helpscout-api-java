@@ -14,4 +14,10 @@ public class Source {
 	public boolean isViaCustomer() {
 		return "customer".equals(via);
 	}
+
+	@Override
+	public String toString() {
+		return "Source [type=" + type + ", via=" + via + "]";
+	}
+
 }

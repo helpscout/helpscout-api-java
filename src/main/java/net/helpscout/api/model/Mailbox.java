@@ -28,4 +28,10 @@ public class Mailbox {
 	public Date getModifiedAt() {
 		return modifiedAt;
 	}
+	@Override
+	public String toString() {
+		return "Mailbox [id=" + id + ", name=" + name + ", slug=" + slug + ", email=" + email + ", createdAt="
+				+ createdAt + ", modifiedAt=" + modifiedAt + "]";
+	}
+
 }
