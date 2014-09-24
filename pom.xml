@@ -13,6 +13,11 @@
   <name>ZT fork of HelpScout Java API</name>
   <url>https://github.com/zeroturnaround/helpscout-api-java</url>
 
+  <scm>
+    <connection>scm:git:git@github.com:zeroturnaround/helpscout-api-java.git</connection>
+    <developerConnection>scm:git:git@github.com:zeroturnaround/helpscout-api-java.git</developerConnection>
+  </scm>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -65,6 +70,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.1</version>
       </plugin>
     </plugins>
     <extensions>
