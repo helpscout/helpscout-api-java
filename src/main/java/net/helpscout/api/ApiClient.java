@@ -1249,51 +1249,12 @@ public class ApiClient {
 		return params;
 	}
 
-	private void addSearchParams(StringBuilder url, String email, String firstName, String lastName, Integer page) {
-		if (email != null && email.trim().length() > 0) {
-			if (url.toString().indexOf("?") > 0) {
-				url.append("&");
-			} else {
-				url.append("?");
-			}
-			url.append("email=").append(email.trim());
-		}
-
-		if (firstName != null && firstName.trim().length() > 0) {
-			if (url.toString().indexOf("?") > 0) {
-				url.append("&");
-			} else {
-				url.append("?");
-			}
-			url.append("firstName=").append(firstName.trim());
-		}
-
-		if (lastName != null && lastName.trim().length() > 0) {
-			if (url.toString().indexOf("?") > 0) {
-				url.append("&");
-			} else {
-				url.append("?");
-			}
-			url.append("lastName=").append(lastName.trim());
-		}
-
-		if (page != null) {
-			if (url.toString().indexOf("?") > 0) {
-				url.append("&");
-			} else {
-				url.append("?");
-			}
-			url.append("page=").append(page);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	private <T> T getItem(String url, Class<T> clazzType, int expectedCode) throws ApiException {
 		String json = doGet(url, expectedCode);
 		JsonElement obj = parseJson(url, json);
 		JsonElement item = obj.getAsJsonObject().get("item");
 
-		return (T) Parser.getInstance().getObject(item, clazzType);
+		return Parser.getInstance().getObject(item, clazzType);
 	}
 
 	private <T> Page<T> getPage(String url, Class<T> clazzType, int expectedCode) throws ApiException {
@@ -1336,8 +1297,7 @@ public class ApiClient {
 		JsonArray ar = elem.getAsJsonArray();
 		ArrayList<T> col = new ArrayList<T>(ar.size());
 		for (JsonElement e : ar) {
-			@SuppressWarnings("unchecked")
-			T o = (T) Parser.getInstance().getObject(e, clazzType);
+			T o = Parser.getInstance().getObject(e, clazzType);
 			if (o != null) {
 				col.add(o);
 			}
