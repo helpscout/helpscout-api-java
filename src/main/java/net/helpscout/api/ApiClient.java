@@ -9,8 +9,6 @@ import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.customer.SearchCustomer;
 import net.helpscout.api.model.thread.*;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -21,6 +19,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.LoggerFactory;
 
 public class ApiClient {
@@ -1569,17 +1568,14 @@ public class ApiClient {
 	}
 
 	private String getEncoded(String val) {
-		return (new BASE64Encoder()).encode(val.getBytes());
+		try {
+			return Base64.encodeBase64String(val.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalStateException("UTF-8 should always be there!", e);
+		}
 	}
 
 	private byte[] getDecoded(String val) {
-		BASE64Decoder decoder = new BASE64Decoder();
-		try {
-			return decoder.decodeBuffer(val);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return Base64.decodeBase64(val);
 	}
 }
