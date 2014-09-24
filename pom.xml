@@ -13,6 +13,9 @@
   <name>ZT fork of HelpScout Java API</name>
   <url>https://github.com/zeroturnaround/helpscout-api-java</url>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
     	<!--  Gson: Java to Json conversion -->
     	<dependency>
