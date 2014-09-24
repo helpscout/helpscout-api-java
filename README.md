@@ -2,14 +2,13 @@ Help Scout Java Wrapper
 =======================
 Java Wrapper for the Help Scout API. More information on our developer site: [http://developer.helpscout.net](http://developer.helpscout.net).
 
-Version 1.3.13 Released
----------------------
-Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
+See the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details on latest release.
 
 Requirements
 ---------------------
 * JDE 1.6
 * [google-gson](http://code.google.com/p/google-gson/)
+* [commons-codec](http://commons.apache.org/proper/commons-codec/)
 
 Example Usage: API
 ---------------------
