@@ -6,7 +6,7 @@ See the [changelog](https://github.com/zeroturnaround/helpscout-api-java/blob/ma
 
 Requirements
 ---------------------
-* JDE 1.6
+* Java 1.6
 * [google-gson](http://code.google.com/p/google-gson/)
 * [commons-codec](http://commons.apache.org/proper/commons-codec/)
 
