@@ -1,3 +1,11 @@
+#### 1.3.14 (September 24, 2014)
+
+* Forked upstream project, as our pull requests have received no response
+* Use consistent types for IDs (they are all Long in model objects). Old methods are deprecated.
+* Made proper use of generics, improved internal structure and added toString() methods to value objects
+* Use BASE64 encoder from Apache Commons Codec instead of "sun.misc" package (which is not the "right way")
+* Source is now also deployed with binary JAR file to the Maven repository
+
 #### 1.3.13 (April 25, 2014)
 
 * Added support for updating the body text of a thread. See [developer docs](http://developer.helpscout.net/) for more information.
