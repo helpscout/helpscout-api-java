@@ -40,7 +40,6 @@ public class UserReport {
         Integer resolved;
         Integer conversationsCreated;
         Integer closed;
-        List<Rating> ratings;
         Integer totalReplies;
         Integer resolvedOnFirstReply;
         Double percentResolvedOnFirstReply;
@@ -75,16 +74,5 @@ public class UserReport {
         Double responseTime;
         Double resolutionTime;
         Double conversationsCreated;
-    }
-
-    @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
-    public class Rating {
-
-        Double repliesSent;
-        Double firstResponseTime;
-        Double resolveTime;
-        String ratingId;
-        Double responseTime;
     }
 }
