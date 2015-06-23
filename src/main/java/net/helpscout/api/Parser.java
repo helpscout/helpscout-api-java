@@ -1,17 +1,18 @@
 package net.helpscout.api;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import java.util.Date;
+
 import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.ref.PersonRef;
+import net.helpscout.api.model.report.common.DateAndCount;
 import net.helpscout.api.model.thread.LineItem;
 
-import java.util.Date;
-
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public final class Parser {
 	private final GsonBuilder builder;
@@ -30,6 +31,8 @@ public final class Parser {
         builder.registerTypeAdapter(WorkflowType.class, new WorkflowTypeAdapter());
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
+		
+		builder.registerTypeAdapter(DateAndCount.class, new DateAndCountDeserializer(builder));
 	}
 
 	public synchronized static Parser getInstance() {
@@ -48,11 +51,16 @@ public final class Parser {
 		JsonElement obj  = (new JsonParser()).parse(json);
 		return (Customer)getObject(obj, Customer.class);
 	}
+	
+	public <T> T getObject(String json, Class<T> clazzType) {
+	    JsonElement obj  = new JsonParser().parse(json);
+	    return getObject(obj, clazzType);
+	}
 
-	public Object getObject(JsonElement item, Class<?> clazzType) {
+	public <T> T getObject(JsonElement item, Class<T> clazzType) {
 		JsonThreadLocal.set(item);
 
-		Object clazz = builder.create().fromJson(item, clazzType);
+		T clazz = builder.create().fromJson(item, clazzType);
 
 		JsonThreadLocal.unset();
 

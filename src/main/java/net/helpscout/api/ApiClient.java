@@ -1,24 +1,81 @@
 package net.helpscout.api;
 
-import com.google.gson.*;
-import net.helpscout.api.adapters.*;
-import net.helpscout.api.cbo.*;
-import net.helpscout.api.exception.*;
-import net.helpscout.api.model.*;
-import net.helpscout.api.model.Customer;
-import net.helpscout.api.model.customer.SearchCustomer;
-import net.helpscout.api.model.thread.*;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
+
+import net.helpscout.api.adapters.ConversationTypeAdapter;
+import net.helpscout.api.adapters.PersonTypeAdapter;
+import net.helpscout.api.adapters.StatusAdapter;
+import net.helpscout.api.adapters.ThreadStateAdapter;
+import net.helpscout.api.adapters.ThreadTypeAdapter;
+import net.helpscout.api.cbo.ConversationType;
+import net.helpscout.api.cbo.PersonType;
+import net.helpscout.api.cbo.Status;
+import net.helpscout.api.cbo.ThreadState;
+import net.helpscout.api.cbo.ThreadType;
+import net.helpscout.api.exception.AccessDeniedException;
+import net.helpscout.api.exception.ApiKeySuspendedException;
+import net.helpscout.api.exception.InvalidApiKeyException;
+import net.helpscout.api.exception.InvalidFormatException;
+import net.helpscout.api.exception.InvalidMethodException;
+import net.helpscout.api.exception.NotFoundException;
+import net.helpscout.api.exception.ServerException;
+import net.helpscout.api.exception.ServiceUnavailableException;
+import net.helpscout.api.exception.ThrottleRateException;
+import net.helpscout.api.model.Attachment;
+import net.helpscout.api.model.Conversation;
+import net.helpscout.api.model.Customer;
+import net.helpscout.api.model.Folder;
+import net.helpscout.api.model.Mailbox;
+import net.helpscout.api.model.SearchConversation;
+import net.helpscout.api.model.Tag;
+import net.helpscout.api.model.User;
+import net.helpscout.api.model.Workflow;
+import net.helpscout.api.model.customer.SearchCustomer;
+import net.helpscout.api.model.report.common.DatesAndCounts;
+import net.helpscout.api.model.report.common.DatesAndElapsedTimes;
+import net.helpscout.api.model.report.common.Rating;
+import net.helpscout.api.model.report.conversations.ConversationsReport;
+import net.helpscout.api.model.report.conversations.DayStats;
+import net.helpscout.api.model.report.docs.DocsReport;
+import net.helpscout.api.model.report.happiness.HappinessReport;
+import net.helpscout.api.model.report.productivity.ProductivityReport;
+import net.helpscout.api.model.report.team.TeamReport;
+import net.helpscout.api.model.report.user.ConversationStats;
+import net.helpscout.api.model.report.user.UserHappiness;
+import net.helpscout.api.model.report.user.UserReport;
+import net.helpscout.api.model.thread.AbstractThread;
+import net.helpscout.api.model.thread.BaseLineItem;
+import net.helpscout.api.model.thread.Chat;
+import net.helpscout.api.model.thread.ConversationThread;
+import net.helpscout.api.model.thread.ForwardChild;
+import net.helpscout.api.model.thread.ForwardParent;
+import net.helpscout.api.model.thread.Message;
+import net.helpscout.api.model.thread.Note;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ApiClient {
 
@@ -849,7 +906,147 @@ public class ApiClient {
         String json = new Gson().toJson(obj);
         doPost("workflows/" + id + "/conversations.json", json, HTTP_STATUS_OK);
     }
+    
+    public ConversationsReport getConversationsReport(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations.json", queryParams);
+        return getObject(url, ConversationsReport.class);
+    }
 
+    public List<DayStats> getBusiestTimeOfDayReport(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations/busy-times.json", queryParams);
+        String json = doGet(url, HTTP_STATUS_OK);
+        JsonElement busyTimes = (new JsonParser()).parse(json);
+
+        return getPageItems(busyTimes, DayStats.class);
+    }
+
+    public DatesAndCounts getNewConversationsReport(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations/new.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+
+    public Page getConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations/drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+
+    public Page getConversationsDrillDownByField(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations/fields-drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+
+    public Page getNewConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/conversations/new-drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+
+    public DocsReport getDocsReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/docs.json", queryParams);
+        return getObject(url, DocsReport.class);
+    }
+    
+    public HappinessReport getHappinessReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/happiness.json", queryParams);
+        return getObject(url, HappinessReport.class);
+    }
+    
+    public Page getHappinessRatings(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/happiness/ratings.json", queryParams);
+        return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
+    }
+    
+    public ProductivityReport getProductivityReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity.json", queryParams);
+        return getObject(url, ProductivityReport.class);
+    }
+    
+    public DatesAndElapsedTimes getFirstResponseTimes(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/first-response-time.json", queryParams);
+        return getObject(url, DatesAndElapsedTimes.class);
+    }
+    
+    public DatesAndCounts getRepliesSent(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/replies-sent.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public DatesAndCounts getResolved(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/resolved.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public DatesAndElapsedTimes getResolutionTimes(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/resolution-time.json", queryParams);
+        return getObject(url, DatesAndElapsedTimes.class);
+    }
+    
+    public DatesAndElapsedTimes getResponseTime(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/response-time.json", queryParams);
+        return getObject(url, DatesAndElapsedTimes.class);
+    }
+    
+    public Page getProductivityDrillDown(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/productivity/drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+    
+    public TeamReport getTeamReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/team.json", queryParams);
+        return getObject(url, TeamReport.class);
+    }
+    
+    public DatesAndCounts getTeamCustomersHelped(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/team/customers-helped.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public Page getTeamDrillDown(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/team/drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+    
+    public UserReport getUserReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user.json", queryParams);
+        return getObject(url, UserReport.class);
+    }
+    
+    public Page getUserConversationHistory(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/conversation-history.json", queryParams);
+        return getPage(url, queryParams, ConversationStats.class, HTTP_STATUS_OK);
+    }
+    
+    public DatesAndCounts getUserCustomersHelped(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/customers-helped.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public DatesAndCounts getUserReplies(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/replies.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public DatesAndCounts getUserResolutions(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/resolutions.json", queryParams);
+        return getObject(url, DatesAndCounts.class);
+    }
+    
+    public UserHappiness getUserHappinessReport(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/happiness.json", queryParams);
+        return getObject(url, UserHappiness.class);
+    }
+    
+    public Page getUserRatings(Map<String,String> queryParams) throws ApiException {
+        String url = setParams("reports/user/ratings.json", queryParams);
+        return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
+    }
+
+    public Page getUserDrillDown(Map<String, String> queryParams) throws ApiException {
+        String url = setParams("reports/user/drilldown.json", queryParams);
+        return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
+    }
+    
+    
+    
 	private void setThreadProperties(ConversationThread thread) {
 		AbstractThread theThread = (AbstractThread)thread;
 
@@ -966,6 +1163,11 @@ public class ApiClient {
 			url.append("page=").append(page);
 		}
 	}
+	
+	private <T> T getObject(String url, Class<T> clazzType) throws ApiException {
+        String json = doGet(url, HTTP_STATUS_OK);
+        return Parser.getInstance().getObject(json, clazzType);	    
+	}
 
 	private Object getItem(String url, Class<?> clazzType, int expectedCode) throws ApiException {
 		String json = doGet(url, expectedCode);
@@ -974,17 +1176,30 @@ public class ApiClient {
 
 		return Parser.getInstance().getObject(item, clazzType);
 	}
+	
+    private Page getPage(String url, Class<?> clazzType, int expectedCode) throws ApiException {
+        return getPage(url, null, clazzType, expectedCode);
+    }
+	
+	private Page getPage(String url, Class<?> clazzType, String wrapperObjectName) throws ApiException {
+        String json = doGet(url, HTTP_STATUS_OK);
 
-	private Page getPage(String url, Class<?> clazzType, int expectedCode) throws ApiException {
-		return getPage(url, null, clazzType, expectedCode);
+        JsonObject outerObj = new JsonParser().parse(json).getAsJsonObject();
+        JsonObject innerObj = outerObj.get(wrapperObjectName).getAsJsonObject();
+        
+        return objectToPage(innerObj, clazzType);
 	}
 
     private Page getPage(String url, Map<String,String> params, Class<?> clazzType, int expectedCode) throws ApiException {
         url = setParams(url, params);
         String json = doGet(url, HTTP_STATUS_OK);
         JsonElement obj = (new JsonParser()).parse(json);
-
-        Set<Map.Entry<String, JsonElement>> set = obj.getAsJsonObject().entrySet();
+        
+        return objectToPage(obj.getAsJsonObject(), clazzType);
+    }
+    
+    private Page objectToPage(JsonObject obj, Class<?> clazzType) {
+        Set<Map.Entry<String, JsonElement>> set = obj.entrySet();
 
         Page p = new Page();
 
@@ -1004,18 +1219,18 @@ public class ApiClient {
                 p.setCount(val.getAsInt());
                 continue;
             }
-            if (key.equals("items")) {
+            if (key.equals("items") || key.equalsIgnoreCase("results")) {
                 p.setItems(getPageItems(val, clazzType));
             }
         }
         return p;
     }
 
-	private ArrayList<Object> getPageItems(JsonElement elem, Class<?> clazzType) {		
+	private <T> ArrayList<T> getPageItems(JsonElement elem, Class<T> clazzType) {		
 		JsonArray ar = elem.getAsJsonArray();
-		ArrayList<Object> col = new ArrayList<Object>(ar.size());
+		ArrayList<T> col = new ArrayList<T>(ar.size());
 		for(JsonElement e : ar) {
-            Object o = Parser.getInstance().getObject(e, clazzType);
+            T o = Parser.getInstance().getObject(e, clazzType);
 			if (o != null) {
 				col.add(o);
 			}
@@ -1146,6 +1361,8 @@ public class ApiClient {
 
 	private HttpURLConnection getConnection(String apiKey, String url, String method, boolean hasRequestBody) throws Exception {
 		URL aUrl = new URL(BASE_URL + url);
+		
+		System.out.println(aUrl);
 
 		HttpURLConnection conn = (HttpURLConnection) aUrl.openConnection();
 
