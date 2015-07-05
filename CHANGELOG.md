@@ -1,6 +1,6 @@
 ### 1.4.0 (June 22, 2015)
 
-* Added support for getting report data. See [developer docs](http://developer.helpscout.net/reports/conversations/conversations/) for more information.
+* Added support for getting report data. See [developer docs](http://developer.helpscout.net/help-desk-api/reports/conversations/conversations/) for more information.
 
 #### 1.3.13 (April 25, 2014)
 
