@@ -79,7 +79,7 @@ import com.google.gson.JsonParser;
 
 public class ApiClient {
 
-	private final static String BASE_URL = "https://api.helpscout.net/v1/";
+	private final static String DEFAULT_BASE_URL = "https://api.helpscout.net/v1/";
 	private final static String METHOD_GET = "GET";
 	private final static String METHOD_POST = "POST";
 	private final static String METHOD_PUT = "PUT";
@@ -89,6 +89,7 @@ public class ApiClient {
     private final static int HTTP_STATUS_CREATED = 201;
 
 	private String apiKey = "";
+	private String baseUrl = DEFAULT_BASE_URL;
 
 	private static ApiClient instance = null;
 
@@ -97,7 +98,7 @@ public class ApiClient {
 
 	public synchronized static ApiClient getInstance() {
 		if (instance == null) {
-			synchronized (BASE_URL) {
+			synchronized (DEFAULT_BASE_URL) {
 				if (instance == null) {
 					instance = new ApiClient();
 				}
@@ -110,7 +111,11 @@ public class ApiClient {
 		this.apiKey = apiKey;
 	}
 
-    /**
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
+
+	/**
      * Gets the mailbox with the specified id.
      *
      * @param mailboxID
@@ -1360,7 +1365,7 @@ public class ApiClient {
 	}
 
 	private HttpURLConnection getConnection(String apiKey, String url, String method, boolean hasRequestBody) throws Exception {
-		URL aUrl = new URL(BASE_URL + url);
+		URL aUrl = new URL(baseUrl + url);
 		
 		System.out.println(aUrl);
 
