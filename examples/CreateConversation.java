@@ -45,6 +45,7 @@ public class CreateConversation {
 		// Created by: required
 		PersonRef createdBy = new CustomerRef();
 		createdBy.setId(12345L);
+		createdBy.setType(PersonType.Customer);
 		thread.setCreatedBy(createdBy); // Required
 
 		// Assigned to: not required - defaults to 'anyone'
