@@ -91,20 +91,12 @@ public class ApiClient {
 	private String apiKey = "";
 	private String baseUrl = DEFAULT_BASE_URL;
 
-	private static ApiClient instance = null;
+	private static ApiClient instance = new ApiClient();
 
-	private ApiClient() {
-	}
+	private ApiClient() {}
 
-	public synchronized static ApiClient getInstance() {
-		if (instance == null) {
-			synchronized (DEFAULT_BASE_URL) {
-				if (instance == null) {
-					instance = new ApiClient();
-				}
-			}
-		}
-		return instance;
+	public static ApiClient getInstance() {
+	    return instance;
 	}
 
 	public void setKey(String apiKey) {
