@@ -1,6 +1,9 @@
 package net.helpscout.api;
 
 import java.util.Date;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
@@ -31,7 +34,6 @@ public final class Parser {
         builder.registerTypeAdapter(WorkflowType.class, new WorkflowTypeAdapter());
 		builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
 		builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
-		
 		builder.registerTypeAdapter(DateAndCount.class, new DateAndCountDeserializer(builder));
 	}
 
@@ -44,12 +46,12 @@ public final class Parser {
 
 	public Conversation getConversation(String json) {
 		JsonElement obj  = (new JsonParser()).parse(json);
-		return (Conversation)getObject(obj, Conversation.class);
+		return getObject(obj, Conversation.class);
 	}
 
 	public Customer getCustomer(String json) {
 		JsonElement obj  = (new JsonParser()).parse(json);
-		return (Customer)getObject(obj, Customer.class);
+		return getObject(obj, Customer.class);
 	}
 	
 	public <T> T getObject(String json, Class<T> clazzType) {
@@ -59,11 +61,10 @@ public final class Parser {
 
 	public <T> T getObject(JsonElement item, Class<T> clazzType) {
 		JsonThreadLocal.set(item);
-
-		T clazz = builder.create().fromJson(item, clazzType);
-
-		JsonThreadLocal.unset();
-
-		return clazz;
+		try {
+			return builder.create().fromJson(item, clazzType);
+		} finally {
+			JsonThreadLocal.unset();
+		}
 	}
 }

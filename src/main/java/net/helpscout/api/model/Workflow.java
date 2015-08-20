@@ -84,4 +84,11 @@ public class Workflow {
     public void setModifiedAt(Date modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
+    @Override
+    public String toString() {
+        return "Workflow [id=" + id + ", mailboxId=" + mailboxId + ", type=" + type + ", status=" + status + ", order="
+                + order + ", name=" + name + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
+    }
+
 }

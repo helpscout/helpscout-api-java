@@ -40,4 +40,11 @@ public class User {
 	public Date getModifiedAt() {
 		return modifiedAt;
 	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", role=" + role + ", timezone=" + timezone + ", photoUrl=" + photoUrl + ", createdAt=" + createdAt
+				+ ", modifiedAt=" + modifiedAt + "]";
+	}
+
 }

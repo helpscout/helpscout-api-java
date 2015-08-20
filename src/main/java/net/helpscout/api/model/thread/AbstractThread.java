@@ -95,4 +95,11 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 	public void setAttachments(List<Attachment> attachments) {
 		this.attachments = attachments;
 	}
+
+	@Override
+	public String toString() {
+		return "AbstractThread [id=" + id + ", type=" + type + ", state=" + state + ", toList=" + toList + ", ccList="
+				+ ccList + ", bccList=" + bccList + ", body=" + body + ", attachments=" + attachments + "]";
+	}
+
 }

@@ -66,4 +66,20 @@ public class Attachment {
 	public void setHash(String hash) {
 		this.hash = hash;
 	}
+
+	@Override
+	public String toString() {
+		String dataPreview = "";
+		if (data != null && data.length() > 0) {
+			if (data.length() < 10) {
+				dataPreview = data;
+			} else {
+				dataPreview = data.substring(0, 10) + "...(" + data.length() + " chars in total)";
+			}
+		}
+		return "Attachment [id=" + id + ", mimeType=" + mimeType + ", fileName=" + fileName + ", size=" + size
+				+ ", width=" + width + ", height=" + height + ", url=" + url + ", hash=" + hash + ", data="
+				+ dataPreview + "]";
+	}
+
 }

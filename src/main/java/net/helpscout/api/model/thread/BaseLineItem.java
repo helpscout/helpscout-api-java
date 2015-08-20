@@ -96,4 +96,12 @@ public class BaseLineItem implements LineItem {
     public void setActionSourceId(Long actionSourceId) {
         this.actionSourceId = actionSourceId;
     }
+
+	@Override
+	public String toString() {
+		return "BaseLineItem [assignedTo=" + assignedTo + ", status=" + status + ", createdBy=" + createdBy
+				+ ", createdAt=" + createdAt + ", fromMailbox=" + fromMailbox + ", actionType=" + actionType
+				+ ", actionSourceId=" + actionSourceId + "]";
+	}
+
 }
