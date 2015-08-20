@@ -76,4 +76,11 @@ public class Address {
 	public void setModifiedAt(Calendar modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
+
+	@Override
+	public String toString() {
+		return "Address [id=" + id + ", lines=" + lines + ", city=" + city + ", state=" + state + ", postalCode="
+				+ postalCode + ", country=" + country + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
+	}
+
 }

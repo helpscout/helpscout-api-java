@@ -139,4 +139,13 @@ public class SearchCustomer {
     public void setModifiedAt(Date modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
+    @Override
+    public String toString() {
+        return "SearchCustomer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", fullName="
+                + fullName + ", emails=" + emails + ", photoUrl=" + photoUrl + ", photoType=" + photoType + ", gender="
+                + gender + ", age=" + age + ", organization=" + organization + ", jobTitle=" + jobTitle + ", location="
+                + location + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
+    }
+
 }

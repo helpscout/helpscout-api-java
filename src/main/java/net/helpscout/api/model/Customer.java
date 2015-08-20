@@ -209,4 +209,15 @@ public class Customer {
 	public void setWebsites(List<WebsiteEntry> websites) {
 		this.websites = websites;
 	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender
+				+ ", age=" + age + ", jobTitle=" + jobTitle + ", location=" + location + ", organization="
+				+ organization + ", photoUrl=" + photoUrl + ", photoType=" + photoType + ", createdAt=" + createdAt
+				+ ", modifiedAt=" + modifiedAt + ", background=" + background + ", address=" + address
+				+ ", socialProfiles=" + socialProfiles + ", emails=" + emails + ", phones=" + phones + ", chats="
+				+ chats + ", websites=" + websites + "]";
+	}
+
 }

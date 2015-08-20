@@ -234,4 +234,15 @@ public class Conversation {
 	public boolean isCreatedByCustomer() {
 		return createdBy != null && createdBy instanceof CustomerRef;
 	}
+
+	@Override
+	public String toString() {
+		return "Conversation [id=" + id + ", type=" + type + ", folderId=" + folderId + ", isDraft=" + isDraft
+				+ ", number=" + number + ", source=" + source + ", owner=" + owner + ", mailbox=" + mailbox
+				+ ", customer=" + customer + ", threadCount=" + threadCount + ", status=" + status + ", subject="
+				+ subject + ", preview=" + preview + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt
+				+ ", closedAt=" + closedAt + ", closedBy=" + closedBy + ", createdBy=" + createdBy + ", ccList="
+				+ ccList + ", bccList=" + bccList + ", tags=" + tags + ", threads=" + threads + "]";
+	}
+
 }

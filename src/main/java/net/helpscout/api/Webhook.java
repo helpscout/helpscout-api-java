@@ -2,14 +2,14 @@ package net.helpscout.api;
 
 import java.io.BufferedReader;
 
-import sun.misc.BASE64Encoder;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
+
+import org.apache.commons.codec.binary.Base64;
 
 final public class Webhook {		
 	private final String secretKey;	
@@ -87,8 +87,7 @@ final public class Webhook {
 				
 			    byte[] digest = json.getBytes();
 	
-			    BASE64Encoder encoder = new BASE64Encoder();		    
-			    computed = new String(encoder.encode(mac.doFinal(digest))).trim();			
+			    computed = new String(Base64.encodeBase64(mac.doFinal(digest))).trim();			
 			} catch (Exception e) {
 			    // ignore
 			}

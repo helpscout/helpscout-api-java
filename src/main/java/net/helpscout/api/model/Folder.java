@@ -32,4 +32,10 @@ public class Folder {
 	public Date getModifiedAt() {
 		return modifiedAt;
 	}
+	@Override
+	public String toString() {
+		return "Folder [id=" + id + ", name=" + name + ", type=" + type + ", userId=" + userId + ", totalCount="
+				+ totalCount + ", activeCount=" + activeCount + ", modifiedAt=" + modifiedAt + "]";
+	}
+
 }
