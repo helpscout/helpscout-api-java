@@ -1245,17 +1245,17 @@ public class ApiClient {
         return getObject(url, DatesAndCounts.class);
     }
 
-    public Page getConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/conversations/drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
 
-    public Page getConversationsDrillDownByField(Map<String, String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getConversationsDrillDownByField(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/conversations/fields-drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
 
-    public Page getNewConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getNewConversationsDrillDown(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/conversations/new-drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
@@ -1270,7 +1270,7 @@ public class ApiClient {
         return getObject(url, HappinessReport.class);
     }
     
-    public Page getHappinessRatings(Map<String, String> queryParams) throws ApiException {
+    public Page<Rating> getHappinessRatings(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/happiness/ratings.json", queryParams);
         return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
     }
@@ -1305,7 +1305,7 @@ public class ApiClient {
         return getObject(url, DatesAndElapsedTimes.class);
     }
     
-    public Page getProductivityDrillDown(Map<String,String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getProductivityDrillDown(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/productivity/drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
@@ -1320,7 +1320,7 @@ public class ApiClient {
         return getObject(url, DatesAndCounts.class);
     }
     
-    public Page getTeamDrillDown(Map<String,String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getTeamDrillDown(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/team/drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
@@ -1330,7 +1330,7 @@ public class ApiClient {
         return getObject(url, UserReport.class);
     }
     
-    public Page getUserConversationHistory(Map<String,String> queryParams) throws ApiException {
+    public Page<ConversationStats> getUserConversationHistory(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/user/conversation-history.json", queryParams);
         return getPage(url, queryParams, ConversationStats.class, HTTP_STATUS_OK);
     }
@@ -1355,17 +1355,15 @@ public class ApiClient {
         return getObject(url, UserHappiness.class);
     }
     
-    public Page getUserRatings(Map<String,String> queryParams) throws ApiException {
+    public Page<Rating> getUserRatings(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/user/ratings.json", queryParams);
         return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
     }
 
-    public Page getUserDrillDown(Map<String, String> queryParams) throws ApiException {
+    public Page<net.helpscout.api.model.report.conversations.Conversation> getUserDrillDown(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/user/drilldown.json", queryParams);
         return getPage(url, net.helpscout.api.model.report.conversations.Conversation.class, "conversations");
     }
-    
-    
     
 	private void setThreadProperties(ConversationThread thread) {
 		AbstractThread theThread = (AbstractThread)thread;
@@ -1512,7 +1510,6 @@ public class ApiClient {
         JsonArray ar = elem.getAsJsonArray();
         ArrayList<T> col = new ArrayList<T>(ar.size());
         for (JsonElement e : ar) {
-            @SuppressWarnings("unchecked")
             T o = (T) Parser.getInstance().getObject(e, clazzType);
             if (o != null) {
                 col.add(o);
