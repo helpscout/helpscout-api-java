@@ -5,11 +5,6 @@ import net.helpscout.api.cbo.WorkflowType;
 
 import java.lang.reflect.Type;
 
-/**
- * WorkflowTypeAdapter -
- *
- * @author briandame@gmail.com
- */
 public class WorkflowTypeAdapter implements JsonDeserializer<WorkflowType>, JsonSerializer<WorkflowType> {
 
     public WorkflowType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

@@ -5,11 +5,6 @@ import net.helpscout.api.cbo.ThreadType;
 
 import java.lang.reflect.Type;
 
-/**
- * ThreadTypeAdapter -
- *
- * @author briandame@gmail.com
- */
 public class ThreadTypeAdapter implements JsonDeserializer<ThreadType>, JsonSerializer<ThreadType> {
 
 	public ThreadType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

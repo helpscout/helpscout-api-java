@@ -5,11 +5,6 @@ import net.helpscout.api.cbo.PersonType;
 
 import java.lang.reflect.Type;
 
-/**
- * PersonTypeAdapter -
- *
- * @author briandame@gmail.com
- */
 public class PersonTypeAdapter implements JsonDeserializer<PersonType>, JsonSerializer<PersonType> {
 
 	public PersonType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
