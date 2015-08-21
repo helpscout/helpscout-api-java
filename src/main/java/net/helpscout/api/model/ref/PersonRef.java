@@ -3,17 +3,18 @@ package net.helpscout.api.model.ref;
 import net.helpscout.api.cbo.PersonType;
 
 public interface PersonRef {
-	public Long getId();
-	public String getFirstName();
-	public String getLastName();
-	public String getEmail();
-	public String getPhone();
-	public PersonType getType();
+    
+	Long getId();
+	String getFirstName();
+	String getLastName();
+	String getEmail();
+	String getPhone();
+	PersonType getType();
 
-	public void setId(Long id);
-	public void setFirstName(String firstName);
-	public void setLastName(String lastName);
-	public void setEmail(String email);
-	public void setPhone(String phone);
-	public void setType(PersonType type);
+	void setId(Long id);
+	void setFirstName(String firstName);
+	void setLastName(String lastName);
+	void setEmail(String email);
+	void setPhone(String phone);
+	void setType(PersonType type);
 }

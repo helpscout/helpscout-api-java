@@ -13,10 +13,6 @@ import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.report.common.DateAndCount;
 import net.helpscout.api.model.thread.LineItem;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 public final class Parser {
 	private final GsonBuilder builder;
 

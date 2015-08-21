@@ -1,23 +1,19 @@
 package net.helpscout.api.model;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Source {
-	private String type;
-	private String via;
-	
-	public String getType() {
-		return type;
-	}
-	public String getVia() {
-		return via;
-	}
+    
+	String type;
+	String via;
 	
 	public boolean isViaCustomer() {
-		return "customer".equals(via);
+		return "customer".equals(getVia());
 	}
-
-	@Override
-	public String toString() {
-		return "Source [type=" + type + ", via=" + via + "]";
-	}
-
 }

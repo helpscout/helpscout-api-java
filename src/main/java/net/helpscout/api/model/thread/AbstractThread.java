@@ -1,105 +1,42 @@
 package net.helpscout.api.model.thread;
 
+import java.util.List;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.model.Attachment;
 
-import java.util.List;
-
+@Data
+@EqualsAndHashCode(callSuper=true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AbstractThread extends BaseLineItem implements ConversationThread {
-	private Long id;
-	private ThreadType type;
-	private ThreadState state;
-	private String body;
-	private List<String> toList;
-	private List<String> ccList;
-	private List<String> bccList;
-	private List<Attachment> attachments;
+    
+	Long id;
+	ThreadType type;
+	ThreadState state;
+	String body;
+	List<String> toList;
+	List<String> ccList;
+	List<String> bccList;
+	List<Attachment> attachments;
 
 	public boolean isPublished() {
-		return this.state == ThreadState.Published;
+	    return getState() == ThreadState.Published;
 	}
 
 	public boolean isDraft() {
-		return this.state == ThreadState.Draft;
+	    return getState() == ThreadState.Draft;
 	}
 
 	public boolean isHeldForReview() {
-		return this.state == ThreadState.UnderReview;
+		return getState() == ThreadState.UnderReview;
 	}
 
 	public boolean hasAttachments() {
-		return this.attachments != null && this.attachments.size() > 0;
+		return getAttachments() != null && getAttachments().size() > 0;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public ThreadType getType() {
-		return type;
-	}
-
-	public ThreadState getState() {
-		return state;
-	}
-
-	public String getBody() {
-		return body;
-	}
-
-	public List<String> getToList() {
-		return toList;
-	}
-
-	public List<String> getCcList() {
-		return ccList;
-	}
-
-	public List<String> getBccList() {
-		return bccList;
-	}
-
-	public List<Attachment> getAttachments() {
-		return attachments;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setType(ThreadType type) {
-		this.type = type;
-	}
-
-	public void setState(ThreadState state) {
-		this.state = state;
-	}
-
-	public void setBody(String body) {
-		this.body = body;
-	}
-
-	public void setToList(List<String> toList) {
-		this.toList = toList;
-	}
-
-	public void setCcList(List<String> ccList) {
-		this.ccList = ccList;
-	}
-
-	public void setBccList(List<String> bccList) {
-		this.bccList = bccList;
-	}
-
-	public void setAttachments(List<Attachment> attachments) {
-		this.attachments = attachments;
-	}
-
-	@Override
-	public String toString() {
-		return "AbstractThread [id=" + id + ", type=" + type + ", state=" + state + ", toList=" + toList + ", ccList="
-				+ ccList + ", bccList=" + bccList + ", body=" + body + ", attachments=" + attachments + "]";
-	}
-
 }

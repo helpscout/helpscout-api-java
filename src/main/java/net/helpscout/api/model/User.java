@@ -2,49 +2,23 @@ package net.helpscout.api.model;
 
 import java.util.Date;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-	private Long id;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String role;
-	private String timezone;
-	private String photoUrl;
-	private Date createdAt;
-	private Date modifiedAt;
-
-	public Long getId() {
-		return id;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public String getRole() {
-		return role;
-	}
-	public String getTimezone() {
-		return timezone;
-	}
-	public String getPhotoUrl() {
-		return photoUrl;
-	}
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	public Date getModifiedAt() {
-		return modifiedAt;
-	}
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", role=" + role + ", timezone=" + timezone + ", photoUrl=" + photoUrl + ", createdAt=" + createdAt
-				+ ", modifiedAt=" + modifiedAt + "]";
-	}
-
+    
+	Long id;
+	String firstName;
+	String lastName;
+	String email;
+	String role;
+	String timezone;
+	String photoUrl;
+	Date createdAt;
+	Date modifiedAt;
 }
