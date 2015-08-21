@@ -1,5 +1,15 @@
+# Java
+*.class
+*.jar
+hs_err_pid*
+
+# Eclipse
 target
 .settings
 .project
 .classpath
 /bin/
+
+# IntelliJ
+*.iml
+.idea/
