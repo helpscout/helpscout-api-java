@@ -1,16 +1,19 @@
 Help Scout Java Wrapper
 =======================
-Java Wrapper for the Help Scout API. More information on our developer site: [http://developer.helpscout.net](http://developer.helpscout.net).
+Java Wrapper for the Help Scout API. More information can be found on our [developer site](http://developer.helpscout.net).
 
-Version 1.4.0 Released
+Version 1.5.0 Released
 ---------------------
 Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
 
 Requirements
 ---------------------
-* Java 1.6
-* [google-gson](http://code.google.com/p/google-gson/)
-* [commons-codec](http://commons.apache.org/proper/commons-codec/)
+* Java 1.6 or higher
+* [Commons Codec](http://commons.apache.org/proper/commons-codec/)
+* [Commons Lang](http://commons.apache.org/proper/commons-lang/)
+* [Commons IO](http://commons.apache.org/proper/commons-io/)
+* [GSON](https://github.com/google/gson/)
+* [SLF4J](http://www.slf4j.org/)
 
 Example Usage: API
 ---------------------
@@ -109,3 +112,7 @@ if (webhook.isValid()) {
   }
 }
 ```
+
+Contributing
+------------
+All contributions are welcomed and reviewed. Please submit all pull requests against the [develop branch](https://github.com/helpscout/helpscout-api-java/tree/develop).

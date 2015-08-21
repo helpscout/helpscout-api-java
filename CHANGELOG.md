@@ -1,3 +1,17 @@
+### 1.5.0 (August 24, 2015)
+
+* Identifiers are now of type `Long` (matching model objects). Old methods using `Integer` are deprecated.
+* Added support for generics.
+* Lombok-ified many classes.
+* Added `toString()` methods to model objects.
+* The build now also generates a source JAR. 
+* Reformatted code to use spaces instead of tabs.
+* Used `Base64` encoder from Apache Commons Codec insead of "sun.misc" package. Fixes [issue #2](https://github.com/helpscout/helpscout-api-java/issues/2).
+* Initialized `ApiClient` instance at class-load time and refactored `ApiClient.getInstance()`. Fixes [issue #6](https://github.com/helpscout/helpscout-api-java/issues/6).
+* Fixed error in example `CreateConversation.java`, and also improved exception messages in the case of bad requests. Fixes [issue #8](https://github.com/helpscout/helpscout-api-java/issues/8).
+
+Thanks to our many contributors who submitted pull requests for this release!
+
 ### 1.4.0 (June 22, 2015)
 
 * Added support for getting report data. See [developer docs](http://developer.helpscout.net/help-desk-api/reports/conversations/conversations/) for more information.
@@ -5,7 +19,6 @@
 #### 1.3.13 (April 25, 2014)
 
 * Added support for updating the body text of a thread. See [developer docs](http://developer.helpscout.net/) for more information.
-
 
 #### 1.3.11 (February 4, 2014)
 
