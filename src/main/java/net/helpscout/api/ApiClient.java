@@ -5,17 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import com.google.gson.*;
-
-import net.helpscout.api.adapters.*;
-import net.helpscout.api.cbo.*;
-import net.helpscout.api.exception.*;
-import net.helpscout.api.model.*;
-import net.helpscout.api.model.Customer;
-import net.helpscout.api.model.customer.SearchCustomer;
-import net.helpscout.api.model.thread.*;
-
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -48,6 +38,7 @@ import net.helpscout.api.exception.NotFoundException;
 import net.helpscout.api.exception.ServerException;
 import net.helpscout.api.exception.ServiceUnavailableException;
 import net.helpscout.api.exception.ThrottleRateException;
+import net.helpscout.api.json.JsonFormatter;
 import net.helpscout.api.model.Attachment;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
@@ -79,14 +70,17 @@ import net.helpscout.api.model.thread.ForwardParent;
 import net.helpscout.api.model.thread.Message;
 import net.helpscout.api.model.thread.Note;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.LoggerFactory;
 
 public class ApiClient {
 
@@ -1547,6 +1541,8 @@ public class ApiClient {
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
 			return extractor.extract(conn);
+		} catch(ApiException ex) {
+		    throw ex;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		} finally {
@@ -1610,7 +1606,9 @@ public class ApiClient {
 			}
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
-		} catch (Exception ex) {
+		} catch(ApiException ex) {
+            throw ex;
+        } catch (Exception ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		} finally {
@@ -1629,7 +1627,9 @@ public class ApiClient {
 
 			br = new BufferedReader(new InputStreamReader((getInputStream(conn)), Charset.forName("UTF8")));
 			response = getResponse(br);
-		} catch(Exception e) {
+		} catch(ApiException e) {
+            throw e;
+        } catch(Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			close(br);
@@ -1644,7 +1644,9 @@ public class ApiClient {
 			conn = getConnection(apiKey, url, METHOD_DELETE, false);
 			conn.connect();
 			checkStatusCode(conn, expectedCode);
-		} catch (Exception ex) {
+		} catch(ApiException e) {
+            throw e;
+        } catch (Exception ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		} finally {
@@ -1673,12 +1675,15 @@ public class ApiClient {
 
 	private void checkStatusCode(HttpURLConnection conn, int expectedCode) throws ApiException, IOException {
 		int code = conn.getResponseCode();
+		
 		if (code == expectedCode) {
 			return;
 		}
+		
 		switch(code) {
 			case 400:
-				throw new InvalidFormatException("The request was not formatted correctly");
+			    String details = getDetailedErrorMessage(conn);
+				throw new InvalidFormatException("The request was not formatted correctly", details);
 			case 401:
 				throw new InvalidApiKeyException("Invalid API key");
 			case 402:
@@ -1696,8 +1701,15 @@ public class ApiClient {
 			case 503:
 				throw new ServiceUnavailableException("Service Temporarily Unavailable");
 			default:
-				throw new ApiException("API key suspended");
+				throw new ApiException("Unknown API exception");
 		}
+	}
+	
+	private String getDetailedErrorMessage(HttpURLConnection conn) throws IOException {
+	    InputStream is = conn.getErrorStream();
+	    String json = IOUtils.toString(is, "UTF-8");
+	    
+	    return StringUtils.isNotEmpty(json) ? new JsonFormatter().format(json) : null;
 	}
 
 	private String getResponse(BufferedReader reader) throws IOException {

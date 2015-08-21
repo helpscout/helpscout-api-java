@@ -9,5 +9,9 @@ public class InvalidFormatException extends ApiException {
 	public InvalidFormatException(String mesg) {
 		super(mesg);	
 	}
+	
+	public InvalidFormatException(String summary, String details) {
+	    super(summary, details);
+	}
 
 }
