@@ -1,5 +1,6 @@
 package net.helpscout.api.model.thread;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -16,11 +17,11 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
     private ThreadType type;
     private ThreadState state;
     private String body;
-    private List<String> toList;
-    private List<String> ccList;
-    private List<String> bccList;
-    private List<Attachment> attachments;
-
+    private List<String> toList = new ArrayList<String>();
+    private List<String> ccList = new ArrayList<String>();
+    private List<String> bccList = new ArrayList<String>();
+    private List<Attachment> attachments = new ArrayList<Attachment>();
+    
 	public boolean isPublished() {
 	    return getState() == ThreadState.Published;
 	}
@@ -34,6 +35,6 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
 	}
 
 	public boolean hasAttachments() {
-		return getAttachments() != null && getAttachments().size() > 0;
+	    return !getAttachments().isEmpty();
 	}
 }
