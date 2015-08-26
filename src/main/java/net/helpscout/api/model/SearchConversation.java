@@ -2,23 +2,20 @@ package net.helpscout.api.model;
 
 import java.util.Date;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchConversation {
 
-    Long id;
-    Long number;
-    Long mailboxId;
-    String subject;
-    String status;
-    int threadCount;
-    String preview;
-    String customerName;
-    String customerEmail;
-    Date modifiedAt;
-    Float score;
+    private Long id;
+    private Long number;
+    private Long mailboxId;
+    private String subject;
+    private String status;
+    private int threadCount;
+    private String preview;
+    private String customerName;
+    private String customerEmail;
+    private Date modifiedAt;
+    private Float score;
 }

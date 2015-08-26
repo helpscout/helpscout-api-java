@@ -1,39 +1,36 @@
 package net.helpscout.api.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Attachment {
     
 	@Getter
-	Long id;
+	private Long id;
 	
 	@Getter @Setter
-	String mimeType;
+	private String mimeType;
 
 	@Setter
-	String fileName;
+	private String fileName;
 	
 	@Getter
-	int size;
+	private int size;
 
 	@Getter
-	int width;
+	private int width;
 	
 	@Getter
-	int height;
+	private int height;
 	
 	@Getter
-	String url;
+	private String url;
 	
 	@Getter @Setter
-	String hash;
+	private String hash;
 	
 	@Getter @Setter
-	String data;
+	private String data;
 
 	public boolean isImage() {
 		return getMimeType() != null && getMimeType().startsWith("image");

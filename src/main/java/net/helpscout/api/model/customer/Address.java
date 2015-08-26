@@ -3,20 +3,17 @@ package net.helpscout.api.model.customer;
 import java.util.Calendar;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Address {
     
-	Long id;
-	List<String> lines;
-	String city;
-	String state;
-	String postalCode;
-	String country;
-	Calendar createdAt;
-	Calendar modifiedAt;
+	private Long id;
+	private List<String> lines;
+	private String city;
+	private String state;
+	private String postalCode;
+	private String country;
+	private Calendar createdAt;
+	private Calendar modifiedAt;
 }

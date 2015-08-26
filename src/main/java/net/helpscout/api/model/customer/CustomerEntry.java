@@ -1,15 +1,12 @@
 package net.helpscout.api.model.customer;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerEntry {
     
-	Long id;
-	String value;
-	String type;
-	String location;
+    private Long id;
+    private String value;
+    private String type;
+    private String location;
 }

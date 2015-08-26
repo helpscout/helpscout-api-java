@@ -3,133 +3,120 @@ package net.helpscout.api.model.report.conversations;
 import java.util.Date;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 import net.helpscout.api.model.report.common.Tag;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConversationsReport {
 
-    List<Tag> filterTags;
-    DayStats busiestDay;
-    Integer busyTimeStart;
-    Integer busyTimeEnd;
-    TimeRangeStats current;
-    TimeRangeStats previous;
-    MultipleTimeRangeStats delta;
-    TagStats tags;
-    CustomerStats customers;
-    SavedReplyStats replies;
-    WorkflowStats workflows;
+    private List<Tag> filterTags;
+    private DayStats busiestDay;
+    private Integer busyTimeStart;
+    private Integer busyTimeEnd;
+    private TimeRangeStats current;
+    private TimeRangeStats previous;
+    private MultipleTimeRangeStats delta;
+    private TagStats tags;
+    private CustomerStats customers;
+    private SavedReplyStats replies;
+    private WorkflowStats workflows;
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class TimeRangeStats {
 
-        Date startDate;
-        Date endDate;
-        Integer totalConversations;
-        Integer conversationsCreated;
-        Integer newConversations;
-        Integer customers;
-        Integer conversationsPerDay;
+        private Date startDate;
+        private Date endDate;
+        private Integer totalConversations;
+        private Integer conversationsCreated;
+        private Integer newConversations;
+        private Integer customers;
+        private Integer conversationsPerDay;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class MultipleTimeRangeStats {
 
-        Double newConversations;
-        Double totalConversations;
-        Double customers;
-        Double conversationsCreated;
-        Double conversationsPerDay;
+        private Double newConversations;
+        private Double totalConversations;
+        private Double customers;
+        private Double conversationsCreated;
+        private Double conversationsPerDay;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class TagStats {
 
-        Integer count;
-        List<TagStat> top;
+        private Integer count;
+        private List<TagStat> top;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class TagStat {
 
-        String name;
-        Integer id;
-        Integer count;
-        Integer previousCount;
-        Double percent;
-        Double previousPercent;
-        Double deltaPercent;
+        private String name;
+        private Integer id;
+        private Integer count;
+        private Integer previousCount;
+        private Double percent;
+        private Double previousPercent;
+        private Double deltaPercent;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class CustomerStats {
 
-        Integer count;
-        List<CustomerStat> top;
+        private Integer count;
+        private List<CustomerStat> top;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class CustomerStat {
 
-        String name;
-        Integer id;
-        Integer count;
-        Double previousCount;
-        Double percent;
-        Double previousPercent;
-        Double deltaPercent;
+        private String name;
+        private Integer id;
+        private Integer count;
+        private Double previousCount;
+        private Double percent;
+        private Double previousPercent;
+        private Double deltaPercent;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class SavedReplyStats {
 
-        Integer count;
-        List<SavedReplyStat> replies;
+        private Integer count;
+        private List<SavedReplyStat> replies;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class SavedReplyStat {
 
-        String name;
-        Integer id;
-        Integer mailboxId;
-        Integer count;
-        Integer previousCount;
-        Double percent;
-        Double previousPercent;
-        Double deltaPercent;
+        private String name;
+        private Integer id;
+        private Integer mailboxId;
+        private Integer count;
+        private Integer previousCount;
+        private Double percent;
+        private Double previousPercent;
+        private Double deltaPercent;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class WorkflowStats {
 
-        Integer count;
-        List<WorkflowStat> top;
+        private Integer count;
+        private List<WorkflowStat> top;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class WorkflowStat {
 
-        String name;
-        Integer id;
-        Integer count;
-        Integer previousCount;
-        Double percent;
-        Double previousPercent;
-        Double deltaPercent;
+        private String name;
+        private Integer id;
+        private Integer count;
+        private Integer previousCount;
+        private Double percent;
+        private Double previousPercent;
+        private Double deltaPercent;
     }
 }

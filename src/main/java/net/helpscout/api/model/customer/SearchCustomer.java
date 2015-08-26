@@ -3,26 +3,23 @@ package net.helpscout.api.model.customer;
 import java.util.Date;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchCustomer {
 
-    Long id;
-    String firstName;
-    String lastName;
-    String fullName;
-    List<String> emails;
-    String photoUrl;
-    String photoType;
-    String gender;
-    String age;
-    String organization;
-    String jobTitle;
-    String location;
-    Date createdAt;
-    Date modifiedAt;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String fullName;
+    private List<String> emails;
+    private String photoUrl;
+    private String photoType;
+    private String gender;
+    private String age;
+    private String organization;
+    private String jobTitle;
+    private String location;
+    private Date createdAt;
+    private Date modifiedAt;
 }

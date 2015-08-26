@@ -3,9 +3,7 @@ package net.helpscout.api.model;
 import java.util.Date;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 import net.helpscout.api.model.customer.Address;
 import net.helpscout.api.model.customer.ChatEntry;
 import net.helpscout.api.model.customer.EmailEntry;
@@ -14,32 +12,31 @@ import net.helpscout.api.model.customer.SocialProfileEntry;
 import net.helpscout.api.model.customer.WebsiteEntry;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Customer {
     
-	Long id;
-	String firstName;
-	String lastName;
-	String gender;
-	String age;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String gender;
+    private String age;
 
-	String jobTitle;
-	String location;
-	String organization;
+    private String jobTitle;
+    private String location;
+    private String organization;
 
-	String photoUrl;
-	String photoType;
+    private String photoUrl;
+	private String photoType;
 
-	Date createdAt;
-	Date modifiedAt;
+	private Date createdAt;
+	private Date modifiedAt;
 
-	String background;
-	Address address;
-	List<SocialProfileEntry> socialProfiles;
-	List<EmailEntry> emails;
-	List<PhoneEntry> phones;
-	List<ChatEntry> chats;
-	List<WebsiteEntry> websites;
+	private String background;
+	private Address address;
+	private List<SocialProfileEntry> socialProfiles;
+	private List<EmailEntry> emails;
+	private List<PhoneEntry> phones;
+	private List<ChatEntry> chats;
+	private List<WebsiteEntry> websites;
 
 	public boolean hasBackground() {
 		return getBackground() != null;
