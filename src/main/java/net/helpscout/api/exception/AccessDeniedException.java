@@ -4,10 +4,10 @@ import net.helpscout.api.ApiException;
 
 public class AccessDeniedException extends ApiException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public AccessDeniedException(String mesg) {
-		super(mesg);	
-	}
+    public AccessDeniedException(String mesg) {
+        super(mesg);    
+    }
 
 }

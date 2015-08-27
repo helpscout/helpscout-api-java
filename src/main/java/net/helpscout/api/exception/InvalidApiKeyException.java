@@ -4,10 +4,10 @@ import net.helpscout.api.ApiException;
 
 public class InvalidApiKeyException extends ApiException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public InvalidApiKeyException(String mesg) {
-		super(mesg);	
-	}
+    public InvalidApiKeyException(String mesg) {
+        super(mesg);    
+    }
 
 }

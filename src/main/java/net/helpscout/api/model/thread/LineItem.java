@@ -10,41 +10,24 @@ import java.util.Date;
 
 public interface LineItem {
 
-	public boolean isAssigned();
+    boolean isAssigned();
+    boolean isActive();
+    boolean isPending();
+    boolean isClosed();
+    boolean isSpam();
+    boolean isStatusChange();
+    UserRef getAssignedTo();
+    Status getStatus();
+    PersonRef getCreatedBy();
+    MailboxRef getFromMailbox();
+    ActionType getActionType();
+    Long getActionSourceId();
 
-	public boolean isActive();
-
-	public boolean isPending();
-
-	public boolean isClosed();
-
-	public boolean isSpam();
-
-	public void setAssignedTo(UserRef assignedTo);
-
-	public UserRef getAssignedTo();
-
-	public void setStatus(Status status);
-
-	public Status getStatus();
-
-	public boolean isStatusChange();
-
-	public void setCreatedBy(PersonRef person);
-
-	public PersonRef getCreatedBy();
-
-	public void setFromMailbox(MailboxRef mailbox);
-
-	public MailboxRef getFromMailbox();
-
-	public void setCreatedAt(Date createdAt);
-
-    public ActionType getActionType();
-
-    public void setActionType(ActionType actionType);
-
-    public Long getActionSourceId();
-
-    public void setActionSourceId(Long actionSourceId);
+    void setAssignedTo(UserRef assignedTo);
+    void setStatus(Status status);
+    void setCreatedBy(PersonRef person);
+    void setFromMailbox(MailboxRef mailbox);
+    void setCreatedAt(Date createdAt);
+    void setActionType(ActionType actionType);
+    void setActionSourceId(Long actionSourceId);
 }

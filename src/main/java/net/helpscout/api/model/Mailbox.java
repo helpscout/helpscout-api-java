@@ -2,30 +2,17 @@ package net.helpscout.api.model;
 
 import java.util.Date;
 
-public class Mailbox {
-	private Long id;
-	private String name;
-	private String slug;
-	private String email;
-	private Date createdAt;
-	private Date modifiedAt;
+import lombok.Getter;
+import lombok.ToString;
 
-	public Long getId() {
-		return id;
-	}
-	public String getName() {
-		return name;
-	}
-	public String getSlug() {
-		return slug;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	public Date getModifiedAt() {
-		return modifiedAt;
-	}
+@Getter
+@ToString
+public class Mailbox {
+
+    private Long id;
+    private String name;
+    private String slug;
+    private String email;
+    private Date createdAt;
+    private Date modifiedAt;
 }

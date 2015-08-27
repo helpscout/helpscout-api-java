@@ -1,69 +1,63 @@
 package net.helpscout.api.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class Attachment {
-	private Long id;
-	private String mimeType;
-	private String fileName;
-	private int size;
-	private int width;
-	private int height;
-	private String url;
-	private String hash;
-	private String data;
+    
+    @Getter
+    private Long id;
+    
+    @Getter @Setter
+    private String mimeType;
 
-	public boolean isImage() {
-		return mimeType != null && mimeType.startsWith("image");
-	}
+    @Setter
+    private String fileName;
+    
+    @Getter
+    private int size;
 
-	public Long getId() {
-		return id;
-	}
+    @Getter
+    private int width;
+    
+    @Getter
+    private int height;
+    
+    @Getter
+    private String url;
+    
+    @Getter @Setter
+    private String hash;
+    
+    @Getter @Setter
+    private String data;
 
-	public String getMimeType() {
-		return mimeType;
-	}
+    public boolean isImage() {
+        return getMimeType() != null && getMimeType().startsWith("image");
+    }
 
-	public String getFilename() {
-		return fileName;
-	}
+    // Don't use Lombok here in order to maintain backward-compatibility. This
+    // method is named "getFilename", but should really be "getFileName". Lombok
+    // unfortunately doesn't distinguish between upper and lower case when
+    // generating methods, so we can't generate a new one and deprecate this
+    // one.
+    public String getFilename() {
+        return fileName;
+    }
 
-	public int getSize() {
-		return size;
-	}
+    @Override
+    public String toString() {
+        String dataPreview = "";
+        if (data != null && data.length() > 0) {
+            if (data.length() < 10) {
+                dataPreview = data;
+            } else {
+                dataPreview = data.substring(0, 10) + "...(" + data.length() + " chars in total)";
+            }
+        }
+        return "Attachment [id=" + id + ", mimeType=" + mimeType + ", fileName=" + fileName + ", size=" + size
+                + ", width=" + width + ", height=" + height + ", url=" + url + ", hash=" + hash + ", data="
+                + dataPreview + "]";
+    }
 
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public String getHash() {
-		return hash;
-	}
-
-	public String getData() {
-		return data;
-	}
-
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public void setData(String data) {
-		this.data = data;
-	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
 }

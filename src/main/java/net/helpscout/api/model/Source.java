@@ -1,17 +1,16 @@
 package net.helpscout.api.model;
 
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
 public class Source {
-	private String type;
-	private String via;
-	
-	public String getType() {
-		return type;
-	}
-	public String getVia() {
-		return via;
-	}
-	
-	public boolean isViaCustomer() {
-		return "customer".equals(via);
-	}
+    
+    private String type;
+    private String via;
+    
+    public boolean isViaCustomer() {
+        return "customer".equals(getVia());
+    }
 }

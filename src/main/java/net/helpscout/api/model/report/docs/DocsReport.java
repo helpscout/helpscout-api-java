@@ -2,62 +2,55 @@ package net.helpscout.api.model.report.docs;
 
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DocsReport {
 
-    TimeRangeStats current;
-    TimeRangeStats previous;
-    List<SearchStats> popularSearches;
-    List<SearchStats> failedSearches;
-    List<ArticleStats> topArticles;
-    List<ArticleStats> topCategories;
-    DeltaStats deltas;
+    private TimeRangeStats current;
+    private TimeRangeStats previous;
+    private List<SearchStats> popularSearches;
+    private List<SearchStats> failedSearches;
+    private List<ArticleStats> topArticles;
+    private List<ArticleStats> topCategories;
+    private DeltaStats deltas;
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class TimeRangeStats {
 
-        Integer visitors;
-        Double browseAction;
-        Double sentAnEmailResult;
-        Double foundAnAnswerResult;
-        Double searchAction;
-        Double failedResult;
-        Double docsViewedPerVisit;
+        private Integer visitors;
+        private Double browseAction;
+        private Double sentAnEmailResult;
+        private Double foundAnAnswerResult;
+        private Double searchAction;
+        private Double failedResult;
+        private Double docsViewedPerVisit;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class SearchStats {
 
-        Integer count;
-        String id;
-        Integer results;
+        private Integer count;
+        private String id;
+        private Integer results;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class ArticleStats {
 
-        Integer count;
-        String id;
+        private Integer count;
+        private String id;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class DeltaStats {
 
-        Double failedResult;
-        Double docsViewedPerVisit;
-        Double foundAnAnswerResult;
-        Double visitors;
-        Double browseAction;
-        Double searchAction;
-        Double sentAnEmailResult;
+        private Double failedResult;
+        private Double docsViewedPerVisit;
+        private Double foundAnAnswerResult;
+        private Double visitors;
+        private Double browseAction;
+        private Double searchAction;
+        private Double sentAnEmailResult;
     }
 }

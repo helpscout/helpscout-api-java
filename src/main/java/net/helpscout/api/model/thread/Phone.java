@@ -1,9 +1,8 @@
 package net.helpscout.api.model.thread;
 
 /**
- * Phone -
- *
- * @author briandame@gmail.com
+ * Marker class to allow creation of threads of type = "phone".
  */
 public class Phone extends AbstractThread {
+    
 }

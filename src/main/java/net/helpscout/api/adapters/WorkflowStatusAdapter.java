@@ -5,11 +5,6 @@ import net.helpscout.api.cbo.WorkflowStatus;
 
 import java.lang.reflect.Type;
 
-/**
- * WorkflowStatusAdapter -
- *
- * @author briandame@gmail.com
- */
 public class WorkflowStatusAdapter implements JsonDeserializer<WorkflowStatus>, JsonSerializer<WorkflowStatus> {
 
     public WorkflowStatus deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

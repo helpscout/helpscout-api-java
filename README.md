@@ -1,15 +1,19 @@
 Help Scout Java Wrapper
 =======================
-Java Wrapper for the Help Scout API. More information on our developer site: [http://developer.helpscout.net](http://developer.helpscout.net).
+Java Wrapper for the Help Scout API. More information can be found on our [developer site](http://developer.helpscout.net).
 
-Version 1.4.0 Released
+Version 1.5.0 Released
 ---------------------
 Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
 
 Requirements
 ---------------------
-* JDE 1.6
-* [google-gson](http://code.google.com/p/google-gson/)
+* Java 1.6 or higher
+* [Commons Codec](http://commons.apache.org/proper/commons-codec/)
+* [Commons Lang](http://commons.apache.org/proper/commons-lang/)
+* [Commons IO](http://commons.apache.org/proper/commons-io/)
+* [GSON](https://github.com/google/gson/)
+* [SLF4J](http://www.slf4j.org/)
 
 Example Usage: API
 ---------------------
@@ -59,36 +63,36 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 
 ### Mailboxes
 * getMailboxes()
-* getMailbox(Integer mailboxID)
+* getMailbox(Long mailboxID)
 
 ### Folders
-* getFolders(Integer mailboxID)
+* getFolders(Long mailboxID)
 
 ### Conversations
-* getConversationsForFolder(Integer mailboxID, Integer folderID)
-* getConversationsForMailbox(Integer mailboxID)
-* getConversationsForCustomerByMailbox(Integer mailboxID, Integer customerID)
-* getConversation(Integer conversationID)
+* getConversationsForFolder(Long mailboxID, Long folderID)
+* getConversationsForMailbox(Long mailboxID)
+* getConversationsForCustomerByMailbox(Long mailboxID, Long customerID)
+* getConversation(Long conversationID)
 * createConversation(Conversation conversation)
 * createConversationThread(Long conversationId, ConversationThread thread)
 * updateConversation(Conversation conversation)
 * deleteConversation(Long id)
 
 ### Attachments
-* getAttachmentData(Integer attachmentID)
+* getAttachmentData(Long attachmentID)
 * createAttachment(Attachment attachment)
 * deleteAttachment(Long id)
 
 ### Customers
 * getCustomers()
-* getCustomer(Integer customerID)
+* getCustomer(Long customerID)
 * createCustomer(Customer customer)
 * updateCustomer(Customer customer)
 
 ### Users
 * getUsers()
-* getUsersForMailbox(Integer mailboxID)
-* getUser(Integer userID)
+* getUsersForMailbox(Long mailboxID)
+* getUser(Long userID)
 
 
 Example Usage: Webhooks
@@ -108,3 +112,7 @@ if (webhook.isValid()) {
   }
 }
 ```
+
+Contributing
+------------
+All contributions are welcomed and reviewed. Please submit all pull requests against the [develop branch](https://github.com/helpscout/helpscout-api-java/tree/develop).

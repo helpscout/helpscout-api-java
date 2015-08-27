@@ -2,47 +2,42 @@ package net.helpscout.api.model.report.happiness;
 
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 import net.helpscout.api.model.report.common.Tag;
 
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HappinessReport {
 
-    List<Tag> filterTags;
-    TimeRangeStats current;
-    TimeRangeStats previous;
-    MultipleTimeRangeStats deltas;
+    private List<Tag> filterTags;
+    private TimeRangeStats current;
+    private TimeRangeStats previous;
+    private MultipleTimeRangeStats deltas;
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class TimeRangeStats {
 
-        Double okay;
-        Integer notGoodCount;
-        Integer totalCustomers;
-        Double happinessScore;
-        Integer totalCustomersWithRatings;
-        Integer ratingsCount;
-        Double ratingsPercent;
-        Double notGood;
-        Double great;
-        Integer greatCount;
-        Integer okayCount;
+        private Double okay;
+        private Integer notGoodCount;
+        private Integer totalCustomers;
+        private Double happinessScore;
+        private Integer totalCustomersWithRatings;
+        private Integer ratingsCount;
+        private Double ratingsPercent;
+        private Double notGood;
+        private Double great;
+        private Integer greatCount;
+        private Integer okayCount;
     }
 
     @Data
-    @FieldDefaults(level = AccessLevel.PRIVATE)
     public class MultipleTimeRangeStats {
 
-        Double okay;
-        Double notGoodCount;
-        Double happinessScore;
-        Double notGood;
-        Double great;
-        Double greatCount;
-        Double okayCount;
+        private Double okay;
+        private Double notGoodCount;
+        private Double happinessScore;
+        private Double notGood;
+        private Double great;
+        private Double greatCount;
+        private Double okayCount;
     }
 }
