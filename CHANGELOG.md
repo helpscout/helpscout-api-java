@@ -1,4 +1,4 @@
-### 1.5.0 (August 24, 2015)
+### 1.5.0 (August 27, 2015)
 
 * Identifiers are now of type `Long` (matching model objects). Old methods using `Integer` are deprecated.
 * Added support for generics.
