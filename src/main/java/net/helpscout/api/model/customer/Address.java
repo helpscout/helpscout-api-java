@@ -8,12 +8,12 @@ import lombok.Data;
 @Data
 public class Address {
     
-	private Long id;
-	private List<String> lines;
-	private String city;
-	private String state;
-	private String postalCode;
-	private String country;
-	private Calendar createdAt;
-	private Calendar modifiedAt;
+    private Long id;
+    private List<String> lines;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
+    private Calendar createdAt;
+    private Calendar modifiedAt;
 }

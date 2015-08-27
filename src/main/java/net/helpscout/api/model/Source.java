@@ -9,8 +9,8 @@ public class Source {
     
     private String type;
     private String via;
-	
-	public boolean isViaCustomer() {
-		return "customer".equals(getVia());
-	}
+    
+    public boolean isViaCustomer() {
+        return "customer".equals(getVia());
+    }
 }

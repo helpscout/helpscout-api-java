@@ -38,23 +38,23 @@ public class Conversation {
     private List<String> tags;
     private List<LineItem> threads;
 
-	public boolean hasCcList() {
-	    return getCcList() != null && !getCcList().isEmpty();
-	}
+    public boolean hasCcList() {
+        return getCcList() != null && !getCcList().isEmpty();
+    }
 
-	public boolean hasBccList() {
-	    return getBccList() != null && !getBccList().isEmpty();
-	}
+    public boolean hasBccList() {
+        return getBccList() != null && !getBccList().isEmpty();
+    }
 
-	public boolean hasThreads() {
-	    return getThreads() != null && !getThreads().isEmpty();
-	}
+    public boolean hasThreads() {
+        return getThreads() != null && !getThreads().isEmpty();
+    }
 
-	public boolean hasTags() {
-	    return getTags() != null && !getTags().isEmpty();
-	}
+    public boolean hasTags() {
+        return getTags() != null && !getTags().isEmpty();
+    }
 
-	public boolean isCreatedByCustomer() {
-	    return getCreatedBy() != null && getCreatedBy() instanceof CustomerRef;
-	}
+    public boolean isCreatedByCustomer() {
+        return getCreatedBy() != null && getCreatedBy() instanceof CustomerRef;
+    }
 }

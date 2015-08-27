@@ -22,19 +22,19 @@ public class AbstractThread extends BaseLineItem implements ConversationThread {
     private List<String> bccList = new ArrayList<String>();
     private List<Attachment> attachments = new ArrayList<Attachment>();
     
-	public boolean isPublished() {
-	    return getState() == ThreadState.Published;
-	}
+    public boolean isPublished() {
+        return getState() == ThreadState.Published;
+    }
 
-	public boolean isDraft() {
-	    return getState() == ThreadState.Draft;
-	}
+    public boolean isDraft() {
+        return getState() == ThreadState.Draft;
+    }
 
-	public boolean isHeldForReview() {
-		return getState() == ThreadState.UnderReview;
-	}
+    public boolean isHeldForReview() {
+        return getState() == ThreadState.UnderReview;
+    }
 
-	public boolean hasAttachments() {
-	    return !getAttachments().isEmpty();
-	}
+    public boolean hasAttachments() {
+        return !getAttachments().isEmpty();
+    }
 }

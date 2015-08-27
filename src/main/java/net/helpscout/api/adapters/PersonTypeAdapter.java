@@ -7,11 +7,11 @@ import java.lang.reflect.Type;
 
 public class PersonTypeAdapter implements JsonDeserializer<PersonType>, JsonSerializer<PersonType> {
 
-	public PersonType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-		return PersonType.findByLabel(json.getAsString());
-	}
+    public PersonType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return PersonType.findByLabel(json.getAsString());
+    }
 
-	public JsonElement serialize(PersonType type, Type typeOfT, JsonSerializationContext context) {
-		return new JsonPrimitive(type.getLabel());
-	}
+    public JsonElement serialize(PersonType type, Type typeOfT, JsonSerializationContext context) {
+        return new JsonPrimitive(type.getLabel());
+    }
 }

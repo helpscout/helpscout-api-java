@@ -4,10 +4,10 @@ import net.helpscout.api.ApiException;
 
 public class ApiKeySuspendedException extends ApiException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ApiKeySuspendedException(String mesg) {
-		super(mesg);	
-	}
+    public ApiKeySuspendedException(String mesg) {
+        super(mesg);    
+    }
 
 }
