@@ -1,3 +1,8 @@
+### 1.5.1 (October 28,2015)
+
+* Address model has been updated to use java.util.Data instead of java.util.Calendar objects, de-serialization from JSON payloads will now work correctly.
+
+
 ### 1.5.0 (August 27, 2015)
 
 * Identifiers are now of type `Long` (matching model objects). Old methods using `Integer` are deprecated.
