@@ -1,5 +1,5 @@
 package net.helpscout.api.model.ref;
 
-public class UserRef extends AbstractRef {
+public class UserRef extends MailboxUserRef {
     
 }

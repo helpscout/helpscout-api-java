@@ -10,4 +10,8 @@ public class ServerException extends ApiException {
         super(mesg);    
     }
 
+    public ServerException(String mesg, String details) {
+        super(mesg, details);
+    }
+
 }

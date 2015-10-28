@@ -9,6 +9,7 @@ import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
+import net.helpscout.api.model.customfield.CustomFieldResponse;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.report.common.DateAndCount;
 import net.helpscout.api.model.thread.LineItem;
@@ -31,6 +32,7 @@ public final class Parser {
         builder.registerTypeAdapter(PersonRef.class, new PersonRefAdapter(builder));
         builder.registerTypeAdapter(LineItem.class, new ThreadsAdapater(builder));
         builder.registerTypeAdapter(DateAndCount.class, new DateAndCountDeserializer(builder));
+        builder.registerTypeAdapter(CustomFieldResponse.class, new CustomFieldResponseAdapter());
     }
 
     public synchronized static Parser getInstance() {

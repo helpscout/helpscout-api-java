@@ -5,7 +5,9 @@ import net.helpscout.api.cbo.JsonThreadLocal;
 import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.model.ref.CustomerRef;
 import net.helpscout.api.model.ref.PersonRef;
+import net.helpscout.api.model.ref.TeamRef;
 import net.helpscout.api.model.ref.UserRef;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
 
@@ -20,12 +22,26 @@ public class PersonRefAdapter implements JsonDeserializer<PersonRef> {
     public PersonRef deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonElement element = JsonThreadLocal.get();
         String type = element.getAsJsonObject().get("type").getAsString();
-        if (type != null) {
-            PersonType personType = PersonType.findByLabel(type.trim());
-            if (personType == PersonType.Customer) {
-                return gson.create().fromJson(json, CustomerRef.class);
-            }
+        Class<? extends PersonRef> personRefClass = getPersonRefClass(type);
+        return gson.create().fromJson(json, personRefClass);
+    }
+
+
+    private static Class<? extends PersonRef> getPersonRefClass(String personTypeString) {
+        if (StringUtils.isEmpty(personTypeString)) {
+            return UserRef.class;
         }
-        return gson.create().fromJson(json, UserRef.class);
+        PersonType personType = PersonType.findByLabel(personTypeString.trim());
+        switch (personType) {
+            case User:
+                return UserRef.class;
+            case Customer:
+                return CustomerRef.class;
+            case Team:
+                return TeamRef.class;
+            default:
+                return UserRef.class;
+        }
+
     }
 }

@@ -1,0 +1,142 @@
+{
+  "item": {
+    "id": 5,
+    "slug": "a729ed5176e0f202",
+    "name": "Support",
+    "email": "tester@test.com",
+    "folders": [
+      {
+        "id": 1,
+        "name": "Unassigned",
+        "type": "open",
+        "userId": 0,
+        "totalCount": 49,
+        "activeCount": 49,
+        "modifiedAt": "2015-11-24T02:59:19Z"
+      },
+      {
+        "id": 2,
+        "name": "Mine",
+        "type": "mine",
+        "userId": 100,
+        "totalCount": 0,
+        "activeCount": 0,
+        "modifiedAt": "2015-11-11T14:31:51Z"
+      },
+      {
+        "id": 3,
+        "name": "Needs Attention",
+        "type": "needsattention",
+        "userId": 0,
+        "totalCount": 0,
+        "activeCount": 0,
+        "modifiedAt": "2014-08-06T20:32:32Z"
+      },
+      {
+        "id": 4,
+        "name": "Drafts",
+        "type": "drafts",
+        "userId": 0,
+        "totalCount": 1,
+        "activeCount": 1,
+        "modifiedAt": "2015-12-28T20:15:12Z"
+      },
+      {
+        "id": 5,
+        "name": "Assigned",
+        "type": "assigned",
+        "userId": 0,
+        "totalCount": 95,
+        "activeCount": 94,
+        "modifiedAt": "2015-11-04T21:25:20Z"
+      },
+      {
+        "id": 6,
+        "name": "Closed",
+        "type": "closed",
+        "userId": 0,
+        "totalCount": 1624,
+        "activeCount": 0,
+        "modifiedAt": "2015-11-24T02:59:19Z"
+      },
+      {
+        "id": 7,
+        "name": "Spam",
+        "type": "spam",
+        "userId": 0,
+        "totalCount": 0,
+        "activeCount": 0,
+        "modifiedAt": "2014-08-06T20:32:32Z"
+      },
+      {
+        "id": 8,
+        "name": "activity",
+        "type": "smart",
+        "userId": 0,
+        "totalCount": 94,
+        "activeCount": 93,
+        "modifiedAt": "2015-11-24T02:59:19Z"
+      }
+    ],
+    "customFields": [
+      {
+        "id": 10,
+        "fieldName": "Favourite Color",
+        "fieldType": "DROPDOWN",
+        "required": false,
+        "order": 1,
+        "options": [
+          {
+            "id": 16,
+            "label": "Blue",
+            "order": 2
+          },
+          {
+            "id": 15,
+            "label": "Red",
+            "order": 1
+          },
+          {
+            "id": 17,
+            "label": "White",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "fieldName": "Purchase Order",
+        "fieldType": "SINGLE_LINE",
+        "required": false,
+        "order": 2,
+        "options": []
+      },
+      {
+        "id": 12,
+        "fieldName": "Customer Notes",
+        "fieldType": "MULTI_LINE",
+        "required": false,
+        "order": 3,
+        "options": []
+      },
+      {
+        "id": 13,
+        "fieldName": "Number Requested",
+        "fieldType": "NUMBER",
+        "required": false,
+        "order": 4,
+        "options": []
+      },
+      {
+        "id": 14,
+        "fieldName": "Date Of Activity",
+        "fieldType": "DATE",
+        "required": false,
+        "order": 5,
+        "options": []
+      }
+    ],
+    "createdAt": "2014-08-06T20:32:32Z",
+    "modifiedAt": "2015-11-25T21:17:08Z"
+  }
+}
