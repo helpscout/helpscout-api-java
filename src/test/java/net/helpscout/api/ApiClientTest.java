@@ -94,7 +94,7 @@ public class ApiClientTest {
 	}
 
 	@SneakyThrows
-	public String getResponse(String responseFile) {
+	private String getResponse(String responseFile) {
 		if (responseFile == null) {
 			return "";
 		}
