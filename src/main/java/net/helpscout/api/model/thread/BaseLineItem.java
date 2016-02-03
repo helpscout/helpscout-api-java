@@ -6,13 +6,14 @@ import lombok.Data;
 import net.helpscout.api.cbo.ActionType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.MailboxRef;
+import net.helpscout.api.model.ref.MailboxUserRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
 @Data
 public class BaseLineItem implements LineItem {
     
-    private UserRef assignedTo;
+    private MailboxUserRef assignedTo;
     private Status status;
     private PersonRef createdBy;
     private Date createdAt;

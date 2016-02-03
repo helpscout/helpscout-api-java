@@ -2,7 +2,7 @@ Help Scout Java Wrapper
 =======================
 Java Wrapper for the Help Scout API. More information can be found on our [developer site](http://developer.helpscout.net).
 
-Version 1.5.1 Released
+Version 1.6.0 Released
 ---------------------
 Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
 
@@ -14,6 +14,7 @@ Requirements
 * [Commons IO](http://commons.apache.org/proper/commons-io/)
 * [GSON](https://github.com/google/gson/)
 * [SLF4J](http://www.slf4j.org/)
+* [Joda Time](http://www.joda.org/joda-time/)
 
 Example Usage: API
 ---------------------
@@ -93,6 +94,11 @@ Each method also has a duplicate that allows you to pass in a list of Strings to
 * getUsers()
 * getUsersForMailbox(Long mailboxID)
 * getUser(Long userID)
+
+### Teams
+* getTeams()
+* getTeam()
+* getTeamMembers()
 
 
 Example Usage: Webhooks

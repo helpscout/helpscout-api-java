@@ -1,0 +1,91 @@
+{
+  "item": {
+    "id": 11,
+    "type": "email",
+    "folderId": 10,
+    "isDraft": false,
+    "number": 123,
+    "owner": null,
+    "mailbox": {
+      "id": 1,
+      "name": "Support"
+    },
+    "customer": {
+      "id": 150,
+      "firstName": "Karl",
+      "lastName": "Tester",
+      "email": "karl@worldoftesters.com",
+      "phone": "5552368",
+      "type": "customer",
+      "emails": [
+        "karl@worldoftesters.com",
+        "karl@worldoftesters.net"
+      ]
+    },
+    "threadCount": 1,
+    "status": "active",
+    "subject": "Subject",
+    "preview": "Subject",
+    "createdBy": {
+      "id": 150,
+      "firstName": "Karl",
+      "lastName": "Tester",
+      "email": "karl@worldoftesters.com",
+      "phone": "5552368",
+      "type": "customer",
+      "emails": [
+        "karl@worldoftesters.com",
+        "karl@worldoftesters.net"
+      ]
+    },
+    "createdAt": "2016-01-03T21:35:51Z",
+    "modifiedAt": "2016-01-03T21:35:51Z",
+    "closedAt": null,
+    "closedBy": null,
+    "source": {
+      "type": "email",
+      "via": "customer"
+    },
+    "cc": [],
+    "bcc": [],
+    "tags": null,
+    "threads": [
+      {
+        "id": 3124897,
+        "type": "customer",
+        "assignedTo": null,
+        "status": "active",
+        "createdAt": "2016-01-03T21:35:51Z",
+        "openedAt": null,
+        "createdBy": {
+          "id": 150,
+          "firstName": "Karl",
+          "lastName": "Tester",
+          "email": "karl@worldoftesters.com",
+          "phone": "5552368",
+          "type": "customer",
+          "emails": [
+            "karl@worldoftesters.com",
+            "karl@worldoftesters.net"
+          ]
+        },
+        "source": {
+          "type": "email",
+          "via": "customer"
+        },
+        "actionType": null,
+        "actionSourceId": null,
+        "fromMailbox": null,
+        "state": "published",
+        "customer": null,
+        "body": "<div dir=\"ltr\">Hello</div>",
+        "to": null,
+        "cc": [],
+        "bcc": [],
+        "attachments": null,
+        "savedReplyId": 0,
+        "createdByCustomer": true
+      }
+    ]
+  }
+}

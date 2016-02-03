@@ -5,6 +5,6 @@ import lombok.ToString;
 
 @Getter
 @ToString(callSuper = true)
-public class User extends MailboxUser {
-
+public class Team extends MailboxUser {
+    
 }

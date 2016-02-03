@@ -1,54 +1,14 @@
 package net.helpscout.api;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
-
-import net.helpscout.api.adapters.ConversationTypeAdapter;
-import net.helpscout.api.adapters.PersonTypeAdapter;
-import net.helpscout.api.adapters.StatusAdapter;
-import net.helpscout.api.adapters.ThreadStateAdapter;
-import net.helpscout.api.adapters.ThreadTypeAdapter;
-import net.helpscout.api.cbo.ConversationType;
-import net.helpscout.api.cbo.PersonType;
-import net.helpscout.api.cbo.Status;
-import net.helpscout.api.cbo.ThreadState;
-import net.helpscout.api.cbo.ThreadType;
-import net.helpscout.api.exception.AccessDeniedException;
-import net.helpscout.api.exception.ApiKeySuspendedException;
-import net.helpscout.api.exception.InvalidApiKeyException;
-import net.helpscout.api.exception.InvalidFormatException;
-import net.helpscout.api.exception.InvalidMethodException;
-import net.helpscout.api.exception.NotFoundException;
-import net.helpscout.api.exception.ServerException;
-import net.helpscout.api.exception.ServiceUnavailableException;
-import net.helpscout.api.exception.ThrottleRateException;
+import com.google.gson.*;
+import net.helpscout.api.adapters.*;
+import net.helpscout.api.cbo.*;
+import net.helpscout.api.exception.*;
 import net.helpscout.api.json.JsonFormatter;
-import net.helpscout.api.model.Attachment;
-import net.helpscout.api.model.Conversation;
+import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
-import net.helpscout.api.model.Folder;
-import net.helpscout.api.model.Mailbox;
-import net.helpscout.api.model.SearchConversation;
-import net.helpscout.api.model.Tag;
-import net.helpscout.api.model.User;
-import net.helpscout.api.model.Workflow;
 import net.helpscout.api.model.customer.SearchCustomer;
+import net.helpscout.api.model.customfield.CustomFieldResponse;
 import net.helpscout.api.model.report.common.DatesAndCounts;
 import net.helpscout.api.model.report.common.DatesAndElapsedTimes;
 import net.helpscout.api.model.report.common.Rating;
@@ -61,26 +21,22 @@ import net.helpscout.api.model.report.team.TeamReport;
 import net.helpscout.api.model.report.user.ConversationStats;
 import net.helpscout.api.model.report.user.UserHappiness;
 import net.helpscout.api.model.report.user.UserReport;
-import net.helpscout.api.model.thread.AbstractThread;
-import net.helpscout.api.model.thread.BaseLineItem;
-import net.helpscout.api.model.thread.Chat;
-import net.helpscout.api.model.thread.ConversationThread;
-import net.helpscout.api.model.thread.ForwardChild;
-import net.helpscout.api.model.thread.ForwardParent;
-import net.helpscout.api.model.thread.Message;
-import net.helpscout.api.model.thread.Note;
-
+import net.helpscout.api.model.thread.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
+
+import static java.text.MessageFormat.format;
 
 public class ApiClient {
 
@@ -162,7 +118,7 @@ public class ApiClient {
             throw new ApiException("Invalid mailboxId in getMailbox");
         }
         String url = setFields("mailboxes/" + mailboxID + ".json", fields);
-        return (Mailbox)getItem(url, Mailbox.class, HTTP_STATUS_OK);
+        return getItem(url, Mailbox.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -841,7 +797,7 @@ public class ApiClient {
      * @throws ApiException
      * @deprecated use {@link #getUser(Long)}
      */
-    public User getUser(Integer userID) throws ApiException {
+    public MailboxUser getUser(Integer userID) throws ApiException {
         return getUser(Long.valueOf(userID));
     }
 
@@ -852,8 +808,19 @@ public class ApiClient {
      * @return User
      * @throws ApiException
      */
-    public User getUser(Long userID) throws ApiException {
-        return getItem("users/" + userID + ".json", User.class, HTTP_STATUS_OK);
+    public MailboxUser getUser(Long userID) throws ApiException {
+        return getItem("users/" + userID + ".json", MailboxUser.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Gets the user with the specified id.
+     *
+     * @param teamID
+     * @return User
+     * @throws ApiException
+     */
+    public Team getTeam(Long teamID) throws ApiException {
+        return getItem("teams/" + teamID + ".json", Team.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -865,7 +832,7 @@ public class ApiClient {
      * @throws ApiException
      * @deprecated use {@link #getUser(Long, List)}
      */
-    public User getUser(Integer userID, List<String> fields) throws ApiException {
+    public MailboxUser getUser(Integer userID, List<String> fields) throws ApiException {
         return getUser(Long.valueOf(userID), fields);
     }
 
@@ -877,12 +844,29 @@ public class ApiClient {
      * @return User
      * @throws ApiException
      */
-    public User getUser(Long userID, List<String> fields) throws ApiException {
-        if (userID == null || userID < 1) {
-            throw new ApiException("Invalid userId in getUser");
+    public MailboxUser getUser(Long userID, List<String> fields) throws ApiException {
+        return getMailboxUser(MailboxUser.class, "users", userID, fields);
+    }
+
+    /**
+     * Gets the user with the specified id.
+     *
+     * @param teamID
+     * @param fields
+     * @return User
+     * @throws ApiException
+     */
+    public Team getTeam(Long teamID, List<String> fields) throws ApiException {
+        return getMailboxUser(Team.class, "teams", teamID, fields);
+    }
+
+    private <T extends MailboxUser> T getMailboxUser(Class<T> userClass, String baseUrl, Long mailboxUserId, List<String> fields) throws ApiException {
+        if (mailboxUserId == null || mailboxUserId < 1) {
+            throw new ApiException("Invalid identifier, it must be larger than 1, but was " + mailboxUserId);
         }
-        String url = setFields("users/" + userID + ".json", fields);
-        return getItem(url, User.class, HTTP_STATUS_OK);
+        String url = format("{0}/{1}.json", baseUrl, mailboxUserId);
+        url = setFields(url, fields);
+        return getItem(url, userClass, HTTP_STATUS_OK);
     }
 
     /**
@@ -891,8 +875,18 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsers() throws ApiException {
-        return getPage("users.json", User.class, HTTP_STATUS_OK);
+    public Page<MailboxUser> getUsers() throws ApiException {
+        return getPage("users.json", MailboxUser.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Gets the first page of teams.
+     *
+     * @return Page of teams
+     * @throws ApiException
+     */
+    public Page<Team> getTeams() throws ApiException {
+        return getPage("teams.json", Team.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -902,20 +896,54 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsers(List<String> fields) throws ApiException {
+    public Page<MailboxUser> getUsers(List<String> fields) throws ApiException {
         String url = setFields("users.json", fields);
-        return getPage(url, User.class, HTTP_STATUS_OK);
+        return getPage(url, MailboxUser.class, HTTP_STATUS_OK);
     }
 
     /**
-     * Gets a page of users.
+     * Gets the first page of teams.
      *
-     * @param queryParams
+     * @param fields
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsers(Map<String, String> queryParams) throws ApiException {
-        return getPage("/users.json", queryParams, User.class, HTTP_STATUS_OK);
+    public Page<Team> getTeams(List<String> fields) throws ApiException {
+        String url = setFields("teams.json", fields);
+        return getPage(url, Team.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Gets a page of teams.
+     *
+     * @param queryParams
+     * @return Page of teams
+     * @throws ApiException
+     */
+    public Page<MailboxUser> getUsers(Map<String, String> queryParams) throws ApiException {
+        return getPage("users.json", queryParams, MailboxUser.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Gets a page of teams.
+     *
+     * @param queryParams
+     * @return Page of teams
+     * @throws ApiException
+     */
+    public Page<Team> getTeams(Map<String, String> queryParams) throws ApiException {
+        return getPage("teams.json", queryParams, Team.class, HTTP_STATUS_OK);
+    }
+
+    /**
+     * Gets the first page of users for the specified mailbox.
+     *
+     * @param mailboxId
+     * @return Page
+     * @throws ApiException
+     */
+    public Page<User> getTeamMembers(Long mailboxId) throws ApiException {
+        return getPage("teams/" + mailboxId + "/members.json", User.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -926,7 +954,7 @@ public class ApiClient {
      * @throws ApiException
      * @deprecated use {@link #getUsersForMailbox(Long)}
      */
-    public Page<User> getUsersForMailbox(Integer mailboxId) throws ApiException {
+    public Page<MailboxUser> getUsersForMailbox(Integer mailboxId) throws ApiException {
         return getUsersForMailbox(Long.valueOf(mailboxId));
     }
 
@@ -937,8 +965,8 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsersForMailbox(Long mailboxId) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/users.json", User.class, HTTP_STATUS_OK);
+    public Page<MailboxUser> getUsersForMailbox(Long mailboxId) throws ApiException {
+        return getPage("mailboxes/" + mailboxId + "/users.json", MailboxUser.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -950,7 +978,7 @@ public class ApiClient {
      * @throws ApiException
      * @deprecated use {@link #getUsersForMailbox(Long, List)}
      */
-    public Page<User> getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
+    public Page<MailboxUser> getUsersForMailbox(Integer mailboxId, List<String> fields) throws ApiException {
         return getUsersForMailbox(Long.valueOf(mailboxId), fields);
     }
 
@@ -962,9 +990,9 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsersForMailbox(Long mailboxId, List<String> fields) throws ApiException {
+    public Page<MailboxUser> getUsersForMailbox(Long mailboxId, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
-        return getPage(url, User.class, HTTP_STATUS_OK);
+        return getPage(url, MailboxUser.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -976,7 +1004,7 @@ public class ApiClient {
      * @throws ApiException
      * @deprecated use {@link #getUsersForMailbox(Long, Map)}
      */
-    public Page<User> getUsersForMailbox(Integer mailboxId, Map<String, String> queryParams) throws ApiException {
+    public Page<MailboxUser> getUsersForMailbox(Integer mailboxId, Map<String, String> queryParams) throws ApiException {
         return getUsersForMailbox(Long.valueOf(mailboxId), queryParams);
     }
 
@@ -988,8 +1016,8 @@ public class ApiClient {
      * @return Page
      * @throws ApiException
      */
-    public Page<User> getUsersForMailbox(Long mailboxId, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/users.json", queryParams, User.class, HTTP_STATUS_OK);
+    public Page<MailboxUser> getUsersForMailbox(Long mailboxId, Map<String, String> queryParams) throws ApiException {
+        return getPage("mailboxes/" + mailboxId + "/users.json", queryParams, MailboxUser.class, HTTP_STATUS_OK);
     }
 
     /**
@@ -1039,7 +1067,8 @@ public class ApiClient {
                 .registerTypeAdapter(Status.class, new StatusAdapter())
                 .registerTypeAdapter(PersonType.class, new PersonTypeAdapter())
                 .registerTypeAdapter(ThreadType.class, new ThreadTypeAdapter())
-                .registerTypeAdapter(ConversationType.class, new ConversationTypeAdapter());
+                .registerTypeAdapter(ConversationType.class, new ConversationTypeAdapter())
+                .registerTypeAdapter(CustomFieldResponse.class, new CustomFieldResponseAdapter());
 
         String json = builder.create().toJson(conversation);
 
@@ -1134,7 +1163,8 @@ public class ApiClient {
         GsonBuilder builder = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                 .registerTypeAdapter(ThreadState.class, new ThreadStateAdapter())
-                .registerTypeAdapter(Status.class, new StatusAdapter());
+                .registerTypeAdapter(Status.class, new StatusAdapter())
+                .registerTypeAdapter(CustomFieldResponse.class, new CustomFieldResponseAdapter());
 
         String json = builder.create().toJson(conversation, Conversation.class);
         doPut("conversations/" + conversation.getId() + ".json", json, HTTP_STATUS_OK);
@@ -1653,8 +1683,6 @@ public class ApiClient {
 
     private HttpURLConnection getConnection(String apiKey, String url, String method, boolean hasRequestBody) throws Exception {
         URL aUrl = new URL(baseUrl + url);
-        
-        System.out.println(aUrl);
 
         HttpURLConnection conn = (HttpURLConnection) aUrl.openConnection();
 
@@ -1676,7 +1704,7 @@ public class ApiClient {
         if (code == expectedCode) {
             return;
         }
-        
+
         switch(code) {
             case 400:
                 String details = getDetailedErrorMessage(conn);
@@ -1694,7 +1722,7 @@ public class ApiClient {
             case 429:
                 throw new ThrottleRateException("Throttle limit reached. Too many requests");
             case 500:
-                throw new ServerException("Application error or server error");
+                throw new ServerException("Application error or server error", getDetailedErrorMessage(conn));
             case 503:
                 throw new ServiceUnavailableException("Service Temporarily Unavailable");
             default:

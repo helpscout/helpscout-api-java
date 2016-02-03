@@ -1,0 +1,15 @@
+{
+  "item": {
+    "id": 100,
+    "firstName": "Some Other",
+    "lastName": "Team",
+    "fullName": "Some Other Team",
+    "email": null,
+    "role": null,
+    "timezone": "America/New_York",
+    "photoUrl": "https://d33v4339jhl8k0.cloudfront.net/users/4.495.png",
+    "createdAt": "2010-09-03T15:55:48Z",
+    "modifiedAt": "2016-01-31T00:04:36Z",
+    "type": "team"
+  }
+}

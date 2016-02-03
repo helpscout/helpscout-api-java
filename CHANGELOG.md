@@ -1,4 +1,36 @@
-### 1.5.1 (October 28,2015)
+### 1.6.0 (February 2, 2016)
+
+* Added Custom Fields and Teams support (Pro Plan features)
+   * there are new methods `getTeam` and `getTeams`
+   * Custom Field responses were added to `Conversation` class
+   * Custom Fields were added to `Mailbox` class
+   * subclasses of `CustomFieldResponse` provide typed access to different custom field types. See [API documentation](http://developer.helpscout.net/help-desk-api/objects/field/)
+* Added more tests for the ApiClient
+
+#### Class model change
+
+API methods that used to return `User` now return `MailboxUser`. `User` and new class `Team` are subtypes of `MailboxUser`.
+
+Affected methods are:
+* `getUser()`
+* `getUsers()`
+* `getUsersForMailbox()`
+* `LineItem.getAssignedTo()`, `LineItem.setAssignedTo()` - `LineItem` is an interface with several subclasses
+
+Affected field:
+* `Conversation.owner`
+
+There is also new dependency - Joda Time
+``` xml
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.9.1</version>
+			<scope>compile</scope>
+		</dependency>
+```
+
+### 1.5.1 (October 28, 2015)
 
 * Address model has been updated to use java.util.Data instead of java.util.Calendar objects, de-serialization from JSON payloads will now work correctly.
 

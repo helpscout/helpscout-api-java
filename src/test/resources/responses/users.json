@@ -1,0 +1,20 @@
+{
+  "page": 1,
+  "pages": 1,
+  "count": 1,
+  "items": [
+    {
+      "id": 110,
+      "firstName": "Robert",
+      "lastName": "Robertson",
+      "fullName": "Robert Robertson",
+      "email": "robert@robertson.com",
+      "role": "user",
+      "timezone": "America/New_York",
+      "photoUrl": "https://d33v4339jhl8k0.cloudfront.net/users/4.495.png",
+      "createdAt": "2010-09-03T15:55:48Z",
+      "modifiedAt": "2016-01-31T00:04:36Z",
+      "type": "user"
+    }
+  ]
+}
