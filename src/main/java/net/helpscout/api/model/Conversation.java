@@ -3,16 +3,20 @@ package net.helpscout.api.model;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.helpscout.api.cbo.ConversationType;
 import net.helpscout.api.cbo.Status;
-import net.helpscout.api.model.ref.CustomerRef;
-import net.helpscout.api.model.ref.MailboxRef;
-import net.helpscout.api.model.ref.PersonRef;
-import net.helpscout.api.model.ref.UserRef;
+import net.helpscout.api.model.customfield.CustomFieldResponse;
+import net.helpscout.api.model.ref.*;
 import net.helpscout.api.model.thread.LineItem;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Conversation {
     
     private Long id;
@@ -21,7 +25,7 @@ public class Conversation {
     private boolean isDraft;
     private Long number;
     private Source source;
-    private UserRef owner;
+    private MailboxUserRef owner;
     private MailboxRef mailbox;
     private CustomerRef customer;
     private int threadCount;
@@ -37,6 +41,7 @@ public class Conversation {
     private List<String> bccList;
     private List<String> tags;
     private List<LineItem> threads;
+    private List<? extends CustomFieldResponse> customFields;
 
     public boolean hasCcList() {
         return getCcList() != null && !getCcList().isEmpty();

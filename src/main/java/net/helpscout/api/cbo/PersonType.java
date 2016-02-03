@@ -8,7 +8,8 @@ package net.helpscout.api.cbo;
 public enum PersonType {
 
     User(1, "user"),
-    Customer(2, "customer");
+    Customer(2, "customer"),
+    Team(4,"team");
 
     private final int value;
     private final String label;

@@ -3,6 +3,7 @@ package net.helpscout.api.model.thread;
 import net.helpscout.api.cbo.ActionType;
 import net.helpscout.api.cbo.Status;
 import net.helpscout.api.model.ref.MailboxRef;
+import net.helpscout.api.model.ref.MailboxUserRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
@@ -16,14 +17,14 @@ public interface LineItem {
     boolean isClosed();
     boolean isSpam();
     boolean isStatusChange();
-    UserRef getAssignedTo();
+    MailboxUserRef getAssignedTo();
     Status getStatus();
     PersonRef getCreatedBy();
     MailboxRef getFromMailbox();
     ActionType getActionType();
     Long getActionSourceId();
 
-    void setAssignedTo(UserRef assignedTo);
+    void setAssignedTo(MailboxUserRef assignedTo);
     void setStatus(Status status);
     void setCreatedBy(PersonRef person);
     void setFromMailbox(MailboxRef mailbox);

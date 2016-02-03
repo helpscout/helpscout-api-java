@@ -5,7 +5,9 @@ import net.helpscout.api.cbo.Status;
 import net.helpscout.api.cbo.ThreadState;
 import net.helpscout.api.cbo.ThreadType;
 import net.helpscout.api.model.Attachment;
+import net.helpscout.api.model.MailboxUser;
 import net.helpscout.api.model.ref.MailboxRef;
+import net.helpscout.api.model.ref.MailboxUserRef;
 import net.helpscout.api.model.ref.PersonRef;
 import net.helpscout.api.model.ref.UserRef;
 
@@ -32,7 +34,7 @@ public interface ConversationThread {
     boolean isClosed();
     boolean isSpam();
     boolean isStatusChange();
-    UserRef getAssignedTo();
+    MailboxUserRef getAssignedTo();
     Status getStatus();
     PersonRef getCreatedBy();
     Date getCreatedAt();
@@ -48,7 +50,7 @@ public interface ConversationThread {
     void setCcList(List<String> ccList);
     void setBccList(List<String> bccList);
     void setAttachments(List<Attachment> attachments);
-    void setAssignedTo(UserRef assignedTo);
+    void setAssignedTo(MailboxUserRef assignedTo);
     void setCreatedBy(PersonRef person);
     void setCreatedAt(Date createdAt);
 }
