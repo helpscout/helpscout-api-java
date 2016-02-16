@@ -5,6 +5,7 @@ import lombok.val;
 import net.helpscout.api.cbo.PersonType;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.customfield.*;
+import net.helpscout.api.model.thread.AbstractThread;
 import org.hamcrest.Matcher;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNull;
 
 public class ConversationApiTest extends AbstractApiClientTest {
@@ -25,9 +26,7 @@ public class ConversationApiTest extends AbstractApiClientTest {
     @Test
     @SneakyThrows
     public void shouldReturnCustomFields() {
-        givenThat(get(urlEqualTo("/v1/conversations/10.json"))
-                .willReturn(aResponse().withStatus(HTTP_OK)
-                        .withBody(getResponse("conversation_10"))));
+        stubGET("/v1/conversations/10.json", "conversation_10");
 
         Conversation conversation = client.getConversation(10L);
 
@@ -42,12 +41,63 @@ public class ConversationApiTest extends AbstractApiClientTest {
     @Test
     @SneakyThrows
     public void shouldParseConversation_WhenCustomFieldsAreNotPresent() {
-        givenThat(get(urlEqualTo("/v1/conversations/11.json"))
-                .willReturn(aResponse().withStatus(HTTP_OK)
-                        .withBody(getResponse("conversation_11"))));
+        stubGET("/v1/conversations/11.json", "conversation_11");
 
         Conversation conversation = client.getConversation(11L);
         assertNull(conversation.getCustomFields());
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldParseCcFieldsInConversation() {
+        stubGET("/v1/conversations/11.json", "conversation_11");
+
+        Conversation conversation = client.getConversation(11L);
+
+        assertThat(conversation.getCcList(), hasSize(2));
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldParseBccFieldsInConversation() {
+        stubGET("/v1/conversations/11.json", "conversation_11");
+
+        Conversation conversation = client.getConversation(11L);
+
+        assertThat(conversation.getBccList(), hasSize(1));
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldParseCcFieldsInThread() {
+        stubGET("/v1/conversations/11.json", "conversation_11");
+
+        Conversation conversation = client.getConversation(11L);
+        AbstractThread thread = getFirstThread(conversation);
+
+        assertThat(thread.getCcList(), hasSize(1));
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldParseToFieldsInThread() {
+        stubGET("/v1/conversations/11.json", "conversation_11");
+
+        Conversation conversation = client.getConversation(11L);
+        AbstractThread thread = getFirstThread(conversation);
+
+        assertThat(thread.getToList(), hasSize(2));
+    }
+
+    @Test
+    @SneakyThrows
+    public void shouldParseBccFieldsInThread() {
+        stubGET("/v1/conversations/11.json", "conversation_11");
+
+        Conversation conversation = client.getConversation(11L);
+        AbstractThread thread = getFirstThread(conversation);
+
+        assertThat(thread.getBccList(), hasSize(2));
     }
 
     @Test
@@ -87,9 +137,7 @@ public class ConversationApiTest extends AbstractApiClientTest {
     @Test
     @SneakyThrows
     public void shouldProperlyParseAllCustomFieldTypes() {
-        givenThat(get(urlEqualTo("/v1/conversations/13.json"))
-                .willReturn(aResponse().withStatus(HTTP_OK)
-                        .withBody(getResponse("conversation_13"))));
+        stubGET("/v1/conversations/13.json", "conversation_13");
 
         Conversation conversation = client.getConversation(13L);
         val fields = conversation.getCustomFields();
@@ -104,9 +152,7 @@ public class ConversationApiTest extends AbstractApiClientTest {
     @Test
     @SneakyThrows
     public void shouldProperlyParseAllCustomFieldProperties() {
-        givenThat(get(urlEqualTo("/v1/conversations/13.json"))
-                .willReturn(aResponse().withStatus(HTTP_OK)
-                        .withBody(getResponse("conversation_13"))));
+        stubGET("/v1/conversations/13.json", "conversation_13");
 
         Conversation conversation = client.getConversation(13L);
         val fields = conversation.getCustomFields();
@@ -120,6 +166,8 @@ public class ConversationApiTest extends AbstractApiClientTest {
     @Test
     @SneakyThrows
     public void shouldSetTeamPersonType() {
+        stubGET("/v1/conversations/10.json", "conversation_10");
+
         givenThat(get(urlEqualTo("/v1/conversations/10.json"))
                 .willReturn(aResponse().withStatus(HTTP_OK)
                         .withBody(getResponse("conversation_10"))));
@@ -140,6 +188,10 @@ public class ConversationApiTest extends AbstractApiClientTest {
         assertThat(customFieldResponse, instanceOf(fieldClass));
         val value = customFieldResponse.getValue();
         assertThat(value, equalTo(fieldValue));
+    }
+
+    private static AbstractThread getFirstThread(Conversation conversation) {
+        return (AbstractThread) conversation.getThreads().get(0);
     }
 
 }

@@ -2,7 +2,7 @@ Help Scout Java Wrapper
 =======================
 Java Wrapper for the Help Scout API. More information can be found on our [developer site](http://developer.helpscout.net).
 
-Version 1.6.0 Released
+Version 1.6.1 Released
 ---------------------
 Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
 

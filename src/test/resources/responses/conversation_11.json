@@ -46,8 +46,8 @@
       "type": "email",
       "via": "customer"
     },
-    "cc": [],
-    "bcc": [],
+    "cc": ["test@email1.com", "test@email2.com"],
+    "bcc": ["test1@email1.com"],
     "tags": null,
     "threads": [
       {
@@ -79,9 +79,9 @@
         "state": "published",
         "customer": null,
         "body": "<div dir=\"ltr\">Hello</div>",
-        "to": null,
-        "cc": [],
-        "bcc": [],
+        "to": ["one@two.theee", "one.one@two.three"],
+        "cc": ["some@not.real.com"],
+        "bcc": ["some@other.not.real.com", "another@not.real.com"],
         "attachments": null,
         "savedReplyId": 0,
         "createdByCustomer": true
