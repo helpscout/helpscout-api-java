@@ -1,3 +1,6 @@
+### 1.6.1 (February 17, 2016)
+* Fixed [issue](https://github.com/helpscout/helpscout-api-java/pull/19) regarding `cc`, `bcc` and `to` fields in `Conversation` and `AbstractThread` classes
+
 ### 1.6.0 (February 2, 2016)
 
 * Added Custom Fields and Teams support (Pro Plan features)

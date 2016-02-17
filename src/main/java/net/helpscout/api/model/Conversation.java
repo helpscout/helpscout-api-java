@@ -3,6 +3,7 @@ package net.helpscout.api.model;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,7 +38,9 @@ public class Conversation {
     private String closedAt;
     private UserRef closedBy;
     private PersonRef createdBy;
+    @SerializedName("cc")
     private List<String> ccList;
+    @SerializedName("bcc")
     private List<String> bccList;
     private List<String> tags;
     private List<LineItem> threads;
