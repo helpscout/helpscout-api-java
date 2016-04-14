@@ -2,13 +2,13 @@ Help Scout Java Wrapper
 =======================
 Java Wrapper for the Help Scout API. More information can be found on our [developer site](http://developer.helpscout.net).
 
-Version 1.6.0 Released
----------------------
+Version 1.6.2 Released
+----------------------
 Please see the [Changelog](https://github.com/helpscout/helpscout-api-java/blob/master/CHANGELOG.md) for details.
 
 Requirements
 ---------------------
-* Java 1.6 or higher
+* Java 1.7 or higher
 * [Commons Codec](http://commons.apache.org/proper/commons-codec/)
 * [Commons Lang](http://commons.apache.org/proper/commons-lang/)
 * [Commons IO](http://commons.apache.org/proper/commons-io/)

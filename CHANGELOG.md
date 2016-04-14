@@ -1,3 +1,8 @@
+### 1.6.2 (April 14, 2016)
+
+* @sphinks fixed wrong header names in WebHooks class (#20)
+* minimal Java version changed to 1.7
+
 ### 1.6.0 (February 2, 2016)
 
 * Added Custom Fields and Teams support (Pro Plan features)
