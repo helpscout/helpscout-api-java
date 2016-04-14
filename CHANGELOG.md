@@ -1,3 +1,8 @@
+### 1.6.2 (April 14, 2016)
+* @sphinks fixed wrong header names in WebHooks class (#20)
+* minimal Java version changed to 1.7
+
+
 ### 1.6.1 (February 17, 2016)
 * Fixed [issue](https://github.com/helpscout/helpscout-api-java/pull/19) regarding `cc`, `bcc` and `to` fields in `Conversation` and `AbstractThread` classes
 

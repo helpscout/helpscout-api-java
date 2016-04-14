@@ -1,0 +1,27 @@
+{
+  "lastName":"Last_Name",
+  "photoType":null,
+  "modifiedAt":"2016-03-21T21:18:58Z",
+  "location":null,
+  "emails":[
+    {
+      "id": 98037223,
+      "location": "work",
+      "value": "some@mail.com"
+    }
+  ],
+  "websites":null,
+  "phones":null,
+  "id":76688730,
+  "organization":null,
+  "address":null,
+  "createdAt":"2016-03-21T21:18:58Z",
+  "background":null,
+  "age":null,
+  "gender":null,
+  "socialProfiles":null,
+  "firstName":"First_Name",
+  "photoUrl":null,
+  "chats":null,
+  "jobTitle":null
+}

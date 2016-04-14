@@ -31,7 +31,7 @@ final public class Webhook {
      * @return string
      */
     public String getEventType() {
-        return this.getHeader("HTTP_X_HELPSCOUT_EVENT");        
+        return this.getHeader("X-HELPSCOUT-EVENT");
     }   
         
     public boolean isTestEvent() {
@@ -70,7 +70,7 @@ final public class Webhook {
         String computed = generateSignature();
         
         if (computed != null) {
-            return computed.equals(getHeader("HTTP_X_HELPSCOUT_SIGNATURE"));            
+            return computed.equals(getHeader("X-HELPSCOUT-SIGNATURE"));
         }
         return false;
     }

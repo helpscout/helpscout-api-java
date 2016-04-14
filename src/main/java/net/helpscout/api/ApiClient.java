@@ -1732,7 +1732,10 @@ public class ApiClient {
     
     private String getDetailedErrorMessage(HttpURLConnection conn) throws IOException {
         InputStream is = conn.getErrorStream();
-        String json = IOUtils.toString(is, "UTF-8");
+        String json = "";
+        if (is != null) {
+            json = IOUtils.toString(is, "UTF-8");
+        }
         
         return StringUtils.isNotEmpty(json) ? new JsonFormatter().format(json) : null;
     }
