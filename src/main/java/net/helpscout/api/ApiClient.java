@@ -1,6 +1,7 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
+import lombok.SneakyThrows;
 import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
 import net.helpscout.api.exception.*;
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
@@ -1416,6 +1418,7 @@ public class ApiClient {
         }
     }
 
+    @SneakyThrows
     private String setParams(String url, Map<String, String> params) {
         if (params != null && params.size() > 0) {
             StringBuilder sb = new StringBuilder();
@@ -1426,7 +1429,8 @@ public class ApiClient {
                 } else {
                     sb.append("?");
                 }
-                sb.append(key).append("=").append(params.get(key));
+                String encodedParameter = URLEncoder.encode(params.get(key), "UTF-8");
+                sb.append(key).append("=").append(encodedParameter);
             }
             return sb.toString();
         }

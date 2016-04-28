@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.net.URLEncoder;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -67,6 +69,16 @@ public class ApiClientTest extends AbstractApiClientTest {
         assertNotNull(customer.getAddress().getCreatedAt());
         Long addressId = 1187643L;
         assertEquals(addressId, customer.getAddress().getId());
+    }
+
+    @Test
+    @SneakyThrows
+    public void checkThatSearchQueryWithSpacesDidNotProduceException() throws ApiException {
+        givenThat(get(urlMatching("/v1/search/conversations.json.*"))
+                .withQueryParam("query", containing(URLEncoder.encode("This is query with spaces", "UTF-8")))
+                .willReturn(aResponse().withStatus(HTTP_OK)
+                        .withBody("{}")));
+        client.searchConversations("This is query with spaces", "", "", 0);
     }
 
 
