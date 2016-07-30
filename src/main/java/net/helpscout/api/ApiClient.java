@@ -1,11 +1,13 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
-import lombok.SneakyThrows;
 import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
 import net.helpscout.api.exception.*;
-import net.helpscout.api.json.JsonFormatter;
+import net.helpscout.api.extractors.HashExtractor;
+import net.helpscout.api.extractors.IdExtractor;
+import net.helpscout.api.utils.EncodeUtils;
+import net.helpscout.api.utils.JSONUtils;
 import net.helpscout.api.model.*;
 import net.helpscout.api.model.Customer;
 import net.helpscout.api.model.customer.SearchCustomer;
@@ -23,22 +25,14 @@ import net.helpscout.api.model.report.user.ConversationStats;
 import net.helpscout.api.model.report.user.UserHappiness;
 import net.helpscout.api.model.report.user.UserReport;
 import net.helpscout.api.model.thread.*;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 
 import static java.text.MessageFormat.format;
+import static net.helpscout.api.utils.ParamsUtils.getCustomerSearchParams;
+import static net.helpscout.api.utils.ParamsUtils.setFields;
+import static net.helpscout.api.utils.ParamsUtils.setParams;
 
 public class ApiClient {
 
@@ -53,6 +47,9 @@ public class ApiClient {
 
     private String apiKey = "";
     private String baseUrl = DEFAULT_BASE_URL;
+
+    private static final ResultExtractor<Long> idExtractor = new IdExtractor();
+    private static final ResultExtractor<String> hashExtractor = new HashExtractor();
 
     private static ApiClient instance = new ApiClient();
 
@@ -556,7 +553,7 @@ public class ApiClient {
         if (json != null) {
             JsonElement obj = parseJson(url, json);
             JsonElement elem  = obj.getAsJsonObject().get("item");
-            return new String(getDecoded(elem.getAsJsonObject().get("data").getAsString()));
+            return new String(EncodeUtils.getDecoded(elem.getAsJsonObject().get("data").getAsString()));
         } 
         return null;
     }
@@ -605,7 +602,7 @@ public class ApiClient {
         String json = doGet(url, HTTP_STATUS_OK);
         JsonElement obj = parseJson(url, json);
         JsonElement elem  = obj.getAsJsonObject().get("item");
-        return getDecoded(elem.getAsJsonObject().get("data").getAsString());
+        return EncodeUtils.getDecoded(elem.getAsJsonObject().get("data").getAsString());
     }
 
     /**
@@ -1120,7 +1117,6 @@ public class ApiClient {
 
             doPost(url.toString(), json, HTTP_STATUS_CREATED, idExtractor);
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new ApiException(ex.getMessage());
         }
     }
@@ -1269,7 +1265,7 @@ public class ApiClient {
         String json = doGet(url, HTTP_STATUS_OK);
         JsonElement busyTimes = (new JsonParser()).parse(json);
 
-        return getPageItems(busyTimes, DayStats.class);
+        return JSONUtils.getPageItems(busyTimes, DayStats.class);
     }
 
     public DatesAndCounts getNewConversationsReport(Map<String, String> queryParams) throws ApiException {
@@ -1418,66 +1414,6 @@ public class ApiClient {
         }
     }
 
-    @SneakyThrows
-    private String setParams(String url, Map<String, String> params) {
-        if (params != null && params.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(url);
-            for (String key : params.keySet()) {
-                if (sb.indexOf("?") > 0) {
-                    sb.append("&");
-                } else {
-                    sb.append("?");
-                }
-                String encodedParameter = URLEncoder.encode(params.get(key), "UTF-8");
-                sb.append(key).append("=").append(encodedParameter);
-            }
-            return sb.toString();
-        }
-        return url;
-    }
-
-    private String setFields(String url, List<String> fields) {
-        if (fields != null && fields.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(url);
-            if (url.indexOf("?") > 0) {
-                sb.append("&");
-            } else {
-                sb.append("?");
-            }
-            sb.append("fields=");
-
-            String sep = "";
-            for (String field : fields) {
-                sb.append(sep).append(field);
-                sep = ",";
-            }
-            url = sb.toString();
-        }
-        return url;
-    }
-
-    private Map<String, String> getCustomerSearchParams(String email, String firstName, String lastName, Integer page) {
-        Map<String, String> params = new HashMap<String, String>();
-        if (email != null && email.trim().length() > 0) {
-            params.put("email", email.trim().toLowerCase());
-        }
-
-        if (firstName != null && firstName.trim().length() > 0) {
-            params.put("firstName", firstName.trim());
-        }
-
-        if (lastName != null && lastName.trim().length() > 0) {
-            params.put("lastName", lastName.trim());
-        }
-
-        if (page != null && page > 0) {
-            params.put("page", String.valueOf(page));
-        }
-        return params;
-    }
-    
     private <T> T getObject(String url, Class<T> clazzType) throws ApiException {
         String json = doGet(url, HTTP_STATUS_OK);
         return Parser.getInstance().getObject(json, clazzType);     
@@ -1501,7 +1437,7 @@ public class ApiClient {
         JsonObject outerObj = parseJson(url, json).getAsJsonObject();
         JsonObject innerObj = outerObj.get(wrapperObjectName).getAsJsonObject();
         
-        return objectToPage(innerObj, clazzType);
+        return JSONUtils.objectToPage(innerObj, clazzType);
     }
 
     private <T> Page<T> getPage(String url, Map<String,String> params, Class<T> clazzType, int expectedCode) throws ApiException {
@@ -1509,301 +1445,49 @@ public class ApiClient {
         String json = doGet(url, HTTP_STATUS_OK);
         JsonElement obj = parseJson(url, json);
         
-        return objectToPage(obj.getAsJsonObject(), clazzType);
+        return JSONUtils.objectToPage(obj.getAsJsonObject(), clazzType);
     }
     
-    private <T> Page<T> objectToPage(JsonObject obj, Class<T> clazzType) {
-        Set<Map.Entry<String, JsonElement>> set = obj.entrySet();
-
-        Page<T> p = new Page<T>();
-
-        for (Map.Entry<String, JsonElement> a : set) {
-            String key = a.getKey();
-            JsonElement val = a.getValue();
-
-            if (key.equals("page")) {
-                p.setPage(val.getAsInt());
-                continue;
-            }
-            if (key.equals("pages")) {
-                p.setPages(val.getAsInt());
-                continue;
-            }
-            if (key.equals("count")) {
-                p.setCount(val.getAsInt());
-                continue;
-            }
-            if (key.equals("items") || key.equalsIgnoreCase("results")) {
-                p.setItems(getPageItems(val, clazzType));
-            }
-        }
-        return p;
-    }
-
-    private <T> ArrayList<T> getPageItems(JsonElement elem, Class<T> clazzType) {
-        JsonArray ar = elem.getAsJsonArray();
-        ArrayList<T> col = new ArrayList<T>(ar.size());
-        for (JsonElement e : ar) {
-            T o = (T) Parser.getInstance().getObject(e, clazzType);
-            if (o != null) {
-                col.add(o);
-            }
-        }
-        return col;
-    }
-
     private <T> T doPost(String url, String requestBody, int expectedCode, ResultExtractor<T> extractor) throws ApiException {
-        HttpURLConnection conn = null;
-        try {
-            conn = getConnection(apiKey, url, METHOD_POST, requestBody != null);
 
-            if (requestBody != null) {
-                conn.setDoOutput(true);
-                OutputStream output = null;
-                try {
-                    output = conn.getOutputStream();
-                    output.write(requestBody.getBytes("UTF-8"));
-                } finally {
-                    if (output != null) {
-                        try { output.close(); } catch (IOException ignored) {}
-                    }
-                }
-            }
-            conn.connect();
-            checkStatusCode(conn, expectedCode);
+        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_POST, expectedCode, requestBody)) {
             return extractor.extract(conn);
         } catch(ApiException ex) {
             throw ex;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
-        } finally {
-            close(conn);
         }
     }
 
-    private final ResultExtractor<Long> idExtractor = new ResultExtractor<Long>() {
-        public Long extract(HttpURLConnection conn) {
-            String location = conn.getHeaderField("LOCATION");
-            if (location != null && location.trim().length() > 0) {
-                return new Long(location.substring(
-                        location.lastIndexOf("/") + 1,
-                        location.lastIndexOf(".")));
-            } else {
-                return null;
-            }
-        }
-    };
-
-    private final ResultExtractor<String> hashExtractor = new ResultExtractor<String>() {
-        public String extract(HttpURLConnection conn) {
-            String hash = null;
-            BufferedReader br = null;
-            String response;
-            try {
-                br = new BufferedReader(new InputStreamReader(
-                        (getInputStream(conn)), Charset.forName("UTF8")));
-                response = getResponse(br);
-                LoggerFactory.getLogger(getClass()).debug("attachment: {}",
-                        response);
-                JsonElement obj = (new JsonParser()).parse(response);
-                JsonElement item = obj.getAsJsonObject().get("item");
-                hash = item.getAsJsonObject().get("hash").getAsString();
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } finally {
-                close(br);
-                close(conn);
-            }
-            return hash;
-        }
-    };
-
     private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
-        HttpURLConnection conn = null;
-        try {
-            conn = getConnection(apiKey, url, METHOD_PUT, requestBody != null);
-            if (requestBody != null) {
-                conn.setDoOutput(true);
-                OutputStream output = null;
-                try {
-                    output = conn.getOutputStream();
-                    output.write(requestBody.getBytes("UTF-8"));
-                } finally {
-                    if (output != null) {
-                        try { output.close(); } catch (IOException ignored) {}
-                    }
-                }
-            }
-            conn.connect();
-            checkStatusCode(conn, expectedCode);
+
+        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_PUT, expectedCode, requestBody)) {
         } catch(ApiException ex) {
             throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new RuntimeException(ex);
-        } finally {
-            close(conn);
         }
     }
 
     private String doGet(String url, int expectedCode) throws ApiException {
-        HttpURLConnection conn = null;
-        BufferedReader br  = null;
         String response    = null;
-        try {
-            conn = getConnection(apiKey, url, METHOD_GET, false);
-            conn.connect();
-            checkStatusCode(conn, expectedCode);
-
-            br = new BufferedReader(new InputStreamReader((getInputStream(conn)), Charset.forName("UTF8")));
-            response = getResponse(br);
+        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_GET, expectedCode)) {
+            response = conn.getResponse();
         } catch(ApiException e) {
             throw e;
         } catch(Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            close(br);
-            close(conn);
         }
         return response;
     }
 
     private void doDelete(String url, int expectedCode) throws ApiException {
-        HttpURLConnection conn = null;
-        try {
-            conn = getConnection(apiKey, url, METHOD_DELETE, false);
-            conn.connect();
-            checkStatusCode(conn, expectedCode);
+        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_DELETE, expectedCode)) {
         } catch(ApiException e) {
             throw e;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new RuntimeException(ex);
-        } finally {
-            close(conn);
         }
     }
 
-    private HttpURLConnection getConnection(String apiKey, String url, String method, boolean hasRequestBody) throws Exception {
-        URL aUrl = new URL(baseUrl + url);
-
-        HttpURLConnection conn = (HttpURLConnection) aUrl.openConnection();
-
-        conn.setInstanceFollowRedirects(false);
-        conn.setRequestMethod(method);
-
-        if (hasRequestBody) {
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
-        }
-        conn.setRequestProperty("Authorization", "Basic " + getEncoded(apiKey + ":x"));
-        conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        return conn;
-    }
-
-    private void checkStatusCode(HttpURLConnection conn, int expectedCode) throws ApiException, IOException {
-        int code = conn.getResponseCode();
-        
-        if (code == expectedCode) {
-            return;
-        }
-
-        switch(code) {
-            case 400:
-                String details = getDetailedErrorMessage(conn);
-                throw new InvalidFormatException("The request was not formatted correctly", details);
-            case 401:
-                throw new InvalidApiKeyException("Invalid API key");
-            case 402:
-                throw new ApiKeySuspendedException("API key suspended");
-            case 403:
-                throw new AccessDeniedException("Access denied");
-            case 404:
-                throw new NotFoundException("Resource not found");
-            case 405:
-                throw new InvalidMethodException("Invalid method type");
-            case 429:
-                throw new ThrottleRateException("Throttle limit reached. Too many requests");
-            case 500:
-                throw new ServerException("Application error or server error", getDetailedErrorMessage(conn));
-            case 503:
-                throw new ServiceUnavailableException("Service Temporarily Unavailable");
-            default:
-                throw new ApiException("Unknown API exception");
-        }
-    }
-    
-    private String getDetailedErrorMessage(HttpURLConnection conn) throws IOException {
-        InputStream is = conn.getErrorStream();
-        String json = "";
-        if (is != null) {
-            json = IOUtils.toString(is, "UTF-8");
-        }
-        
-        return StringUtils.isNotEmpty(json) ? new JsonFormatter().format(json) : null;
-    }
-
-    private String getResponse(BufferedReader reader) throws IOException {
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-
-        return sb.toString();
-    }
-
-    private void close(HttpURLConnection conn) {
-        if (conn != null) {
-            try {
-                conn.disconnect();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
-
-    private void close(BufferedReader reader) {
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                // ignore
-            }
-        }
-    }
-
-    private InputStream getInputStream(HttpURLConnection conn) throws IOException {
-        String encoding = conn.getContentEncoding();
-
-        InputStream inputStream = null;
-
-        //create the appropriate stream wrapper based on
-        //the encoding type
-        if (encoding != null) {
-            if (encoding.equalsIgnoreCase("gzip")) {
-                inputStream = new GZIPInputStream(conn.getInputStream());
-            } else if (encoding.equalsIgnoreCase("deflate")) {
-                inputStream = new InflaterInputStream(conn.getInputStream(), new Inflater(true));
-            }
-        }
-        if (inputStream == null) {
-            inputStream = conn.getInputStream();
-        }
-        return inputStream;
-    }
-
-    private String getEncoded(String val) {
-        try {
-            return Base64.encodeBase64String(val.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("UTF-8 should always be there!", e);
-        }
-    }
-
-    private byte[] getDecoded(String val) {
-        return Base64.decodeBase64(val);
-    }
 }
