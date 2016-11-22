@@ -1,6 +1,8 @@
 package net.helpscout.api;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.helpscout.api.adapters.*;
 import net.helpscout.api.cbo.*;
 import net.helpscout.api.exception.*;
@@ -34,37 +36,32 @@ import static net.helpscout.api.utils.ParamsUtils.getCustomerSearchParams;
 import static net.helpscout.api.utils.ParamsUtils.setFields;
 import static net.helpscout.api.utils.ParamsUtils.setParams;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiClient {
 
     private final static String DEFAULT_BASE_URL = "https://api.helpscout.net/v1/";
-    private final static String METHOD_GET = "GET";
-    private final static String METHOD_POST = "POST";
-    private final static String METHOD_PUT = "PUT";
-    private final static String METHOD_DELETE = "DELETE";
 
     private final static int HTTP_STATUS_OK = 200;
     private final static int HTTP_STATUS_CREATED = 201;
 
-    private String apiKey = "";
-    private String baseUrl = DEFAULT_BASE_URL;
-
     private static final ResultExtractor<Long> idExtractor = new IdExtractor();
     private static final ResultExtractor<String> hashExtractor = new HashExtractor();
+    private static final HTTPMethodWrapper httpMethodWrapper = new HTTPMethodWrapper(DEFAULT_BASE_URL);
 
     private static ApiClient instance = new ApiClient();
 
-    private ApiClient() {}
+    private final JsonParser jsonParser = new JsonParser();
 
     public static ApiClient getInstance() {
         return instance;
     }
 
     public void setKey(String apiKey) {
-        this.apiKey = apiKey;
+        httpMethodWrapper.setApiKey(apiKey);
     }
 
     public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+        httpMethodWrapper.setBaseUrl(baseUrl);
     }
 
     /**
@@ -127,7 +124,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Mailbox> getMailboxes() throws ApiException {
-        return getPage("mailboxes.json", Mailbox.class, HTTP_STATUS_OK);
+        return getPage("mailboxes.json", Mailbox.class);
     }
 
     /**
@@ -139,7 +136,7 @@ public class ApiClient {
      */
     public Page<Mailbox> getMailboxes(List<String> fields) throws ApiException {
         String url = setFields("mailboxes.json", fields);
-        return getPage(url, Mailbox.class, HTTP_STATUS_OK);
+        return getPage(url, Mailbox.class);
     }
 
     /**
@@ -150,7 +147,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Mailbox> getMailboxes(Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes.json", queryParams, Mailbox.class, HTTP_STATUS_OK);
+        return getPage("mailboxes.json", queryParams, Mailbox.class);
     }
 
     /**
@@ -173,7 +170,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Folder> getFolders(Long mailboxId) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/folders.json", Folder.class);
     }
 
     /**
@@ -199,7 +196,7 @@ public class ApiClient {
      */
     public Page<Folder> getFolders(Long mailboxId, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxId + "/folders.json", fields);
-        return getPage(url, Folder.class, HTTP_STATUS_OK);
+        return getPage(url, Folder.class);
     }
 
     /**
@@ -224,7 +221,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Folder> getFolders(Long mailboxId, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/folders.json", queryParams, Folder.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/folders.json", queryParams, Folder.class);
     }
 
     /**
@@ -251,7 +248,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForFolder(Long mailboxID, Long folderID) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", Conversation.class);
     }
 
     /**
@@ -281,7 +278,7 @@ public class ApiClient {
      */
     public Page<Conversation> getConversationsForFolder(Long mailboxID, Long folderID, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", fields);
-        return getPage(url, Conversation.class, HTTP_STATUS_OK);
+        return getPage(url, Conversation.class);
     }
 
     /**
@@ -308,7 +305,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForFolder(Long mailboxID, Long folderID, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/folders/" + folderID + "/conversations.json", queryParams, Conversation.class);
     }
 
     /**
@@ -331,7 +328,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForMailbox(Long mailboxID) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/conversations.json", Conversation.class);
     }
 
     /**
@@ -357,7 +354,7 @@ public class ApiClient {
      */
     public Page<Conversation> getConversationsForMailbox(Long mailboxID, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxID + "/conversations.json", fields);
-        return getPage(url, Conversation.class, HTTP_STATUS_OK);
+        return getPage(url, Conversation.class);
     }
 
     /**
@@ -382,7 +379,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForMailbox(Long mailboxID, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/conversations.json", queryParams, Conversation.class);
     }
 
     /**
@@ -409,7 +406,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForCustomerByMailbox(Long mailboxID, Long customerID) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", Conversation.class);
     }
 
     /**
@@ -440,7 +437,7 @@ public class ApiClient {
      */
     public Page<Conversation> getConversationsForCustomerByMailbox(Long mailboxID, Long customerID, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", fields);
-        return getPage(url, Conversation.class, HTTP_STATUS_OK);
+        return getPage(url, Conversation.class);
     }
 
     /**
@@ -468,7 +465,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Conversation> getConversationsForCustomerByMailbox(Long mailboxID, Long customerID, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", queryParams, Conversation.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxID + "/customers/" + customerID + "/conversations.json", queryParams, Conversation.class);
     }
 
     /**
@@ -542,7 +539,7 @@ public class ApiClient {
         String url = "conversations/" + conversationID + "/thread-source/" + threadID + ".json";
         String json;
         try {
-            json = doGet(url, HTTP_STATUS_OK);
+            json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
         } catch(RuntimeException e) {
             if (e.getCause() instanceof NotFoundException) {
                 json = null;
@@ -556,12 +553,6 @@ public class ApiClient {
             return new String(EncodeUtils.getDecoded(elem.getAsJsonObject().get("data").getAsString()));
         } 
         return null;
-    }
-
-    private JsonElement parseJson(String url, String json) {
-        LoggerFactory.getLogger(getClass()).trace("{}: {}", url, json);
-        JsonElement obj = (new JsonParser()).parse(json);
-        return obj;
     }
 
     /**
@@ -599,7 +590,7 @@ public class ApiClient {
             throw new ApiException("Invalid attachmentID in getAttachmentData");
         }
         String url = "attachments/" + attachmentID + "/data.json";
-        String json = doGet(url, HTTP_STATUS_OK);
+        String json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
         JsonElement obj = parseJson(url, json);
         JsonElement elem  = obj.getAsJsonObject().get("item");
         return EncodeUtils.getDecoded(elem.getAsJsonObject().get("data").getAsString());
@@ -613,7 +604,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Tag> getTags(Map<String, String> queryParams) throws ApiException {
-        return getPage("tags.json", queryParams, Tag.class, HTTP_STATUS_OK);
+        return getPage("tags.json", queryParams, Tag.class);
     }
 
     /**
@@ -635,9 +626,9 @@ public class ApiClient {
      */
     public Page<Customer> getCustomers(Integer page) throws ApiException {
         if (page != null) {
-            return getPage("customers.json?page=" + page, Customer.class, HTTP_STATUS_OK);
+            return getPage("customers.json?page=" + page, Customer.class);
         } else {
-            return getPage("customers.json", Customer.class, HTTP_STATUS_OK);
+            return getPage("customers.json", Customer.class);
         }
     }
 
@@ -650,7 +641,7 @@ public class ApiClient {
      */
     public Page<Customer> getCustomers(List<String> fields) throws ApiException {
         String url = setFields("customers.json", fields);
-        return getPage(url, Customer.class, HTTP_STATUS_OK);
+        return getPage(url, Customer.class);
     }
 
     /**
@@ -669,7 +660,7 @@ public class ApiClient {
             sbUrl.append("?page=").append(page);
         }
         String url = setFields(sbUrl.toString(), fields);
-        return getPage(url, Customer.class, HTTP_STATUS_OK);
+        return getPage(url, Customer.class);
     }
 
     /**
@@ -701,7 +692,7 @@ public class ApiClient {
     public Page<Customer> searchCustomers(String email, String firstName, String lastName, Integer page, List<String> fields) throws ApiException {
         Map<String, String> params = getCustomerSearchParams(email, firstName, lastName, page);
         String url = setFields("customers.json", fields);
-        return getPage(url, params, Customer.class, HTTP_STATUS_OK);
+        return getPage(url, params, Customer.class);
     }
 
     /**
@@ -725,7 +716,7 @@ public class ApiClient {
             params.put("sortOrder", sortOrder);
         }
         params.put("page", String.valueOf(page));
-        return getPage("search/conversations.json", params, SearchConversation.class, HTTP_STATUS_OK);
+        return getPage("search/conversations.json", params, SearchConversation.class);
     }
 
     /**
@@ -748,7 +739,7 @@ public class ApiClient {
             params.put("sortOrder", sortOrder);
         }
         params.put("page", String.valueOf(page));
-        return getPage("search/customers.json", params, SearchCustomer.class, HTTP_STATUS_OK);
+        return getPage("search/customers.json", params, SearchCustomer.class);
     }
 
     /**
@@ -875,7 +866,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<MailboxUser> getUsers() throws ApiException {
-        return getPage("users.json", MailboxUser.class, HTTP_STATUS_OK);
+        return getPage("users.json", MailboxUser.class);
     }
 
     /**
@@ -885,7 +876,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Team> getTeams() throws ApiException {
-        return getPage("teams.json", Team.class, HTTP_STATUS_OK);
+        return getPage("teams.json", Team.class);
     }
 
     /**
@@ -897,7 +888,7 @@ public class ApiClient {
      */
     public Page<MailboxUser> getUsers(List<String> fields) throws ApiException {
         String url = setFields("users.json", fields);
-        return getPage(url, MailboxUser.class, HTTP_STATUS_OK);
+        return getPage(url, MailboxUser.class);
     }
 
     /**
@@ -909,7 +900,7 @@ public class ApiClient {
      */
     public Page<Team> getTeams(List<String> fields) throws ApiException {
         String url = setFields("teams.json", fields);
-        return getPage(url, Team.class, HTTP_STATUS_OK);
+        return getPage(url, Team.class);
     }
 
     /**
@@ -920,7 +911,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<MailboxUser> getUsers(Map<String, String> queryParams) throws ApiException {
-        return getPage("users.json", queryParams, MailboxUser.class, HTTP_STATUS_OK);
+        return getPage("users.json", queryParams, MailboxUser.class);
     }
 
     /**
@@ -931,7 +922,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Team> getTeams(Map<String, String> queryParams) throws ApiException {
-        return getPage("teams.json", queryParams, Team.class, HTTP_STATUS_OK);
+        return getPage("teams.json", queryParams, Team.class);
     }
 
     /**
@@ -942,7 +933,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<User> getTeamMembers(Long mailboxId) throws ApiException {
-        return getPage("teams/" + mailboxId + "/members.json", User.class, HTTP_STATUS_OK);
+        return getPage("teams/" + mailboxId + "/members.json", User.class);
     }
 
     /**
@@ -965,7 +956,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<MailboxUser> getUsersForMailbox(Long mailboxId) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/users.json", MailboxUser.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/users.json", MailboxUser.class);
     }
 
     /**
@@ -991,7 +982,7 @@ public class ApiClient {
      */
     public Page<MailboxUser> getUsersForMailbox(Long mailboxId, List<String> fields) throws ApiException {
         String url = setFields("mailboxes/" + mailboxId + "/users.json", fields);
-        return getPage(url, MailboxUser.class, HTTP_STATUS_OK);
+        return getPage(url, MailboxUser.class);
     }
 
     /**
@@ -1016,7 +1007,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<MailboxUser> getUsersForMailbox(Long mailboxId, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/users.json", queryParams, MailboxUser.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/users.json", queryParams, MailboxUser.class);
     }
 
     /**
@@ -1027,7 +1018,7 @@ public class ApiClient {
      */
     public void createCustomer(Customer customer) throws ApiException {
         String json = new Gson().toJson(customer);
-        Long id = doPost("customers.json", json, HTTP_STATUS_CREATED, idExtractor);
+        Long id = httpMethodWrapper.doPost("customers.json", json, HTTP_STATUS_CREATED, idExtractor);
         customer.setId(id);
     }
 
@@ -1040,7 +1031,7 @@ public class ApiClient {
     public void updateCustomer(Customer customer) throws ApiException {
         GsonBuilder builder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String json = builder.create().toJson(customer, Customer.class);
-        doPut("customers/" + customer.getId() + ".json", json, HTTP_STATUS_OK);
+        httpMethodWrapper.doPut("customers/" + customer.getId() + ".json", json, HTTP_STATUS_OK);
     }
 
     /**
@@ -1076,7 +1067,7 @@ public class ApiClient {
             url.append("?imported=true");
         }
 
-        Long id = doPost(url.toString(), json, HTTP_STATUS_CREATED, idExtractor);
+        Long id = httpMethodWrapper.doPost(url.toString(), json, HTTP_STATUS_CREATED, idExtractor);
         conversation.setId(id);
     }
 
@@ -1115,7 +1106,7 @@ public class ApiClient {
                 url.append("?imported=true");
             }
 
-            doPost(url.toString(), json, HTTP_STATUS_CREATED, idExtractor);
+            httpMethodWrapper.doPost(url.toString(), json, HTTP_STATUS_CREATED, idExtractor);
         } catch (Exception ex) {
             throw new ApiException(ex.getMessage());
         }
@@ -1137,7 +1128,7 @@ public class ApiClient {
         GsonBuilder builder = new GsonBuilder();
         String json = builder.create().toJson(threadBody);
 
-        doPut("conversations/" + conversationId + "/threads/" + threadId + ".json", json, HTTP_STATUS_OK);
+        httpMethodWrapper.doPut("conversations/" + conversationId + "/threads/" + threadId + ".json", json, HTTP_STATUS_OK);
     }
 
     /**
@@ -1148,7 +1139,7 @@ public class ApiClient {
      */
     public void deleteConversation(Long id) throws ApiException {
         String url = "conversations/" + id + ".json";
-        doDelete(url, HTTP_STATUS_OK);
+        httpMethodWrapper.doDelete(url, HTTP_STATUS_OK);
     }
 
     /**
@@ -1165,7 +1156,7 @@ public class ApiClient {
                 .registerTypeAdapter(CustomFieldResponse.class, new CustomFieldResponseAdapter());
 
         String json = builder.create().toJson(conversation, Conversation.class);
-        doPut("conversations/" + conversation.getId() + ".json", json, HTTP_STATUS_OK);
+        httpMethodWrapper.doPut("conversations/" + conversation.getId() + ".json", json, HTTP_STATUS_OK);
     }
 
     /**
@@ -1178,7 +1169,7 @@ public class ApiClient {
      */
     public void createAttachment(Attachment attachment) throws ApiException {
         String json = new Gson().toJson(attachment);
-        String hash = doPost("attachments.json", json, HTTP_STATUS_CREATED, hashExtractor);
+        String hash = httpMethodWrapper.doPost("attachments.json", json, HTTP_STATUS_CREATED, hashExtractor);
         attachment.setHash(hash);
     }
 
@@ -1190,7 +1181,7 @@ public class ApiClient {
      */
     public void deleteAttachment(Long id) throws ApiException {
         String url = "attachments/" + id + ".json";
-        doDelete(url, HTTP_STATUS_OK);
+        httpMethodWrapper.doDelete(url, HTTP_STATUS_OK);
     }
 
     /**
@@ -1201,7 +1192,7 @@ public class ApiClient {
      */
     public void deleteNote(Long threadId) throws ApiException {
         String url = "notes/" + threadId + ".json";
-        doDelete(url, HTTP_STATUS_OK);
+        httpMethodWrapper.doDelete(url, HTTP_STATUS_OK);
     }
 
     /**
@@ -1214,7 +1205,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Workflow> getWorkflows(Long mailboxId) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/workflows.json", Workflow.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/workflows.json", Workflow.class);
     }
 
     /**
@@ -1226,7 +1217,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public Page<Workflow> getWorkflows(Long mailboxId, Map<String, String> queryParams) throws ApiException {
-        return getPage("mailboxes/" + mailboxId + "/workflows.json", queryParams, Workflow.class, HTTP_STATUS_OK);
+        return getPage("mailboxes/" + mailboxId + "/workflows.json", queryParams, Workflow.class);
     }
 
     /**
@@ -1237,7 +1228,7 @@ public class ApiClient {
      * @throws ApiException
      */
     public void runManualWorkflow(Long id, Long ticketId) throws ApiException {
-        doPost("workflows/" + id + "/conversations/" + ticketId + ".json", null, HTTP_STATUS_OK, idExtractor);
+        httpMethodWrapper.doPost("workflows/" + id + "/conversations/" + ticketId + ".json", null, HTTP_STATUS_OK, idExtractor);
     }
 
     /**
@@ -1252,7 +1243,7 @@ public class ApiClient {
         JsonObject obj = new JsonObject();
         obj.add("conversationIds", tickets);
         String json = new Gson().toJson(obj);
-        doPost("workflows/" + id + "/conversations.json", json, HTTP_STATUS_OK, idExtractor);
+        httpMethodWrapper.doPost("workflows/" + id + "/conversations.json", json, HTTP_STATUS_OK, idExtractor);
     }
     
     public ConversationsReport getConversationsReport(Map<String, String> queryParams) throws ApiException {
@@ -1262,10 +1253,7 @@ public class ApiClient {
 
     public List<DayStats> getBusiestTimeOfDayReport(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/conversations/busy-times.json", queryParams);
-        String json = doGet(url, HTTP_STATUS_OK);
-        JsonElement busyTimes = (new JsonParser()).parse(json);
-
-        return JSONUtils.getPageItems(busyTimes, DayStats.class);
+        return getPageItems("reports/conversations/busy-times.json", DayStats.class);
     }
 
     public DatesAndCounts getNewConversationsReport(Map<String, String> queryParams) throws ApiException {
@@ -1300,7 +1288,7 @@ public class ApiClient {
     
     public Page<Rating> getHappinessRatings(Map<String, String> queryParams) throws ApiException {
         String url = setParams("reports/happiness/ratings.json", queryParams);
-        return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
+        return getPage(url, queryParams, Rating.class);
     }
     
     public ProductivityReport getProductivityReport(Map<String,String> queryParams) throws ApiException {
@@ -1360,7 +1348,7 @@ public class ApiClient {
     
     public Page<ConversationStats> getUserConversationHistory(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/user/conversation-history.json", queryParams);
-        return getPage(url, queryParams, ConversationStats.class, HTTP_STATUS_OK);
+        return getPage(url, queryParams, ConversationStats.class);
     }
     
     public DatesAndCounts getUserCustomersHelped(Map<String,String> queryParams) throws ApiException {
@@ -1385,7 +1373,7 @@ public class ApiClient {
     
     public Page<Rating> getUserRatings(Map<String,String> queryParams) throws ApiException {
         String url = setParams("reports/user/ratings.json", queryParams);
-        return getPage(url, queryParams, Rating.class, HTTP_STATUS_OK);
+        return getPage(url, queryParams, Rating.class);
     }
 
     public Page<net.helpscout.api.model.report.conversations.Conversation> getUserDrillDown(Map<String, String> queryParams) throws ApiException {
@@ -1414,80 +1402,50 @@ public class ApiClient {
         }
     }
 
-    private <T> T getObject(String url, Class<T> clazzType) throws ApiException {
-        String json = doGet(url, HTTP_STATUS_OK);
-        return Parser.getInstance().getObject(json, clazzType);     
+    private <T> T getObject(String url, Class<T> responseType) throws ApiException {
+        String json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
+        return Parser.getInstance().getObject(json, responseType);
     }
 
-    private <T> T getItem(String url, Class<T> clazzType, int expectedCode) throws ApiException {
-        String json = doGet(url, expectedCode);
+    private <T> T getItem(String url, Class<T> responseType, int expectedCode) throws ApiException {
+        String json = httpMethodWrapper.doGet(url, expectedCode);
         JsonElement obj = parseJson(url, json);
         JsonElement item = obj.getAsJsonObject().get("item");
 
-        return Parser.getInstance().getObject(item, clazzType);
+        return Parser.getInstance().getObject(item, responseType);
+    }
+
+    private <T> Page<T> getPage(String url, Class<T> responseType) throws ApiException {
+        return getPage(url, null, responseType);
     }
     
-    private <T> Page<T> getPage(String url, Class<T> clazzType, int expectedCode) throws ApiException {
-        return getPage(url, null, clazzType, expectedCode);
-    }
-    
-    private <T> Page<T> getPage(String url, Class<T> clazzType, String wrapperObjectName) throws ApiException {
-        String json = doGet(url, HTTP_STATUS_OK);
+    private <T> Page<T> getPage(String url, Class<T> reponseType, String wrapperObjectName) throws ApiException {
+        String json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
 
         JsonObject outerObj = parseJson(url, json).getAsJsonObject();
         JsonObject innerObj = outerObj.get(wrapperObjectName).getAsJsonObject();
         
-        return JSONUtils.objectToPage(innerObj, clazzType);
+        return JSONUtils.objectToPage(innerObj, reponseType);
     }
 
-    private <T> Page<T> getPage(String url, Map<String,String> params, Class<T> clazzType, int expectedCode) throws ApiException {
+    private <T> Page<T> getPage(String url, Map<String,String> params, Class<T> responseType) throws ApiException {
         url = setParams(url, params);
-        String json = doGet(url, HTTP_STATUS_OK);
+        String json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
         JsonElement obj = parseJson(url, json);
         
-        return JSONUtils.objectToPage(obj.getAsJsonObject(), clazzType);
+        return JSONUtils.objectToPage(obj.getAsJsonObject(), responseType);
+    }
+
+    private <T> List<T> getPageItems(String url, Class<T> responseType) throws ApiException {
+        String json = httpMethodWrapper.doGet(url, HTTP_STATUS_OK);
+        JsonElement obj = parseJson(url, json);
+
+        return JSONUtils.getPageItems(obj, responseType);
+    }
+
+    private JsonElement parseJson(String url, String json) {
+        LoggerFactory.getLogger(getClass()).trace("{}: {}", url, json);
+        return jsonParser.parse(json);
     }
     
-    private <T> T doPost(String url, String requestBody, int expectedCode, ResultExtractor<T> extractor) throws ApiException {
-
-        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_POST, expectedCode, requestBody)) {
-            return extractor.extract(conn);
-        } catch(ApiException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private void doPut(String url, String requestBody, int expectedCode) throws ApiException {
-
-        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_PUT, expectedCode, requestBody)) {
-        } catch(ApiException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private String doGet(String url, int expectedCode) throws ApiException {
-        String response    = null;
-        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_GET, expectedCode)) {
-            response = conn.getResponse();
-        } catch(ApiException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-        return response;
-    }
-
-    private void doDelete(String url, int expectedCode) throws ApiException {
-        try (HTTPConnectionWrapper conn = new HTTPConnectionWrapper(apiKey, baseUrl + url, METHOD_DELETE, expectedCode)) {
-        } catch(ApiException e) {
-            throw e;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
 }

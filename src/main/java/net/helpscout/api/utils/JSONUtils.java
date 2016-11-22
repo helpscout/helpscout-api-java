@@ -3,8 +3,11 @@ package net.helpscout.api.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.helpscout.api.ApiClient;
 import net.helpscout.api.Page;
 import net.helpscout.api.Parser;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -56,4 +59,5 @@ public class JSONUtils {
         }
         return col;
     }
+
 }

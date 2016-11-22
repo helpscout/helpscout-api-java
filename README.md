@@ -107,12 +107,12 @@ Example Usage: Webhooks
 String secretKey = "secret-key-here";
 Webhook webhook = new Webhook(secretKey, httpRequest);
 if (webhook.isValid()) {
-  String event = webhook.getEventType();
+  WebhookEventType event = webhook.getEventType();
 
-  if (webhook.isConversationEvent()) {
+  if (event.isConversationEvent()) {
     Conversation convo = webhook.getConversation();
     // do something
-  } else if (webhook.isCustomerEvent()) {
+  } else if (event.isCustomerEvent()) {
     Customer customer = webhook.getCustomer();
     // do something
   }

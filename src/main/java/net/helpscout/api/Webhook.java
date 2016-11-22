@@ -6,6 +6,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
+import net.helpscout.api.cbo.WebhookEventType;
 import net.helpscout.api.model.Conversation;
 import net.helpscout.api.model.Customer;
 
@@ -23,44 +24,39 @@ final public class Webhook {
     }
     
     private String getHeader(String headerName) {
-        return request.getHeader(headerName);       
+        return request.getHeader(headerName);
     }
     
     /**
      * Get the event type
      * @return string
      */
-    public String getEventType() {
-        return this.getHeader("X-HELPSCOUT-EVENT");
-    }   
-        
-    public boolean isTestEvent() {
-        return "helpscout.test".equals(this.getEventType());        
+    public WebhookEventType getEventType() {
+        return WebhookEventType.findByLabel(this.getHeader("X-HELPSCOUT-EVENT"));
     }
 
-    private boolean isEventTypeOf(String eventType) {
-        String event = this.getEventType();
-        if (event != null) {
-            return event.substring(0, eventType.length()).equals(eventType);            
-        }
-        return false;
+    public boolean isTestEvent() {
+        return getEventType().isTestEvent();
     }
-    
+
     /**
+     * @deprecated Starting 1.6.2, consider to replace with {@link WebhookEventType#isConversationEvent()}<br>
      * Is the current event a type of conversation event
      * @return boolean
      */
     public boolean isConversationEvent() {
-        return this.isEventTypeOf("convo");
+        return getEventType().isConversationEvent();
     }
 
     /**
+     * @deprecated Starting 1.6.2, consider to replace with {@link WebhookEventType#isCustomerEvent()}<br>
      * Is the current event a type of customer event
      * @return boolean
      */
     public boolean isCustomerEvent() {
-        return this.isEventTypeOf("customer");
+        return getEventType().isCustomerEvent();
     }
+
 
     /**
      * Returns true if the current request is a valid webhook issued from Help Scout, false otherwise.
